@@ -1,0 +1,15 @@
+{
+  "title": "Фонды",
+  "charity": "Благотворительный фонд",
+  "reserve": "Резервный фонд",
+  "renovation": "Фонд ремонта",
+  "emergency": "Фонд на чёрный день",
+  "taxReserve": "Налоговый резерв",
+  "deposit": "Пополнить",
+  "withdraw": "Снять",
+  "balance": "Баланс",
+  "transactions": "Операции",
+  "income": "Доход",
+  "expense": "Расход",
+  "transactionType": "Тип операции"
+}

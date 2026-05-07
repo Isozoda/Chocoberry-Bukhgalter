@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(winget install *)",
+      "PowerShell(Test-Path *)",
+      "PowerShell(Get-Item *)",
+      "PowerShell(Get-Process *)",
+      "PowerShell(Get-WmiObject *)",
+      "PowerShell(docker --version 2>&1; docker ps 2>&1 | Select-Object -First 3)",
+      "PowerShell(scoop *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Lenovo\\\\Desktop\\\\MoneyMind\" -Recurse -Force)",
+      "Bash(Select-Object -Property FullName)",
+      "Bash(Format-Table -AutoSize -Wrap)"
+    ]
+  }
+}

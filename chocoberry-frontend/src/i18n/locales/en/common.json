@@ -1,0 +1,134 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "sales": "Sales / POS",
+    "inventory": "Inventory",
+    "suppliers": "Suppliers",
+    "products": "Products",
+    "expenses": "Expenses",
+    "employees": "Employees",
+    "cashbox": "Cash Box",
+    "funds": "Funds",
+    "dailyReport": "Daily Report",
+    "reports": "Reports",
+    "business": "Business"
+  },
+  "actions": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "export": "Export",
+    "print": "Print",
+    "finalize": "Finalize",
+    "view": "View",
+    "close": "Close",
+    "refresh": "Refresh",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset"
+  },
+  "labels": {
+    "total": "Total",
+    "date": "Date",
+    "amount": "Amount",
+    "quantity": "Quantity",
+    "unit": "Unit",
+    "status": "Status",
+    "notes": "Notes",
+    "search": "Search...",
+    "filter": "Filter",
+    "name": "Name",
+    "type": "Type",
+    "price": "Price",
+    "cost": "Cost",
+    "balance": "Balance",
+    "description": "Description",
+    "phone": "Phone",
+    "email": "Email",
+    "password": "Password",
+    "role": "Role",
+    "period": "Period",
+    "from": "From",
+    "to": "To",
+    "category": "Category",
+    "vendor": "Vendor",
+    "payment": "Payment",
+    "salary": "Salary",
+    "bonus": "Bonus",
+    "fines": "Fines",
+    "advances": "Advances",
+    "margin": "Margin %"
+  },
+  "status": {
+    "completed": "Completed",
+    "refunded": "Refunded",
+    "void": "Void",
+    "active": "Active",
+    "inactive": "Inactive",
+    "draft": "Draft",
+    "finalized": "Finalized"
+  },
+  "payment": {
+    "cash": "Cash",
+    "card": "Card",
+    "mixed": "Mixed"
+  },
+  "units": {
+    "kg": "kg",
+    "gram": "g",
+    "piece": "pcs",
+    "pack": "pack",
+    "box": "box",
+    "liter": "L",
+    "ml": "ml",
+    "block": "block",
+    "dozen": "dozen",
+    "ton": "ton"
+  },
+  "currency": {
+    "symbol": "см",
+    "name": "Somoni"
+  },
+  "errors": {
+    "required": "This field is required",
+    "minLength": "Minimum {{min}} characters",
+    "invalidEmail": "Invalid email address",
+    "passwordMismatch": "Passwords do not match",
+    "invalidAmount": "Invalid amount",
+    "insufficientStock": "Insufficient stock",
+    "networkError": "Network error"
+  },
+  "toast": {
+    "success": "Operation successful",
+    "error": "An error occurred",
+    "saved": "Saved successfully",
+    "deleted": "Deleted successfully",
+    "updated": "Updated successfully"
+  },
+  "confirm": {
+    "delete": "Are you sure? This cannot be undone.",
+    "voidSale": "Void this sale? Inventory will NOT be restored.",
+    "finalize": "Finalize this daily report? It cannot be edited after.",
+    "payroll": "This will create salary payments for all employees. Confirm?"
+  },
+  "empty": {
+    "noData": "No data",
+    "noResults": "No results found",
+    "noItems": "No items"
+  },
+  "pagination": {
+    "showing": "Showing {{from}}–{{to}} of {{total}}",
+    "perPage": "per page"
+  },
+  "loading": "Loading...",
+  "saving": "Saving...",
+  "deleting": "Deleting..."
+}

@@ -1,0 +1,22 @@
+{
+  "title": "Панель управления",
+  "todaySales": "Продажи сегодня",
+  "cashSales": "Наличные",
+  "cardSales": "Карта",
+  "saleCount": "Количество продаж",
+  "cashboxBalance": "Баланс кассы",
+  "lowStockAlerts": "Предупреждения о запасах",
+  "quickActions": "Быстрые действия",
+  "newSale": "Новая продажа",
+  "addPurchase": "Добавить покупку",
+  "dailyReport": "Дневной отчёт",
+  "viewReports": "Просмотр отчётов",
+  "last7Days": "Последние 7 дней",
+  "topProducts": "Топ продукты",
+  "restock": "Пополнить",
+  "vsYesterday": "по сравнению со вчера",
+  "cash": "Наличные",
+  "card": "Карта",
+  "total": "Итого",
+  "itemsLow": "{{count}} товаров мало"
+}

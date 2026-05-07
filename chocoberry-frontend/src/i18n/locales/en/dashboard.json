@@ -1,0 +1,22 @@
+{
+  "title": "Dashboard",
+  "todaySales": "Today's Sales",
+  "cashSales": "Cash",
+  "cardSales": "Card",
+  "saleCount": "Sales Count",
+  "cashboxBalance": "Cash Box Balance",
+  "lowStockAlerts": "Low Stock Alerts",
+  "quickActions": "Quick Actions",
+  "newSale": "New Sale",
+  "addPurchase": "Add Purchase",
+  "dailyReport": "Daily Report",
+  "viewReports": "View Reports",
+  "last7Days": "Last 7 Days",
+  "topProducts": "Top Products",
+  "restock": "Restock",
+  "vsYesterday": "vs yesterday",
+  "cash": "Cash",
+  "card": "Card",
+  "total": "Total",
+  "itemsLow": "{{count}} items low"
+}

@@ -1,0 +1,15 @@
+{
+  "title": "Фондҳо",
+  "charity": "Фонди Хайр",
+  "reserve": "Фонди Захиравӣ",
+  "renovation": "Фонди Ободонӣ",
+  "emergency": "Рӯзи Мабодо",
+  "taxReserve": "Захираи Андоз",
+  "deposit": "Пардохт кардан",
+  "withdraw": "Бардоштан",
+  "balance": "Тавозун",
+  "transactions": "Амалиётҳо",
+  "income": "Даромад",
+  "expense": "Хароҷот",
+  "transactionType": "Навъи амалиёт"
+}

@@ -1,0 +1,15 @@
+{
+  "title": "Касса",
+  "cashBalance": "Баланс наличных",
+  "cardBalance": "Баланс по карте",
+  "totalBalance": "Общий баланс",
+  "cashIn": "Приход",
+  "cashOut": "Расход",
+  "openSession": "Открыть смену",
+  "closeSession": "Закрыть смену",
+  "todayReport": "Отчёт за сегодня",
+  "history": "История",
+  "balanceBefore": "Баланс до",
+  "balanceAfter": "Баланс после",
+  "operationType": "Тип операции"
+}

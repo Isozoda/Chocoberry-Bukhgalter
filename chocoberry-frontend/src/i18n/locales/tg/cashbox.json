@@ -1,0 +1,15 @@
+{
+  "title": "Касса",
+  "cashBalance": "Тавозуни нақд",
+  "cardBalance": "Тавозуни карта",
+  "totalBalance": "Тавозуни умумӣ",
+  "cashIn": "Воридшавии нақд",
+  "cashOut": "Хуруҷи нақд",
+  "openSession": "Кушодани сессия",
+  "closeSession": "Пӯшидани сессия",
+  "todayReport": "Ҳисоботи имрӯз",
+  "history": "Таърих",
+  "balanceBefore": "Тавозун пеш",
+  "balanceAfter": "Тавозун баъд",
+  "operationType": "Навъи амалиёт"
+}
