@@ -62,8 +62,8 @@ export class BusinessService {
       const suppliers = await Promise.all([
         tx.supplier.create({ data: { businessId: bid, name: 'Аки Талабшоҳ', type: 'FRUIT' } }),
         tx.supplier.create({ data: { businessId: bid, name: 'Шоколадфурӯш', type: 'CHOCOLATE' } }),
-        tx.supplier.create({ data: { businessId: bid, name: 'Намк', type: 'PACKAGING' } }),
-        tx.supplier.create({ data: { businessId: bid, name: 'Баҳрулло', type: 'PACKAGING' } }),
+        tx.supplier.create({ data: { businessId: bid, name: 'Наимшоҳ', type: 'PACKAGING' } }),
+        tx.supplier.create({ data: { businessId: bid, name: 'Фаррух', type: 'PACKAGING' } }),
       ]);
 
       // INVENTORY ITEMS
@@ -151,11 +151,17 @@ export class BusinessService {
       // EMPLOYEES
       await tx.employee.createMany({
         data: [
-          { businessId: bid, name: 'Ман', role: 'OWNER', isOwner: true, salary: new Decimal(500), salaryType: 'DAILY' },
-          { businessId: bid, name: 'Дилшод', role: 'OWNER', isOwner: true, salary: new Decimal(500), salaryType: 'DAILY' },
-          { businessId: bid, name: 'Саф', role: 'OWNER', isOwner: true, salary: new Decimal(250), salaryType: 'DAILY' },
-          { businessId: bid, name: 'Намк', role: 'STAFF', isConsumableBuyer: true },
-          { businessId: bid, name: 'Баҳрулло', role: 'STAFF', isConsumableBuyer: true },
+          { businessId: bid, name: 'Сафиалло', role: 'OWNER', isOwner: true, salary: new Decimal(500), salaryType: 'DAILY' },
+          { businessId: bid, name: 'Шамс', role: 'OWNER', isOwner: true, salary: new Decimal(500), salaryType: 'DAILY' },
+          { businessId: bid, name: 'Эҳсон', role: 'STAFF' },
+          { businessId: bid, name: 'Шоди', role: 'STAFF' },
+          { businessId: bid, name: 'Меҳрубон', role: 'STAFF' },
+          { businessId: bid, name: 'Наимшоҳ', role: 'STAFF', isConsumableBuyer: true },
+          { businessId: bid, name: 'Фаррух', role: 'STAFF', isConsumableBuyer: true },
+          { businessId: bid, name: 'Шодрӯз', role: 'STAFF' },
+          { businessId: bid, name: 'Шуҳрат', role: 'STAFF' },
+          { businessId: bid, name: 'Ҷовидон', role: 'STAFF' },
+          { businessId: bid, name: 'Муҳаммад', role: 'STAFF' },
         ],
       });
 

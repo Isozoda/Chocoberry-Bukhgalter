@@ -5,6 +5,7 @@ import { MoneyDisplay } from '@/components/ui/MoneyDisplay'
 import { PaymentMethodBadge } from '@/components/ui/PaymentMethodBadge'
 import { formatDateTime } from '@/utils/date.util'
 import type { Sale } from '@/types/sale.types'
+import strawberryImg from '@/assets/IMG_6686.PNG'
 
 interface Props {
   sale: Sale
@@ -25,7 +26,10 @@ export default function SaleReceiptModal({ sale, onClose }: Props) {
 
         <div className="space-y-3 text-sm">
           <div className="text-center border-b pb-3">
-            <p className="font-bold text-lg">🍓 Choco Berry</p>
+            <p className="font-bold text-lg flex items-center justify-center gap-2">
+              <img src={strawberryImg} alt="" className="h-8 w-8 object-cover rounded-full border shadow-sm" />
+              Choco Berry
+            </p>
             <p className="text-muted-foreground">{formatDateTime(sale.createdAt)}</p>
             <p className="text-muted-foreground">#{sale.saleNumber}</p>
           </div>

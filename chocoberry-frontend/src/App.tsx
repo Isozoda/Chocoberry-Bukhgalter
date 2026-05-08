@@ -38,6 +38,9 @@ const ExpensesPage = lazy(() => import('@/pages/expenses/ExpensesPage'))
 const EmployeesPage = lazy(() => import('@/pages/employees/EmployeesPage'))
 const EmployeeDetailPage = lazy(() => import('@/pages/employees/EmployeeDetailPage'))
 
+// Attendance
+const AttendancePage = lazy(() => import('@/pages/attendance/AttendancePage'))
+
 // Cashbox
 const CashboxPage = lazy(() => import('@/pages/cashbox/CashboxPage'))
 
@@ -88,6 +91,8 @@ export default function App() {
 
             <Route path="employees" element={<Wrap><EmployeesPage /></Wrap>} />
             <Route path="employees/:id" element={<Wrap><EmployeeDetailPage /></Wrap>} />
+
+            <Route path="attendance" element={<Wrap><AttendancePage /></Wrap>} />
 
             <Route path="cashbox" element={<Wrap><CashboxPage /></Wrap>} />
 

@@ -8,6 +8,7 @@ import { RolesGuard } from './common/guards/roles.guard';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
+import { AttendanceModule } from './modules/attendance/attendance.module';
 import { BusinessModule } from './modules/business/business.module';
 import { SuppliersModule } from './modules/suppliers/suppliers.module';
 import { ProductsModule } from './modules/products/products.module';
@@ -34,6 +35,7 @@ import { ReportsModule } from './modules/reports/reports.module';
       },
     ]),
     AuthModule,
+    AttendanceModule,
     BusinessModule,
     SuppliersModule,
     ProductsModule,
@@ -65,4 +67,4 @@ import { ReportsModule } from './modules/reports/reports.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

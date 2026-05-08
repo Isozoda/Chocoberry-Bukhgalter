@@ -21,6 +21,7 @@ import SaleReceiptModal from './SaleReceiptModal'
 import type { Product } from '@/types/product.types'
 import type { Sale } from '@/types/sale.types'
 import Decimal from 'decimal.js'
+import strawberryImg from '@/assets/IMG_6686.PNG'
 
 interface CartItem {
   product: Product
@@ -139,7 +140,9 @@ export default function POSTerminal() {
                   onClick={() => addToCart(product)}
                   className="text-left p-3 rounded-lg border hover:border-primary hover:bg-primary/5 transition-colors"
                 >
-                  <div className="text-2xl mb-1">🍓</div>
+                  <div className="mb-2 h-16 w-full rounded-md overflow-hidden bg-white border flex items-center justify-center">
+                    <img src={strawberryImg} alt={name} className="h-full w-full object-cover" />
+                  </div>
                   <p className="font-medium text-sm truncate">{name}</p>
                   <MoneyDisplay amount={product.price} className="text-xs text-primary font-bold" />
                 </button>

@@ -9,6 +9,7 @@ import {
   Cookie,
   Wallet,
   Users,
+  UserCheck,
   Banknote,
   PiggyBank,
   ClipboardList,
@@ -36,6 +37,7 @@ const navItems = [
   { path: '/app/products', icon: Cookie, ns: 'products' as const },
   { path: '/app/expenses', icon: Wallet, ns: 'expenses' as const },
   { path: '/app/employees', icon: Users, ns: 'employees' as const },
+  { path: '/app/attendance', icon: UserCheck, ns: 'attendance' as const },
   { path: '/app/cashbox', icon: Banknote, ns: 'cashbox' as const },
   { path: '/app/funds', icon: PiggyBank, ns: 'funds' as const },
   { path: '/app/daily-report', icon: ClipboardList, ns: 'daily-report' as const },
@@ -74,9 +76,9 @@ export function Sidebar() {
             "relative flex items-center justify-center bg-white rounded-full overflow-hidden transition-all duration-300 shadow-xl",
             sidebarOpen ? "w-12 h-12" : "w-10 h-10"
           )}>
-            <img 
-              src={logo} 
-              alt="Choco Berry Logo" 
+            <img
+              src={logo}
+              alt="Choco Berry Logo"
               className="w-full h-full object-contain p-0.5"
             />
           </div>

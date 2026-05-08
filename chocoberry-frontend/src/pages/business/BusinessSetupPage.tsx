@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import type { z } from 'zod'
 import type { SetupResponse } from '@/types/business.types'
+import strawberryImg from '@/assets/IMG_6686.PNG'
 
 type SetupForm = z.infer<typeof businessSetupSchema>
 
@@ -89,7 +90,9 @@ export default function BusinessSetupPage() {
       <div className="w-full max-w-lg">
         {/* Header */}
         <div className="text-center mb-10">
-          <div className="inline-flex h-14 w-14 items-center justify-center bg-primary rounded-2xl text-2xl mb-4 shadow-lg shadow-primary/30">🍓</div>
+          <div className="inline-flex h-14 w-14 items-center justify-center bg-white border rounded-2xl overflow-hidden mb-4 shadow-lg">
+            <img src={strawberryImg} alt="" className="h-full w-full object-cover" />
+          </div>
           <h1 className="text-2xl font-bold">Set up your business</h1>
           <p className="text-muted-foreground mt-1 text-sm">Takes less than 2 minutes</p>
         </div>

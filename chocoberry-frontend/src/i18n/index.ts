@@ -2,6 +2,7 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 
+import tjAttendance from './locales/tj/attendance.json'
 import tjCommon from './locales/tj/common.json'
 import tjDashboard from './locales/tj/dashboard.json'
 import tjSales from './locales/tj/sales.json'
@@ -17,6 +18,7 @@ import tjReports from './locales/tj/reports.json'
 import tjBusiness from './locales/tj/business.json'
 import tjAuth from './locales/tj/auth.json'
 
+import ruAttendance from './locales/ru/attendance.json'
 import ruCommon from './locales/ru/common.json'
 import ruDashboard from './locales/ru/dashboard.json'
 import ruSales from './locales/ru/sales.json'
@@ -32,6 +34,7 @@ import ruReports from './locales/ru/reports.json'
 import ruBusiness from './locales/ru/business.json'
 import ruAuth from './locales/ru/auth.json'
 
+import enAttendance from './locales/en/attendance.json'
 import enCommon from './locales/en/common.json'
 import enDashboard from './locales/en/dashboard.json'
 import enSales from './locales/en/sales.json'
@@ -56,6 +59,7 @@ i18n
     defaultNS: 'common',
     ns: [
       'common',
+      'attendance',
       'dashboard',
       'sales',
       'inventory',
@@ -79,6 +83,7 @@ i18n
     resources: {
       tj: {
         common: tjCommon,
+        attendance: tjAttendance,
         dashboard: tjDashboard,
         sales: tjSales,
         inventory: tjInventory,
@@ -95,6 +100,7 @@ i18n
       },
       ru: {
         common: ruCommon,
+        attendance: ruAttendance,
         dashboard: ruDashboard,
         sales: ruSales,
         inventory: ruInventory,
@@ -111,6 +117,7 @@ i18n
       },
       en: {
         common: enCommon,
+        attendance: enAttendance,
         dashboard: enDashboard,
         sales: enSales,
         inventory: enInventory,
