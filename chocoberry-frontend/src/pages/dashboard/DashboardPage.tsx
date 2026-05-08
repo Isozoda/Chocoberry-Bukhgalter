@@ -18,6 +18,8 @@ import { MoneyDisplay } from '@/components/ui/MoneyDisplay'
 import { Skeleton } from '@/components/ui/skeleton'
 import { last7Days } from '@/utils/date.util'
 import { cn } from '@/lib/utils'
+import { t } from 'i18next'
+import i18n from '@/i18n'
 
 function KpiCard({
   label,
@@ -64,7 +66,7 @@ function KpiCard({
                 isPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400'
               )}>
                 {isPositive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                {isPositive ? '+' : ''}{change.toFixed(1)}% vs yesterday
+                {isPositive ? '+' : ''}{change.toFixed(1)}% {t('vsYesterday')}
               </div>
             )}
           </div>
@@ -114,7 +116,7 @@ export default function DashboardPage() {
       <div>
         <h1 className="text-2xl font-bold">{t('title')}</h1>
         <p className="text-sm text-muted-foreground mt-0.5">
-          {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+          {new Date().toLocaleDateString(i18n.language === 'tj' ? 'tg-TJ' : i18n.language, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
         </p>
       </div>
 
@@ -131,7 +133,7 @@ export default function DashboardPage() {
         <KpiCard
           label={t('cashSales')}
           value={<MoneyDisplay amount={todayStats?.cashSales || '0'} />}
-          sub={`${todayStats?.saleCount ?? 0} transactions`}
+          sub={t('transactionsCount', { count: todayStats?.saleCount ?? 0 })}
           icon={DollarSign}
           color="bg-emerald-500"
           isLoading={loadingStats}
@@ -171,7 +173,7 @@ export default function DashboardPage() {
             {lowStock.length === 0 ? (
               <div className="text-center py-6">
                 <Package className="h-8 w-8 text-muted-foreground/30 mx-auto mb-2" />
-                <p className="text-sm text-muted-foreground">All stock levels are OK</p>
+                <p className="text-sm text-muted-foreground">{t('allStockOk')}</p>
               </div>
             ) : (
               <div className="space-y-2">
@@ -195,7 +197,7 @@ export default function DashboardPage() {
                 ))}
                 {lowStock.length > 5 && (
                   <Button variant="ghost" size="sm" className="w-full text-xs" onClick={() => navigate('/app/inventory')}>
-                    View all {lowStock.length} alerts <ArrowRight className="h-3 w-3 ml-1" />
+                    {t('viewAllAlerts', { count: lowStock.length })} <ArrowRight className="h-3 w-3 ml-1" />
                   </Button>
                 )}
               </div>

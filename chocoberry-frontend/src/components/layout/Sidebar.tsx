@@ -93,17 +93,17 @@ export function Sidebar() {
           </div>
         )}
 
-        {/* Toggle Button - Repositioned for better UX */}
+        {/* Toggle Button - Repositioned to avoid overlapping content */}
         <Button
           variant="ghost"
           size="icon"
           className={cn(
-            "absolute -right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-border border border-border shadow-md hover:bg-primary hover:text-white transition-all",
+            "absolute right-4 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full bg-[#161618] border border-[#1a1a1c] shadow-xl hover:bg-orange-600 hover:text-white transition-all duration-300 group-hover:scale-110",
             !sidebarOpen && "hidden group-hover:flex"
           )}
           onClick={toggleSidebar}
         >
-          {sidebarOpen ? <ChevronLeft className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+          {sidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
         </Button>
       </div>
 

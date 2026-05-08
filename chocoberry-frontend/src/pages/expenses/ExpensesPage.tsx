@@ -106,10 +106,10 @@ export default function ExpensesPage() {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
         <TrendingDown className="h-12 w-12 text-muted-foreground mb-4 opacity-20" />
-        <h3 className="text-lg font-semibold">Failed to load expenses</h3>
-        <p className="text-muted-foreground mt-2">There was an error connecting to the server.</p>
+        <h3 className="text-lg font-semibold">{t('common:errors.networkError')}</h3>
+        <p className="text-muted-foreground mt-2">{t('common:errors.tryAgainLater') || 'Please try again later.'}</p>
         <Button variant="outline" className="mt-6" onClick={() => qc.invalidateQueries({ queryKey: ['expenses'] })}>
-          Try Again
+          {t('common:actions.refresh')}
         </Button>
       </div>
     )

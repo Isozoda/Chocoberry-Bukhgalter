@@ -2,19 +2,20 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 
-import tgCommon from './locales/tg/common.json'
-import tgDashboard from './locales/tg/dashboard.json'
-import tgSales from './locales/tg/sales.json'
-import tgInventory from './locales/tg/inventory.json'
-import tgSuppliers from './locales/tg/suppliers.json'
-import tgProducts from './locales/tg/products.json'
-import tgExpenses from './locales/tg/expenses.json'
-import tgEmployees from './locales/tg/employees.json'
-import tgCashbox from './locales/tg/cashbox.json'
-import tgFunds from './locales/tg/funds.json'
-import tgDailyReport from './locales/tg/daily-report.json'
-import tgReports from './locales/tg/reports.json'
-import tgBusiness from './locales/tg/business.json'
+import tjCommon from './locales/tj/common.json'
+import tjDashboard from './locales/tj/dashboard.json'
+import tjSales from './locales/tj/sales.json'
+import tjInventory from './locales/tj/inventory.json'
+import tjSuppliers from './locales/tj/suppliers.json'
+import tjProducts from './locales/tj/products.json'
+import tjExpenses from './locales/tj/expenses.json'
+import tjEmployees from './locales/tj/employees.json'
+import tjCashbox from './locales/tj/cashbox.json'
+import tjFunds from './locales/tj/funds.json'
+import tjDailyReport from './locales/tj/daily-report.json'
+import tjReports from './locales/tj/reports.json'
+import tjBusiness from './locales/tj/business.json'
+import tjAuth from './locales/tj/auth.json'
 
 import ruCommon from './locales/ru/common.json'
 import ruDashboard from './locales/ru/dashboard.json'
@@ -29,6 +30,7 @@ import ruFunds from './locales/ru/funds.json'
 import ruDailyReport from './locales/ru/daily-report.json'
 import ruReports from './locales/ru/reports.json'
 import ruBusiness from './locales/ru/business.json'
+import ruAuth from './locales/ru/auth.json'
 
 import enCommon from './locales/en/common.json'
 import enDashboard from './locales/en/dashboard.json'
@@ -43,13 +45,14 @@ import enFunds from './locales/en/funds.json'
 import enDailyReport from './locales/en/daily-report.json'
 import enReports from './locales/en/reports.json'
 import enBusiness from './locales/en/business.json'
+import enAuth from './locales/en/auth.json'
 
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'tg',
-    supportedLngs: ['tg', 'ru', 'en'],
+    fallbackLng: 'tj',
+    supportedLngs: ['tj', 'ru', 'en'],
     defaultNS: 'common',
     ns: [
       'common',
@@ -65,6 +68,7 @@ i18n
       'daily-report',
       'reports',
       'business',
+      'auth',
     ],
     interpolation: { escapeValue: false },
     detection: {
@@ -73,20 +77,21 @@ i18n
       lookupLocalStorage: 'chocoberry_lang',
     },
     resources: {
-      tg: {
-        common: tgCommon,
-        dashboard: tgDashboard,
-        sales: tgSales,
-        inventory: tgInventory,
-        suppliers: tgSuppliers,
-        products: tgProducts,
-        expenses: tgExpenses,
-        employees: tgEmployees,
-        cashbox: tgCashbox,
-        funds: tgFunds,
-        'daily-report': tgDailyReport,
-        reports: tgReports,
-        business: tgBusiness,
+      tj: {
+        common: tjCommon,
+        dashboard: tjDashboard,
+        sales: tjSales,
+        inventory: tjInventory,
+        suppliers: tjSuppliers,
+        products: tjProducts,
+        expenses: tjExpenses,
+        employees: tjEmployees,
+        cashbox: tjCashbox,
+        funds: tjFunds,
+        'daily-report': tjDailyReport,
+        reports: tjReports,
+        business: tjBusiness,
+        auth: tjAuth,
       },
       ru: {
         common: ruCommon,
@@ -102,6 +107,7 @@ i18n
         'daily-report': ruDailyReport,
         reports: ruReports,
         business: ruBusiness,
+        auth: ruAuth,
       },
       en: {
         common: enCommon,
@@ -117,6 +123,7 @@ i18n
         'daily-report': enDailyReport,
         reports: enReports,
         business: enBusiness,
+        auth: enAuth,
       },
     },
   })

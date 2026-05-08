@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts'
@@ -10,6 +10,7 @@ import { MoneyDisplay } from '@/components/ui/MoneyDisplay'
 import { ExportButtons } from './ExportButtons'
 import { reportsApi } from '@/api/reports.api'
 import { formatMoney } from '@/utils/decimal.util'
+import type { TopProductItem } from '@/types/report.types'
 import type { ColumnDef } from '@/components/ui/DataTable'
 
 const COLORS = ['#E8593C', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899']
@@ -27,22 +28,24 @@ export default function TopProductsReport() {
     queryFn: () => reportsApi.topProducts({ from, to }),
   })
 
-  const chartData = data?.products?.slice(0, 7).map((p, i) => ({
-    name: p.nameRu || p.nameTg,
+  const products = data ?? []
+
+  const chartData = products.slice(0, 7).map((p, i) => ({
+    name: p.name.length > 14 ? p.name.slice(0, 14) + '…' : p.name,
     value: parseFloat(p.revenue),
     color: COLORS[i % COLORS.length],
-  })) ?? []
+  }))
 
-  const columns: ColumnDef<typeof data extends undefined ? never : NonNullable<typeof data>['products'][number]>[] = [
+  const columns: ColumnDef<TopProductItem>[] = [
     {
       key: 'rank',
       header: '#',
       cell: (row) => <span className="font-mono text-sm">#{row.rank}</span>,
     },
     {
-      key: 'nameRu',
+      key: 'name',
       header: t('product'),
-      cell: (row) => <span className="font-medium">{row.nameRu || row.nameTg}</span>,
+      cell: (row) => <span className="font-medium">{row.name}</span>,
     },
     {
       key: 'qtySold',
@@ -53,20 +56,6 @@ export default function TopProductsReport() {
       key: 'revenue',
       header: t('revenue'),
       cell: (row) => <MoneyDisplay amount={row.revenue} className="font-semibold" />,
-    },
-    {
-      key: 'cost',
-      header: t('cost'),
-      cell: (row) => <MoneyDisplay amount={row.cost} />,
-    },
-    {
-      key: 'margin',
-      header: t('margin'),
-      cell: (row) => (
-        <span className={parseFloat(row.margin) > 0 ? 'text-green-600' : 'text-red-600'}>
-          {parseFloat(row.margin).toFixed(1)}%
-        </span>
-      ),
     },
   ]
 
@@ -109,12 +98,11 @@ export default function TopProductsReport() {
         </Card>
 
         <DataTable
-          columns={columns as ColumnDef<Record<string, unknown>>[]}
-          data={(data?.products ?? []) as Record<string, unknown>[]}
+          columns={columns as unknown as ColumnDef<Record<string, unknown>>[]}
+          data={products as unknown as Record<string, unknown>[]}
           emptyMessage={t('noData')}
         />
       </div>
     </div>
   )
 }
-

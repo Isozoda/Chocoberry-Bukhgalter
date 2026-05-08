@@ -12,28 +12,28 @@ import type {
 } from '@/types/report.types'
 
 export const reportsApi = {
-  profit: (params: DateRangeParams): Promise<ProfitReport> =>
+  profit: (params: Partial<DateRangeParams>): Promise<ProfitReport> =>
     api.get('/reports/profit', { params }),
 
-  cashflow: (params: DateRangeParams): Promise<CashflowReport> =>
+  cashflow: (params: Partial<DateRangeParams>): Promise<CashflowReport> =>
     api.get('/reports/cashflow', { params }),
 
-  cogs: (params: DateRangeParams): Promise<COGSReport> =>
+  cogs: (params: Partial<DateRangeParams>): Promise<COGSReport> =>
     api.get('/reports/cogs', { params }),
 
-  daily: (params: DateRangeParams): Promise<{ date: string; revenue: string; expenses: string; profit: string }[]> =>
+  daily: (params: Partial<DateRangeParams>): Promise<{ date: string; salesCount: number; totalSales: string; totalExpenses: string; netProfit: string }> =>
     api.get('/reports/daily-summary', { params }),
 
   monthly: (params: { year?: number; month?: number }): Promise<MonthlyReport> =>
     api.get('/reports/monthly', { params }),
 
-  topProducts: (params: DateRangeParams & { limit?: number }): Promise<TopProductsReport> =>
+  topProducts: (params: Partial<DateRangeParams> & { limit?: number }): Promise<TopProductsReport> =>
     api.get('/reports/top-products', { params }),
 
-  supplierBreakdown: (params: DateRangeParams): Promise<SupplierBreakdownReport> =>
+  supplierBreakdown: (params: Partial<DateRangeParams>): Promise<SupplierBreakdownReport> =>
     api.get('/reports/supplier-breakdown', { params }),
 
-  hotHours: (params: DateRangeParams): Promise<HotHoursReport> =>
+  hotHours: (params: Partial<DateRangeParams>): Promise<HotHoursReport> =>
     api.get('/reports/hot-hours', { params }),
 
   payroll: (month: string): Promise<PayrollReport> =>

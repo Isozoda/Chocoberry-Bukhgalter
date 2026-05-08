@@ -17,18 +17,14 @@ import type { z } from 'zod'
 
 type RegisterForm = z.infer<typeof registerSchema>
 
-const BENEFITS = [
-  'Free setup with sample data',
-  'POS terminal & inventory tracking',
-  'Payroll & daily P&L reports',
-]
-
 export default function RegisterPage() {
-  const { t } = useTranslation()
+  const { t } = useTranslation(['auth', 'common'])
   const navigate = useNavigate()
   const { login } = useAuthStore()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
+
+  const BENEFITS = t('auth:register.branding.benefits', { returnObjects: true }) as string[]
 
   const { register, handleSubmit, formState: { errors } } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
@@ -39,7 +35,7 @@ export default function RegisterPage() {
       authApi.register({ name: data.name, email: data.email, password: data.password }),
     onSuccess: (data) => {
       login(data.accessToken, data.user)
-      toast.success('Account created! Let\'s set up your business.')
+      toast.success(t('auth:register.success'))
       navigate('/setup')
     },
   })
@@ -56,10 +52,10 @@ export default function RegisterPage() {
             <span className="text-2xl font-bold">Choco Berry</span>
           </div>
           <h1 className="text-4xl font-bold mb-4 leading-tight">
-            Start managing<br />smarter today
+            {t('auth:register.branding.title')}
           </h1>
           <p className="text-orange-100 text-lg">
-            Join thousands of business owners who trust Choco Berry for their daily operations.
+            {t('auth:register.branding.description')}
           </p>
         </div>
 
@@ -87,37 +83,37 @@ export default function RegisterPage() {
           </div>
 
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-foreground">Create your account</h2>
-            <p className="text-muted-foreground mt-1">Get started in under 2 minutes</p>
+            <h2 className="text-2xl font-bold text-foreground">{t('auth:register.title')}</h2>
+            <p className="text-muted-foreground mt-1">{t('auth:register.subtitle')}</p>
           </div>
 
           <form onSubmit={handleSubmit((d) => registerMutation.mutate(d))} className="space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="name" className="text-sm font-medium">Full name</Label>
+              <Label htmlFor="name" className="text-sm font-medium">{t('auth:register.nameLabel')}</Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input id="name" placeholder="Your full name" className="pl-10 h-11" {...register('name')} />
+                <Input id="name" placeholder={t('auth:register.namePlaceholder')} className="pl-10 h-11" {...register('name')} />
               </div>
               {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-sm font-medium">Email address</Label>
+              <Label htmlFor="email" className="text-sm font-medium">{t('auth:register.emailLabel')}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input id="email" type="email" placeholder="you@example.com" className="pl-10 h-11" {...register('email')} />
+                <Input id="email" type="email" placeholder={t('auth:register.emailPlaceholder')} className="pl-10 h-11" {...register('email')} />
               </div>
               {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="password" className="text-sm font-medium">Password</Label>
+              <Label htmlFor="password" className="text-sm font-medium">{t('auth:register.passwordLabel')}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Min. 6 characters"
+                  placeholder={t('auth:register.passwordPlaceholder')}
                   className="pl-10 pr-10 h-11"
                   {...register('password')}
                 />
@@ -133,13 +129,13 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="confirmPassword" className="text-sm font-medium">Confirm password</Label>
+              <Label htmlFor="confirmPassword" className="text-sm font-medium">{t('auth:register.confirmPasswordLabel')}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="confirmPassword"
                   type={showConfirm ? 'text' : 'password'}
-                  placeholder="Repeat your password"
+                  placeholder={t('auth:register.confirmPasswordPlaceholder')}
                   className="pl-10 pr-10 h-11"
                   {...register('confirmPassword')}
                 />
@@ -164,16 +160,16 @@ export default function RegisterPage() {
               {registerMutation.isPending ? (
                 <span className="flex items-center gap-2">
                   <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Creating account…
+                  {t('auth:register.creatingAccount')}
                 </span>
-              ) : 'Create Account'}
+              ) : t('auth:register.submit')}
             </Button>
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            Already have an account?{' '}
+            {t('auth:register.haveAccount')}{' '}
             <Link to="/login" className="text-primary font-medium hover:underline">
-              Sign in
+              {t('auth:register.signIn')}
             </Link>
           </p>
         </div>

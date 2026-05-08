@@ -45,15 +45,15 @@ export default function DailyReportDetail() {
   return (
     <div className="max-w-xl mx-auto space-y-6">
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={() => navigate('/daily-report')}>
+        <Button variant="ghost" size="icon" onClick={() => navigate('/app/daily-report')}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div className="flex-1">
           <h1 className="text-xl font-bold">{t('reportFor')} {formatDate(report.date)}</h1>
           <p className="text-sm text-muted-foreground">#{report.id.slice(-8).toUpperCase()}</p>
         </div>
-        <Badge variant={report.status === 'FINALIZED' ? 'success' : 'secondary'}>
-          {t(`status.${report.status}`)}
+        <Badge variant={report.isFinalized ? 'success' : 'secondary'}>
+          {t(report.isFinalized ? 'status.FINALIZED' : 'status.DRAFT')}
         </Badge>
       </div>
 
@@ -61,21 +61,10 @@ export default function DailyReportDetail() {
         <CardContent className="pt-6">
           <h3 className="font-semibold text-green-600 dark:text-green-400 mb-3">{t('income')}</h3>
           <Row label={t('totalSales')} value={report.totalSales} />
-          {report.locations?.map((loc, i) => (
-            <div key={i} className="flex justify-between items-center py-1 pl-4 text-sm">
-              <span className="text-muted-foreground">↳ {loc.label}</span>
-              <MoneyDisplay amount={loc.amount} />
-            </div>
-          ))}
-          {report.totalExtraIncome && parseFloat(report.totalExtraIncome) > 0 && (
-            <Row label={t('extraIncome')} value={report.totalExtraIncome} />
+          {parseFloat(report.extraIncome) > 0 && (
+            <Row label={t('extraIncome')} value={report.extraIncome} />
           )}
-          {report.extraIncome?.map((inc, i) => (
-            <div key={i} className="flex justify-between items-center py-1 pl-4 text-sm">
-              <span className="text-muted-foreground">↳ {inc.label}</span>
-              <MoneyDisplay amount={inc.amount} />
-            </div>
-          ))}
+          <Row label={t('totalIncome')} value={report.totalIncome} className="font-bold text-green-600" />
         </CardContent>
       </Card>
 
@@ -85,34 +74,26 @@ export default function DailyReportDetail() {
           {parseFloat(report.operationalExp) > 0 && (
             <Row label={t('operationalExpenses')} value={report.operationalExp} />
           )}
-          {report.consumables?.length > 0 && (
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">{t('consumables')}</p>
-              {report.consumables.map((c, i) => (
-                <div key={i} className="flex justify-between items-center py-1 pl-4 text-sm">
-                  <span className="text-muted-foreground">↳ {c.employeeName || c.employeeId}</span>
-                  <MoneyDisplay amount={c.amount} />
-                </div>
-              ))}
-            </div>
+          {parseFloat(report.consumablesExp) > 0 && (
+            <Row label={t('consumables')} value={report.consumablesExp} />
           )}
-          {report.ownerDraws?.length > 0 && (
+          {report.draws?.length > 0 && (
             <div>
               <p className="text-sm text-muted-foreground mb-1">{t('ownerDraws')}</p>
-              {report.ownerDraws.map((d, i) => (
+              {report.draws.map((d, i) => (
                 <div key={i} className="flex justify-between items-center py-1 pl-4 text-sm">
-                  <span className="text-muted-foreground">↳ {d.employeeName || d.employeeId}</span>
+                  <span className="text-muted-foreground">↳ {d.ownerName}</span>
                   <MoneyDisplay amount={d.amount} />
                 </div>
               ))}
             </div>
           )}
-          {report.supplierPurchases?.length > 0 && (
+          {report.suppliers?.length > 0 && (
             <div>
               <p className="text-sm text-muted-foreground mb-1">{t('supplierPayments')}</p>
-              {report.supplierPurchases.map((s, i) => (
+              {report.suppliers.map((s, i) => (
                 <div key={i} className="flex justify-between items-center py-1 pl-4 text-sm">
-                  <span className="text-muted-foreground">↳ {s.supplierName || s.supplierId}</span>
+                  <span className="text-muted-foreground">↳ {s.name}</span>
                   <MoneyDisplay amount={s.amount} />
                 </div>
               ))}
@@ -125,13 +106,15 @@ export default function DailyReportDetail() {
 
       <Card className="border-primary/50">
         <CardContent className="pt-6 space-y-1">
-          <Row label={t('charity')} value={report.charityAmount} className="text-orange-600" />
+          {parseFloat(report.charityAmount) > 0 && (
+            <Row label={t('charity')} value={report.charityAmount} className="text-orange-600" />
+          )}
           <Separator className="my-2" />
           <div className="flex justify-between items-center py-1">
             <span className="font-bold text-lg">{t('remainingCash')}</span>
             <MoneyDisplay
-              amount={report.remainingCash}
-              className={`font-bold text-lg ${parseFloat(report.remainingCash) >= 0 ? 'text-green-600' : 'text-red-600'}`}
+              amount={report.remaining}
+              className={`font-bold text-lg ${parseFloat(report.remaining) >= 0 ? 'text-green-600' : 'text-red-600'}`}
             />
           </div>
         </CardContent>
@@ -150,7 +133,7 @@ export default function DailyReportDetail() {
         <Button variant="outline" className="flex-1" onClick={() => window.print()}>
           {t('common:actions.print')}
         </Button>
-        {report.status === 'DRAFT' && (
+        {!report.isFinalized && (
           <Button
             className="flex-1"
             onClick={() => finalizeMutation.mutate()}

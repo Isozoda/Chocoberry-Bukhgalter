@@ -10,7 +10,13 @@
       "PowerShell(scoop *)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Lenovo\\\\Desktop\\\\MoneyMind\" -Recurse -Force)",
       "Bash(Select-Object -Property FullName)",
-      "Bash(Format-Table -AutoSize -Wrap)"
+      "Bash(Format-Table -AutoSize -Wrap)",
+      "Bash(node -e ' *)",
+      "Bash(curl -s http://localhost:3000/api/v1/sales/stats/today -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlZGM5NjA2My03NTM0LTRiYjUtOTQwMy0yMDM1YzY1ZTZkOGIiLCJlbWFpbCI6Im11c29ldmlzbzQ2QGdtYWlsLmNvbSIsImlhdCI6MTc3ODE3MzU4NiwiZXhwIjoxNzc4Nzc4Mzg2fQ.IOEEkcyD1yBwET3q7xYp0iITK-LT8RZavVEYKUJyDOE')",
+      "Bash(curl -s http://localhost:3000/api/v1/business/dashboard -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlZGM5NjA2My03NTM0LTRiYjUtOTQwMy0yMDM1YzY1ZTZkOGIiLCJlbWFpbCI6Im11c29ldmlzbzQ2QGdtYWlsLmNvbSIsImlhdCI6MTc3ODE3MzU4NiwiZXhwIjoxNzc4Nzc4Mzg2fQ.IOEEkcyD1yBwET3q7xYp0iITK-LT8RZavVEYKUJyDOE')",
+      "Bash(curl -s 'http://localhost:3000/api/v1/sales/stats/top-products?from=2026-04-30&to=2026-05-07' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlZGM5NjA2My03NTM0LTRiYjUtOTQwMy0yMDM1YzY1ZTZkOGIiLCJlbWFpbCI6Im11c29ldmlzbzQ2QGdtYWlsLmNvbSIsImlhdCI6MTc3ODE3MzU4NiwiZXhwIjoxNzc4Nzc4Mzg2fQ.IOEEkcyD1yBwET3q7xYp0iITK-LT8RZavVEYKUJyDOE')",
+      "Bash(npx nest *)",
+      "Bash(npx tsc *)"
     ]
   }
 }

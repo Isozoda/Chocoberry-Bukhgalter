@@ -1,4 +1,4 @@
-﻿import { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm, useWatch, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -17,7 +17,7 @@ import { dailyReportApi } from '@/api/daily-report.api'
 import { salesApi } from '@/api/sales.api'
 import { dailyReportSchema } from '@/utils/validation.util'
 import {
-  toDecimal, addMoney, subtractMoney, multiplyMoney,
+  toDecimal, addMoney, subtractMoney,
 } from '@/utils/decimal.util'
 import type { CreateDailyReportDto } from '@/types/daily-report.types'
 import toast from 'react-hot-toast'
@@ -63,6 +63,11 @@ export default function DailyReportForm() {
     name: 'consumables',
   })
 
+  const { fields: ownerDrawFields, append: addOwnerDraw, remove: removeOwnerDraw } = useFieldArray({
+    control: form.control,
+    name: 'ownerDraws',
+  })
+
   const { fields: supplierFields, append: addSupplier, remove: removeSupplier } = useFieldArray({
     control: form.control,
     name: 'supplierPurchases',
@@ -70,7 +75,6 @@ export default function DailyReportForm() {
 
   const watched = useWatch({ control: form.control })
 
-  // Auto-fill totalSales from today stats
   useEffect(() => {
     if (todayStats?.totalSales) {
       const total = (todayStats as any).totalSales ?? (todayStats as any).total ?? '0'
@@ -81,7 +85,6 @@ export default function DailyReportForm() {
     }
   }, [todayStats, form])
 
-  // Sync totalSales with sum of locations
   const locationsTotal = (watched.locations ?? []).reduce(
     (sum, loc) => addMoney(sum, toDecimal(loc?.amount || '0')),
     toDecimal('0')
@@ -99,22 +102,43 @@ export default function DailyReportForm() {
     (sum, c) => addMoney(sum, toDecimal(c?.amount || '0')),
     toDecimal('0')
   )
+  const ownerDrawsTotal = (watched.ownerDraws ?? []).reduce(
+    (sum, d) => addMoney(sum, toDecimal(d?.amount || '0')),
+    toDecimal('0')
+  )
   const supplierTotal = (watched.supplierPurchases ?? []).reduce(
     (sum, s) => addMoney(sum, toDecimal(s?.amount || '0')),
     toDecimal('0')
   )
-  const totalExpenses = addMoney(addMoney(opExp, consumablesTotal), supplierTotal)
+  const totalExpenses = addMoney(addMoney(addMoney(opExp, consumablesTotal), ownerDrawsTotal), supplierTotal)
   const charity = toDecimal(watched.charityAmount || '0')
   const remainingCash = subtractMoney(subtractMoney(totalIncome, totalExpenses), charity)
 
   const mutation = useMutation({
-    mutationFn: (data: CreateDailyReportDto) => dailyReportApi.create({
-      ...data,
-      totalSales: locationsTotal.toString(),
-    }),
+    mutationFn: (data: CreateDailyReportDto) => {
+      const backendDto = {
+        date: data.date,
+        totalSales: Number(locationsTotal.toString()),
+        extraIncome: Number(extraTotal.toString()),
+        operationalExp: Number(data.operationalExp || 0),
+        consumablesExp: Number(consumablesTotal.toString()),
+        suppliers: (data.supplierPurchases || []).map((s) => ({
+          supplierId: s.supplierId || undefined,
+          name: s.name || 'Supplier',
+          amount: Number(s.amount || 0),
+        })),
+        draws: (data.ownerDraws || []).map((d) => ({
+          ownerName: d.ownerName || 'Owner',
+          amount: Number(d.amount || 0),
+        })),
+        remaining: Number(remainingCash.toString()),
+        notes: data.notes,
+      }
+      return dailyReportApi.create(backendDto as any)
+    },
     onSuccess: (data) => {
       toast.success(t('reportSaved'))
-      navigate(`/daily-report/${data.id}`)
+      navigate(`/app/daily-report/${data.id}`)
     },
   })
 
@@ -259,11 +283,11 @@ export default function DailyReportForm() {
                 <div key={field.id} className="flex gap-2 items-center">
                   <FormField
                     control={form.control}
-                    name={`consumables.${i}.employeeId`}
+                    name={`consumables.${i}.label`}
                     render={({ field }) => (
                       <FormItem className="flex-1">
                         <FormControl>
-                          <Input placeholder={t('employeeId')} {...field} />
+                          <Input placeholder={t('consumableLabel')} {...field} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -284,9 +308,44 @@ export default function DailyReportForm() {
                   </Button>
                 </div>
               ))}
-              <Button type="button" variant="ghost" size="sm" onClick={() => addConsumable({ employeeId: '', amount: '0' })}>
+              <Button type="button" variant="ghost" size="sm" onClick={() => addConsumable({ label: '', amount: '0' })}>
                 <Plus className="mr-1 h-3 w-3" />
                 {t('addConsumable')}
+              </Button>
+
+              <p className="text-sm font-medium text-muted-foreground">{t('ownerDraws')}</p>
+              {ownerDrawFields.map((field, i) => (
+                <div key={field.id} className="flex gap-2 items-center">
+                  <FormField
+                    control={form.control}
+                    name={`ownerDraws.${i}.ownerName`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormControl>
+                          <Input placeholder={t('ownerName')} {...field} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`ownerDraws.${i}.amount`}
+                    render={({ field }) => (
+                      <FormItem className="w-40">
+                        <FormControl>
+                          <MoneyInput value={field.value} onChange={field.onChange} placeholder="0" />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="button" variant="ghost" size="icon" onClick={() => removeOwnerDraw(i)}>
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
+                </div>
+              ))}
+              <Button type="button" variant="ghost" size="sm" onClick={() => addOwnerDraw({ ownerName: '', amount: '0' })}>
+                <Plus className="mr-1 h-3 w-3" />
+                {t('addOwnerDraw')}
               </Button>
 
               <p className="text-sm font-medium text-muted-foreground">{t('supplierPayments')}</p>
@@ -294,11 +353,11 @@ export default function DailyReportForm() {
                 <div key={field.id} className="flex gap-2 items-center">
                   <FormField
                     control={form.control}
-                    name={`supplierPurchases.${i}.supplierId`}
+                    name={`supplierPurchases.${i}.name`}
                     render={({ field }) => (
                       <FormItem className="flex-1">
                         <FormControl>
-                          <Input placeholder={t('supplierId')} {...field} />
+                          <Input placeholder={t('supplierName')} {...field} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -319,7 +378,7 @@ export default function DailyReportForm() {
                   </Button>
                 </div>
               ))}
-              <Button type="button" variant="ghost" size="sm" onClick={() => addSupplier({ supplierId: '', amount: '0' })}>
+              <Button type="button" variant="ghost" size="sm" onClick={() => addSupplier({ name: '', amount: '0' })}>
                 <Plus className="mr-1 h-3 w-3" />
                 {t('addSupplier')}
               </Button>
@@ -402,7 +461,7 @@ export default function DailyReportForm() {
           />
 
           <div className="flex gap-3">
-            <Button type="button" variant="outline" className="flex-1" onClick={() => navigate('/daily-report')}>
+            <Button type="button" variant="outline" className="flex-1" onClick={() => navigate('/app/daily-report')}>
               {t('common:actions.cancel')}
             </Button>
             <Button type="submit" className="flex-1" disabled={mutation.isPending}>
@@ -414,4 +473,3 @@ export default function DailyReportForm() {
     </div>
   )
 }
-

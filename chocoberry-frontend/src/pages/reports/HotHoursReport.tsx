@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell
+} from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ExportButtons } from './ExportButtons'
 import { reportsApi } from '@/api/reports.api'
-import { cn } from '@/lib/utils'
-
-const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-const HOURS = Array.from({ length: 24 }, (_, i) => i)
+import { formatMoney } from '@/utils/decimal.util'
 
 export default function HotHoursReport() {
   const { t } = useTranslation('reports')
@@ -24,24 +24,15 @@ export default function HotHoursReport() {
     queryFn: () => reportsApi.hotHours({ from, to }),
   })
 
-  // Build 7x24 matrix from flat heatmap array [{hour, dayOfWeek, count}]
-  const matrix: number[][] = Array.from({ length: 7 }, () => Array(24).fill(0))
-  data?.heatmap?.forEach(({ hour, dayOfWeek, count }) => {
-    const dayIdx = ((dayOfWeek - 1) + 7) % 7
-    if (dayIdx >= 0 && dayIdx < 7 && hour >= 0 && hour < 24) {
-      matrix[dayIdx][hour] = count
-    }
-  })
-  const maxValue = Math.max(...matrix.flat(), 1)
+  const hours = data ?? []
+  const maxCount = Math.max(...hours.map((h) => h.count), 1)
+  const peakHour = hours.reduce((best, h) => (h.count > best.count ? h : best), { hour: 0, count: 0, revenue: '0' })
 
-  const getIntensity = (value: number) => {
-    const ratio = value / maxValue
-    if (ratio === 0) return 'bg-muted'
-    if (ratio < 0.25) return 'bg-primary/20'
-    if (ratio < 0.5) return 'bg-primary/40'
-    if (ratio < 0.75) return 'bg-primary/70'
-    return 'bg-primary'
-  }
+  const chartData = hours.map((h) => ({
+    hour: `${h.hour}:00`,
+    [t('sales')]: h.count,
+    [t('revenue')]: parseFloat(h.revenue),
+  }))
 
   return (
     <div className="space-y-6">
@@ -59,9 +50,9 @@ export default function HotHoursReport() {
         <ExportButtons reportType="hot-hours" params={{ from, to }} />
       </div>
 
-      {data?.peakHour !== undefined && (
+      {hours.length > 0 && (
         <p className="text-sm text-muted-foreground">
-          {t('peakHour')}: <strong>{data.peakHour}:00</strong>
+          {t('peakHour')}: <strong>{peakHour.hour}:00</strong> — {peakHour.count} {t('sales')}
         </p>
       )}
 
@@ -70,33 +61,25 @@ export default function HotHoursReport() {
           <CardTitle className="text-base">{t('salesHeatmap')}</CardTitle>
         </CardHeader>
         <CardContent className="overflow-x-auto">
-          <div className="min-w-max">
-            <div className="flex gap-1 mb-1 ml-10">
-              {HOURS.filter(h => h % 3 === 0).map(h => (
-                <div key={h} className="text-xs text-center text-muted-foreground" style={{ width: '72px' }}>
-                  {h}:00
-                </div>
-              ))}
-            </div>
-            {DAYS.map((day, di) => (
-              <div key={day} className="flex items-center gap-1 mb-1">
-                <div className="w-10 text-xs text-muted-foreground text-right pr-1 shrink-0">{day}</div>
-                {HOURS.map((h) => (
-                  <div
-                    key={h}
-                    className={cn('h-7 w-7 rounded-sm cursor-default shrink-0', getIntensity(matrix[di][h]))}
-                    title={`${day} ${h}:00 — ${matrix[di][h]}`}
-                  />
-                ))}
-              </div>
-            ))}
-            <div className="flex items-center gap-2 mt-3 text-xs text-muted-foreground">
-              <span>{t('low')}</span>
-              {[0, 0.25, 0.5, 0.75, 1].map((v) => (
-                <div key={v} className={cn('h-4 w-6 rounded shrink-0', getIntensity(Math.round(v * maxValue)))} />
-              ))}
-              <span>{t('high')}</span>
-            </div>
+          <div className="h-72">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+                <XAxis dataKey="hour" tick={{ fontSize: 11 }} interval={1} />
+                <YAxis tick={{ fontSize: 12 }} />
+                <Tooltip formatter={((v: unknown, name: string) => {
+                  if (name === t('revenue')) return formatMoney(String(v ?? 0))
+                  return [v, name]
+                }) as any} />
+                <Bar dataKey={t('sales')} radius={[4, 4, 0, 0]}>
+                  {chartData.map((entry, i) => {
+                    const ratio = hours[i]?.count / maxCount
+                    const opacity = 0.3 + ratio * 0.7
+                    return <Cell key={i} fill={`rgba(232, 89, 60, ${opacity})`} />
+                  })}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </CardContent>
       </Card>

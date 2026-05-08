@@ -1,22 +1,96 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Plus, PiggyBank, Eye } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { DataTable } from '@/components/ui/DataTable'
 import { MoneyDisplay } from '@/components/ui/MoneyDisplay'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { fundsApi } from '@/api/funds.api'
 import FundTransactionForm from './FundTransactionForm'
-import type { Fund, FundTransaction } from '@/types/fund.types'
+import type { Fund, FundTransaction, FundType } from '@/types/fund.types'
 import type { ColumnDef } from '@/components/ui/DataTable'
+import toast from 'react-hot-toast'
+
+const FUND_TYPES: FundType[] = ['CHARITY', 'RESERVE', 'RENOVATION', 'EMERGENCY', 'TAX_RESERVE', 'OTHER']
+
+function CreateFundDialog({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
+  const { t } = useTranslation('funds')
+  const [type, setType] = useState<FundType>('CHARITY')
+  const [name, setName] = useState('')
+  const [notes, setNotes] = useState('')
+
+  const mutation = useMutation({
+    mutationFn: () => fundsApi.create({ type, name: name || t(`types.${type}`), notes: notes || undefined }),
+    onSuccess: () => {
+      toast.success(t('fundCreated'))
+      onSuccess()
+    },
+  })
+
+  return (
+    <Dialog open onOpenChange={onClose}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>{t('createFund')}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div>
+            <Label>{t('fundType')}</Label>
+            <Select value={type} onValueChange={(v) => setType(v as FundType)}>
+              <SelectTrigger className="mt-1">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {FUND_TYPES.map((ft) => (
+                  <SelectItem key={ft} value={ft}>{t(`types.${ft}`)}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>{t('name')}</Label>
+            <Input
+              className="mt-1"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={t(`types.${type}`)}
+            />
+          </div>
+          <div>
+            <Label>{t('notes')}</Label>
+            <Input
+              className="mt-1"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder={t('notesOptional')}
+            />
+          </div>
+          <div className="flex gap-2 pt-2">
+            <Button variant="outline" className="flex-1" onClick={onClose}>
+              {t('common:actions.cancel')}
+            </Button>
+            <Button className="flex-1" onClick={() => mutation.mutate()} disabled={mutation.isPending}>
+              {mutation.isPending ? t('common:loading') : t('common:actions.create')}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
 
 export default function FundsPage() {
   const { t } = useTranslation('funds')
   const qc = useQueryClient()
-  const [showForm, setShowForm] = useState(false)
+  const [showTxForm, setShowTxForm] = useState(false)
+  const [showCreateForm, setShowCreateForm] = useState(false)
   const [selectedFundId, setSelectedFundId] = useState<string | null>(null)
 
   const { data: funds, isLoading } = useQuery({
@@ -72,7 +146,7 @@ export default function FundsPage() {
     {
       key: 'date',
       header: t('date'),
-      cell: (row) => <span className="text-sm text-muted-foreground">{row.date}</span>,
+      cell: (row) => <span className="text-sm text-muted-foreground">{new Date(row.date).toLocaleDateString()}</span>,
     },
     {
       key: 'type',
@@ -95,6 +169,11 @@ export default function FundsPage() {
     },
   ]
 
+  const invalidate = () => {
+    qc.invalidateQueries({ queryKey: ['funds'] })
+    qc.invalidateQueries({ queryKey: ['fund-transactions'] })
+  }
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -102,10 +181,16 @@ export default function FundsPage() {
         description={t('description')}
         icon={PiggyBank}
         action={
-          <Button onClick={() => setShowForm(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            {t('addTransaction')}
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setShowCreateForm(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              {t('createFund')}
+            </Button>
+            <Button onClick={() => setShowTxForm(true)} disabled={!funds?.length}>
+              <Plus className="mr-2 h-4 w-4" />
+              {t('addTransaction')}
+            </Button>
+          </div>
         }
       />
 
@@ -136,15 +221,18 @@ export default function FundsPage() {
         </div>
       )}
 
-      {showForm && (
+      {showTxForm && (
         <FundTransactionForm
           funds={funds ?? []}
-          onClose={() => setShowForm(false)}
-          onSuccess={() => {
-            qc.invalidateQueries({ queryKey: ['funds'] })
-            qc.invalidateQueries({ queryKey: ['fund-transactions'] })
-            setShowForm(false)
-          }}
+          onClose={() => setShowTxForm(false)}
+          onSuccess={() => { invalidate(); setShowTxForm(false) }}
+        />
+      )}
+
+      {showCreateForm && (
+        <CreateFundDialog
+          onClose={() => setShowCreateForm(false)}
+          onSuccess={() => { invalidate(); setShowCreateForm(false) }}
         />
       )}
     </div>

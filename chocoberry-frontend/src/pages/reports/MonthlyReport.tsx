@@ -1,8 +1,8 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -26,13 +26,10 @@ export default function MonthlyReport() {
     queryFn: () => reportsApi.monthly({ year, month }),
   })
 
-  const chartData = data?.topProducts?.map((p) => ({
-    name: p.name.length > 12 ? p.name.slice(0, 12) + 'вЂ¦' : p.name,
-    [t('revenue')]: parseFloat(p.revenue),
-    [t('qty')]: p.qty,
-  })) ?? []
-
-  const expenseEntries = data?.expenses ? Object.entries(data.expenses) : []
+  const dailyChartData = (data?.dailySales ?? []).map((d) => ({
+    date: new Date(d.date).getDate().toString(),
+    [t('revenue')]: parseFloat(d._sum.total || '0'),
+  }))
 
   return (
     <div className="space-y-6">
@@ -64,23 +61,23 @@ export default function MonthlyReport() {
 
       {data && (
         <div className="grid gap-4 md:grid-cols-3">
-          <StatsCard label={t('monthRevenue')} value={data.revenue} isMoney />
+          <StatsCard label={t('monthRevenue')} value={data.totalIncome} isMoney />
           <StatsCard label={t('totalExpenses')} value={data.totalExpenses} isMoney />
           <StatsCard label={t('netProfit')} value={data.netProfit} isMoney />
         </div>
       )}
 
-      {expenseEntries.length > 0 && (
+      {data?.expenseBreakdown && data.expenseBreakdown.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className="text-base">{t('expenseBreakdown')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {expenseEntries.map(([key, value]) => (
-                <div key={key} className="flex justify-between text-sm">
-                  <span className="text-muted-foreground capitalize">{key}</span>
-                  <MoneyDisplay amount={value} />
+              {data.expenseBreakdown.map((e) => (
+                <div key={e.expenseType} className="flex justify-between text-sm">
+                  <span className="text-muted-foreground capitalize">{e.expenseType.toLowerCase().replace(/_/g, ' ')}</span>
+                  <MoneyDisplay amount={e._sum.amount || '0'} />
                 </div>
               ))}
             </div>
@@ -88,20 +85,19 @@ export default function MonthlyReport() {
         </Card>
       )}
 
-      {chartData.length > 0 && (
+      {dailyChartData.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">{t('topProducts')} {monthStr}</CardTitle>
+            <CardTitle className="text-base">{t('dailySales')} — {monthStr}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData}>
+                <BarChart data={dailyChartData}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                  <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                  <YAxis tickFormatter={(v) => formatMoney(v.toString()).replace(' СЃРј', '')} tick={{ fontSize: 12 }} />
+                  <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                  <YAxis tickFormatter={(v) => formatMoney(v.toString()).replace(' см', '')} tick={{ fontSize: 12 }} />
                   <Tooltip formatter={((v: unknown) => formatMoney(String(v ?? 0))) as any} />
-                  <Legend />
                   <Bar dataKey={t('revenue')} fill="#E8593C" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -112,4 +108,3 @@ export default function MonthlyReport() {
     </div>
   )
 }
-

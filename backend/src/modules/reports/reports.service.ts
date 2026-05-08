@@ -183,7 +183,7 @@ export class ReportsService {
   async getTopProducts(userId: string, from?: string, to?: string) {
     const b = await this.getBusiness(userId);
     const { start, end } = this.dateRange(from, to);
-    return this.prisma.saleItem.groupBy({
+    const rows = await this.prisma.saleItem.groupBy({
       by: ['productId', 'name'],
       where: { sale: { businessId: b.id, status: 'COMPLETED', date: { gte: start, lte: end } } },
       _sum: { quantity: true, total: true },
@@ -191,6 +191,13 @@ export class ReportsService {
       orderBy: { _sum: { total: 'desc' } },
       take: 20,
     });
+    return rows.map((r, i) => ({
+      rank: i + 1,
+      productId: r.productId,
+      name: r.name,
+      qtySold: Number(r._sum.quantity || 0),
+      revenue: r._sum.total?.toString() || '0',
+    }));
   }
 
   async getSupplierBreakdown(userId: string, from?: string, to?: string) {
@@ -204,7 +211,17 @@ export class ReportsService {
     });
     const suppliers = await this.prisma.supplier.findMany({ where: { businessId: b.id } });
     const supplierMap = Object.fromEntries(suppliers.map((s) => [s.id, s]));
-    return purchases.map((p) => ({ supplier: supplierMap[p.supplierId], ...p }));
+    const grandTotal = purchases.reduce((acc, p) => acc + Number(p._sum.totalAmount || 0), 0);
+    return purchases.map((p) => {
+      const total = p._sum.totalAmount?.toString() || '0';
+      return {
+        supplierId: p.supplierId,
+        name: supplierMap[p.supplierId]?.name || 'Unknown',
+        total,
+        purchaseCount: p._count,
+        percentage: grandTotal > 0 ? ((Number(total) / grandTotal) * 100).toFixed(1) : '0',
+      };
+    });
   }
 
   async getHotHours(userId: string, from?: string, to?: string) {
@@ -249,10 +266,23 @@ export class ReportsService {
 
     return {
       month,
-      employees: Object.values(byEmployee).map((e: any) => ({
-        ...e,
-        total: e.total.toFixed(2),
-      })),
+      totalPayroll: (Object.values(byEmployee) as any[]).reduce((sum: Decimal, e: any) => sum.plus(e.total), new Decimal(0)).toFixed(2),
+      employees: Object.values(byEmployee).map((e: any) => {
+        const byType = e.payments.reduce((acc: any, p: any) => {
+          const key = p.paymentType as string;
+          acc[key] = (acc[key] || new Decimal(0)).plus(toDecimal(p.amount));
+          return acc;
+        }, {} as Record<string, Decimal>);
+        return {
+          employeeId: e.employee.id,
+          name: e.employee.name,
+          baseSalary: (byType['SALARY'] || new Decimal(0)).toFixed(2),
+          bonus: (byType['BONUS'] || new Decimal(0)).toFixed(2),
+          advances: (byType['ADVANCE'] || new Decimal(0)).toFixed(2),
+          fines: (byType['FINE'] || new Decimal(0)).toFixed(2),
+          final: e.total.toFixed(2),
+        };
+      }),
     };
   }
 

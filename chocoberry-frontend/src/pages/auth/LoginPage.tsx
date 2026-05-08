@@ -18,13 +18,13 @@ import { useAuthStore } from '@/store/auth.store'
 type LoginForm = z.infer<typeof loginSchema>
 
 const FEATURES = [
-  { icon: TrendingUp, label: 'Real-time sales tracking' },
-  { icon: BarChart3, label: 'Financial analytics & P&L' },
-  { icon: Users, label: 'Employee payroll management' },
+  { icon: TrendingUp, label: 'auth:login.branding.features.sales' },
+  { icon: BarChart3, label: 'auth:login.branding.features.analytics' },
+  { icon: Users, label: 'auth:login.branding.features.employees' },
 ]
 
 export default function LoginPage() {
-  const { t } = useTranslation()
+  const { t } = useTranslation(['auth', 'common'])
   const navigate = useNavigate()
   const { login } = useAuthStore()
   const [showPassword, setShowPassword] = useState(false)
@@ -37,7 +37,7 @@ export default function LoginPage() {
     mutationFn: authApi.login,
     onSuccess: (data) => {
       login(data.accessToken, data.user)
-      toast.success('Welcome back!')
+      toast.success(t('auth:login.welcomeBack'))
       navigate('/app/dashboard')
     },
   })
@@ -54,10 +54,10 @@ export default function LoginPage() {
             <span className="text-2xl font-bold">Choco Berry</span>
           </div>
           <h1 className="text-4xl font-bold mb-4 leading-tight">
-            Your complete<br />business manager
+            {t('auth:login.branding.title')}
           </h1>
           <p className="text-orange-100 text-lg">
-            Track sales, manage inventory, and grow your business with confidence.
+            {t('auth:login.branding.description')}
           </p>
         </div>
 
@@ -67,7 +67,7 @@ export default function LoginPage() {
               <div className="h-8 w-8 bg-white/20 rounded-lg flex items-center justify-center">
                 <Icon className="h-4 w-4 text-white" />
               </div>
-              <span className="text-sm font-medium">{label}</span>
+              <span className="text-sm font-medium">{t(label)}</span>
             </div>
           ))}
         </div>
@@ -87,19 +87,19 @@ export default function LoginPage() {
           </div>
 
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-foreground">Welcome back</h2>
-            <p className="text-muted-foreground mt-1">Sign in to your account to continue</p>
+            <h2 className="text-2xl font-bold text-foreground">{t('auth:login.title')}</h2>
+            <p className="text-muted-foreground mt-1">{t('auth:login.subtitle')}</p>
           </div>
 
           <form onSubmit={handleSubmit((d) => loginMutation.mutate(d))} className="space-y-5">
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-sm font-medium">Email address</Label>
+              <Label htmlFor="email" className="text-sm font-medium">{t('auth:login.emailLabel')}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder={t('auth:login.emailPlaceholder')}
                   className="pl-10 h-11"
                   {...register('email')}
                 />
@@ -108,13 +108,13 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="password" className="text-sm font-medium">Password</Label>
+              <Label htmlFor="password" className="text-sm font-medium">{t('auth:login.passwordLabel')}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••"
+                  placeholder={t('auth:login.passwordPlaceholder')}
                   className="pl-10 pr-10 h-11"
                   {...register('password')}
                 />
@@ -137,16 +137,16 @@ export default function LoginPage() {
               {loginMutation.isPending ? (
                 <span className="flex items-center gap-2">
                   <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Signing in…
+                  {t('auth:login.signingIn')}
                 </span>
-              ) : 'Sign In'}
+              ) : t('auth:login.submit')}
             </Button>
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            Don&apos;t have an account?{' '}
+            {t('auth:login.noAccount')}{' '}
             <Link to="/register" className="text-primary font-medium hover:underline">
-              Create one free
+              {t('auth:login.createAccount')}
             </Link>
           </p>
         </div>

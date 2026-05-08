@@ -4,102 +4,85 @@ export interface DateRangeParams {
 }
 
 export interface ProfitReport {
-  from: string
-  to: string
-  totalRevenue: string
-  totalCOGS: string
-  grossProfit: string
+  period: { from: string; to: string }
+  totalIncome: string
   totalExpenses: string
   netProfit: string
-  daily: Array<{
-    date: string
-    revenue: string
-    cogs: string
-    expenses: string
-    profit: string
-  }>
+  profitMargin: string
+  expenseBreakdown: Array<{ expenseType: string; _sum: { amount: string | null } }>
 }
 
 export interface CashflowReport {
-  from: string
-  to: string
-  openingBalance: string
-  closingBalance: string
-  totalInflows: string
-  totalOutflows: string
-  daily: Array<{
+  transactions: Array<{
+    id: string
+    type: 'INCOME' | 'EXPENSE'
+    amount: string
     date: string
-    inflows: string
-    outflows: string
-    balance: string
+    notes?: string
+    runningBalance: string
   }>
+  finalBalance: string
 }
 
 export interface COGSReport {
-  from: string
-  to: string
-  totalCOGS: string
-  byProduct: Array<{
-    productId: string
-    name: string
-    qtySold: number
-    cogs: string
-  }>
+  totalSales: string
+  totalCogs: string
+  grossProfit: string
+  grossMargin: string
 }
 
 export interface MonthlyReport {
-  month: string
-  revenue: string
-  expenses: Record<string, string>
+  period: string
+  totalIncome: string
   totalExpenses: string
   netProfit: string
-  topProducts: Array<{ name: string; qty: number; revenue: string }>
+  salesCount: number
+  cashSales: string
+  cardSales: string
+  dailySales: Array<{ date: string; _sum: { total: string | null } }>
+  expenseBreakdown: Array<{ expenseType: string; _sum: { amount: string | null } }>
 }
 
-export interface TopProductsReport {
-  from: string
-  to: string
-  products: Array<{
-    rank: number
-    productId: string
-    nameTg: string
-    nameRu: string
-    qtySold: number
-    revenue: string
-    cost: string
-    margin: string
-  }>
+export interface TopProductItem {
+  rank: number
+  productId: string | null
+  name: string
+  qtySold: number
+  revenue: string
 }
 
-export interface HotHoursReport {
-  from: string
-  to: string
-  peakHour: number
-  heatmap: Array<{ hour: number; dayOfWeek: number; count: number }>
+export type TopProductsReport = TopProductItem[]
+
+export interface HotHourItem {
+  hour: number
+  count: number
+  revenue: string
 }
 
-export interface SupplierBreakdownReport {
-  from: string
-  to: string
-  suppliers: Array<{
-    supplierId: string
-    name: string
-    total: string
-    purchaseCount: number
-    percentage: string
-  }>
+export type HotHoursReport = HotHourItem[]
+
+export interface SupplierBreakdownItem {
+  supplierId: string
+  name: string
+  total: string
+  purchaseCount: number
+  percentage: string
+}
+
+export type SupplierBreakdownReport = SupplierBreakdownItem[]
+
+export interface PayrollEmployeeRow {
+  employeeId: string
+  name: string
+  baseSalary: string
+  bonus: string
+  advances: string
+  fines: string
+  final: string
 }
 
 export interface PayrollReport {
   month: string
-  employees: Array<{
-    employeeId: string
-    name: string
-    baseSalary: string
-    bonus: string
-    fines: string
-    advances: string
-    final: string
-  }>
   totalPayroll: string
+  employees: PayrollEmployeeRow[]
 }

@@ -8,6 +8,7 @@ import { MoneyDisplay } from '@/components/ui/MoneyDisplay'
 import { StatsCard } from '@/components/ui/StatsCard'
 import { ExportButtons } from './ExportButtons'
 import { reportsApi } from '@/api/reports.api'
+import type { PayrollEmployeeRow } from '@/types/report.types'
 import type { ColumnDef } from '@/components/ui/DataTable'
 
 export default function PayrollReport() {
@@ -23,9 +24,7 @@ export default function PayrollReport() {
     queryFn: () => reportsApi.payroll(monthStr),
   })
 
-  type EmployeeRow = NonNullable<typeof data>['employees'][number]
-
-  const columns: ColumnDef<EmployeeRow>[] = [
+  const columns: ColumnDef<PayrollEmployeeRow>[] = [
     {
       key: 'name',
       header: t('employee'),
@@ -71,8 +70,8 @@ export default function PayrollReport() {
       )}
 
       <DataTable
-        columns={columns as ColumnDef<Record<string, unknown>>[]}
-        data={(data?.employees ?? []) as Record<string, unknown>[]}
+        columns={columns as unknown as ColumnDef<Record<string, unknown>>[]}
+        data={(data?.employees ?? []) as unknown as Record<string, unknown>[]}
         emptyMessage={t('noData')}
       />
     </div>

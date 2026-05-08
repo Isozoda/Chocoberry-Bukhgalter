@@ -17,6 +17,9 @@ import {
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useAuthStore } from '@/store/auth.store'
 import { useNavigate } from 'react-router-dom'
+import enFlag from '@/assets/image copy 3.png'
+import ruFlag from '@/assets/image copy 2.png'
+import tjFlag from '@/assets/image copy.png'
 
 const routeLabels: Record<string, string> = {
   dashboard: 'nav.dashboard',
@@ -66,7 +69,7 @@ export function Header() {
       )}
     >
       {/* Breadcrumb */}
-      <div className="flex-1 flex items-center gap-1 text-sm text-muted-foreground">
+      <div className="flex-1 flex items-center gap-1 text-sm text-muted-foreground pl-8">
         {breadcrumbs.map((crumb, i) => (
           <span key={crumb.path} className="flex items-center gap-1">
             {i > 0 && <ChevronRight className="h-3 w-3" />}
@@ -86,22 +89,54 @@ export function Header() {
       {/* Right side */}
       <div className="flex items-center gap-2">
         {/* Language switcher */}
-        <div className="flex rounded-md border overflow-hidden">
-          {(['tg', 'ru', 'en'] as const).map((lang) => (
-            <button
-              key={lang}
-              onClick={() => changeLanguage(lang)}
-              className={cn(
-                'px-2 py-1 text-xs font-medium transition-colors',
-                currentLang === lang
-                  ? 'bg-primary text-primary-foreground'
-                  : 'hover:bg-muted'
-              )}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-10 px-2 gap-3 hover:bg-primary/10 transition-all duration-300 rounded-xl"
             >
-              {lang.toUpperCase()}
-            </button>
-          ))}
-        </div>
+              <div className="h-6 w-6 rounded-full overflow-hidden border border-border/50 shadow-sm">
+                <img 
+                  src={currentLang === 'tj' ? tjFlag : currentLang === 'ru' ? ruFlag : enFlag} 
+                  alt={currentLang}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <span className="text-sm font-bold uppercase tracking-wider hidden sm:inline-block">
+                {currentLang === 'tj' ? 'TJ' : currentLang.toUpperCase()}
+              </span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="min-w-[140px] rounded-2xl p-1.5 bg-[#0c0c0d]/98 backdrop-blur-xl border-[#1a1a1c] shadow-2xl animate-in fade-in zoom-in duration-300">
+            {[
+              { code: 'en', label: 'En', flag: enFlag },
+              { code: 'ru', label: 'Ru', flag: ruFlag },
+              { code: 'tj', label: 'Tj', flag: tjFlag },
+            ].map((lang) => (
+              <DropdownMenuItem
+                key={lang.code}
+                onClick={() => changeLanguage(lang.code as any)}
+                className={cn(
+                  "flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 mb-0.5 last:mb-0",
+                  currentLang === lang.code 
+                    ? "bg-primary/15 text-primary font-bold shadow-inner" 
+                    : "text-muted-foreground hover:bg-[#1a1a1c] hover:text-foreground"
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-6 w-6 rounded-full overflow-hidden border border-white/10 shadow-sm">
+                    <img src={lang.flag} alt={lang.label} className="h-full w-full object-cover" />
+                  </div>
+                  <span className="text-sm font-medium">{lang.label}</span>
+                </div>
+                {currentLang === lang.code && (
+                  <div className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(234,88,12,0.8)]" />
+                )}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         {/* Theme toggle */}
         <Button variant="ghost" size="icon" onClick={toggle} className="h-9 w-9">

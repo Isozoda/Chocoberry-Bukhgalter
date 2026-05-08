@@ -11,7 +11,8 @@
     "funds": "Фондҳо",
     "dailyReport": "Ҳисоботи Рӯзона",
     "reports": "Гузоришот",
-    "business": "Корхона"
+    "business": "Корхона",
+    "auth": "Воридшавӣ"
   },
   "actions": {
     "add": "Илова кардан",
@@ -104,7 +105,9 @@
     "passwordMismatch": "Рамзҳо мувофиқат намекунанд",
     "invalidAmount": "Маблағ нодуруст",
     "insufficientStock": "Захираи кофӣ нест",
-    "networkError": "Хатои шабака"
+    "insufficientStock": "Захираи кофӣ нест",
+    "networkError": "Хатои шабака",
+    "tryAgainLater": "Лутфан дертар кӯшиш кунед"
   },
   "toast": {
     "success": "Амалиёт муваффақ гузашт",

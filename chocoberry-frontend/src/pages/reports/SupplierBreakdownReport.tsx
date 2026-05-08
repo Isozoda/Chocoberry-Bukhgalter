@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -12,6 +12,7 @@ import { MoneyDisplay } from '@/components/ui/MoneyDisplay'
 import { ExportButtons } from './ExportButtons'
 import { reportsApi } from '@/api/reports.api'
 import { formatMoney } from '@/utils/decimal.util'
+import type { SupplierBreakdownItem } from '@/types/report.types'
 import type { ColumnDef } from '@/components/ui/DataTable'
 
 const COLORS = ['#E8593C', '#f97316', '#eab308', '#22c55e', '#3b82f6']
@@ -29,15 +30,15 @@ export default function SupplierBreakdownReport() {
     queryFn: () => reportsApi.supplierBreakdown({ from, to }),
   })
 
-  type SupplierRow = NonNullable<typeof data>['suppliers'][number]
+  const suppliers = data ?? []
 
-  const chartData = data?.suppliers?.slice(0, 8).map((s, i) => ({
-    name: s.name.length > 12 ? s.name.slice(0, 12) + 'вЂ¦' : s.name,
+  const chartData = suppliers.slice(0, 8).map((s, i) => ({
+    name: s.name.length > 12 ? s.name.slice(0, 12) + '…' : s.name,
     amount: parseFloat(s.total),
     color: COLORS[i % COLORS.length],
-  })) ?? []
+  }))
 
-  const columns: ColumnDef<SupplierRow>[] = [
+  const columns: ColumnDef<SupplierBreakdownItem>[] = [
     { key: 'name', header: t('supplier'), cell: (row) => <span className="font-medium">{row.name}</span> },
     { key: 'purchaseCount', header: t('purchases'), cell: (row) => <span>{row.purchaseCount}</span> },
     {
@@ -77,7 +78,7 @@ export default function SupplierBreakdownReport() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                <XAxis type="number" tickFormatter={(v) => formatMoney(v.toString()).replace(' СЃРј', '')} tick={{ fontSize: 11 }} />
+                <XAxis type="number" tickFormatter={(v) => formatMoney(v.toString()).replace(' см', '')} tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="name" width={90} tick={{ fontSize: 12 }} />
                 <Tooltip formatter={((v: unknown) => formatMoney(String(v ?? 0))) as any} />
                 <Bar dataKey="amount" radius={[0, 4, 4, 0]}>
@@ -92,11 +93,10 @@ export default function SupplierBreakdownReport() {
       </Card>
 
       <DataTable
-        columns={columns as ColumnDef<Record<string, unknown>>[]}
-        data={(data?.suppliers ?? []) as Record<string, unknown>[]}
+        columns={columns as unknown as ColumnDef<Record<string, unknown>>[]}
+        data={suppliers as unknown as Record<string, unknown>[]}
         emptyMessage={t('noData')}
       />
     </div>
   )
 }
-

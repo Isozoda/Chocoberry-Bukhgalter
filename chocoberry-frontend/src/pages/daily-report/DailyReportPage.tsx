@@ -52,21 +52,21 @@ export default function DailyReportPage() {
       cell: (row) => <MoneyDisplay amount={row.charityAmount} className="text-orange-600" />,
     },
     {
-      key: 'remainingCash',
+      key: 'remaining',
       header: t('remainingCash'),
       cell: (row) => (
         <MoneyDisplay
-          amount={row.remainingCash}
-          className={parseFloat(row.remainingCash) >= 0 ? 'text-green-600 font-bold' : 'text-red-600 font-bold'}
+          amount={row.remaining}
+          className={parseFloat(row.remaining) >= 0 ? 'text-green-600 font-bold' : 'text-red-600 font-bold'}
         />
       ),
     },
     {
-      key: 'status',
+      key: 'isFinalized',
       header: t('status'),
       cell: (row) => (
-        <Badge variant={row.status === 'FINALIZED' ? 'success' : 'secondary'}>
-          {t(`status.${row.status}`)}
+        <Badge variant={row.isFinalized ? 'success' : 'secondary'}>
+          {t(row.isFinalized ? 'status.FINALIZED' : 'status.DRAFT')}
         </Badge>
       ),
     },

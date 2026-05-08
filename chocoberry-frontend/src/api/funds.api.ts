@@ -1,9 +1,18 @@
 import api from './axios'
-import type { Fund, FundTransaction, FundTransactionDto } from '@/types/fund.types'
+import type { Fund, FundTransaction, FundTransactionDto, FundType } from '@/types/fund.types'
+
+export interface CreateFundDto {
+  type: FundType
+  name: string
+  notes?: string
+}
 
 export const fundsApi = {
   list: (): Promise<Fund[]> =>
     api.get('/funds'),
+
+  create: (dto: CreateFundDto): Promise<Fund> =>
+    api.post('/funds', dto),
 
   getById: (id: string): Promise<Fund> =>
     api.get(`/funds/${id}`),

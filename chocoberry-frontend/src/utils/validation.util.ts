@@ -177,7 +177,7 @@ export const dailyReportSchema = z.object({
   consumables: z
     .array(
       z.object({
-        employeeId: z.string(),
+        label: z.string(),
         amount: z.string(),
       })
     )
@@ -185,7 +185,7 @@ export const dailyReportSchema = z.object({
   ownerDraws: z
     .array(
       z.object({
-        employeeId: z.string(),
+        ownerName: z.string().min(1),
         amount: z.string(),
       })
     )
@@ -193,7 +193,8 @@ export const dailyReportSchema = z.object({
   supplierPurchases: z
     .array(
       z.object({
-        supplierId: z.string(),
+        name: z.string().min(1),
+        supplierId: z.string().optional(),
         amount: z.string(),
       })
     )
