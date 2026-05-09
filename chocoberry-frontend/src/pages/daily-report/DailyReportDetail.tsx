@@ -14,7 +14,7 @@ import toast from 'react-hot-toast'
 
 export default function DailyReportDetail() {
   const { id } = useParams<{ id: string }>()
-  const { t } = useTranslation('dailyReport')
+  const { t } = useTranslation('daily-report')
   const navigate = useNavigate()
   const qc = useQueryClient()
 

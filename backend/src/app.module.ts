@@ -20,6 +20,9 @@ import { CashboxModule } from './modules/cashbox/cashbox.module';
 import { FundsModule } from './modules/funds/funds.module';
 import { DailyReportModule } from './modules/daily-report/daily-report.module';
 import { ReportsModule } from './modules/reports/reports.module';
+import { TelegramModule } from './modules/telegram/telegram.module';
+import { FixedExpensesModule } from './modules/fixed-expenses/fixed-expenses.module';
+import { AiModule } from './modules/ai/ai.module';
 
 @Module({
   imports: [
@@ -47,6 +50,9 @@ import { ReportsModule } from './modules/reports/reports.module';
     FundsModule,
     DailyReportModule,
     ReportsModule,
+    TelegramModule,
+    FixedExpensesModule,
+    AiModule,
   ],
   providers: [
     {

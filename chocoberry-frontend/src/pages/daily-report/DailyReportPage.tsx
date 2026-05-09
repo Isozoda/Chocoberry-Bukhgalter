@@ -15,7 +15,7 @@ import type { DailyReport } from '@/types/daily-report.types'
 import type { ColumnDef } from '@/components/ui/DataTable'
 
 export default function DailyReportPage() {
-  const { t } = useTranslation('dailyReport')
+  const { t } = useTranslation('daily-report')
   const navigate = useNavigate()
   const [page, setPage] = useState(1)
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date } | undefined>()
@@ -63,7 +63,7 @@ export default function DailyReportPage() {
     },
     {
       key: 'isFinalized',
-      header: t('status'),
+      header: t('statusLabel'),
       cell: (row) => (
         <Badge variant={row.isFinalized ? 'success' : 'secondary'}>
           {t(row.isFinalized ? 'status.FINALIZED' : 'status.DRAFT')}

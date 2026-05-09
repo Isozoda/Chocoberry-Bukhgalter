@@ -12,7 +12,9 @@
     "funds": "Funds",
     "dailyReport": "Daily Report",
     "reports": "Reports",
-    "business": "Business"
+    "business": "Business",
+    "fixedExpenses": "Fixed Expenses",
+    "ai": "AI Assistant"
   },
   "actions": {
     "add": "Add",
@@ -131,5 +133,24 @@
   },
   "loading": "Loading...",
   "saving": "Saving...",
-  "deleting": "Deleting..."
+  "deleting": "Deleting...",
+  "telegram": {
+    "title": "Telegram Integration",
+    "description": "Connect Telegram to receive low-stock alerts and daily report summaries.",
+    "connect": "Connect Telegram",
+    "connected": "Connected",
+    "connectedAt": "Connected on",
+    "connectedDesc": "Notifications are being sent to Telegram.",
+    "disconnect": "Disconnect",
+    "openLink": "Click the link to open the bot:",
+    "openTelegram": "Open Telegram",
+    "copyLink": "Copy Link",
+    "copied": "Copied!",
+    "linkExpiry": "Link expires in 15 minutes.",
+    "cancel": "Cancel",
+    "connectError": "Failed to get connect link",
+    "disconnectError": "Failed to disconnect",
+    "copyError": "Failed to copy",
+    "disconnected": "Telegram disconnected"
+  }
 }

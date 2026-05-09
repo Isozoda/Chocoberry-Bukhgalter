@@ -7,10 +7,29 @@ import { CleaningDto } from './dto/cleaning.dto';
 import { AdjustDto } from './dto/adjust.dto';
 import Decimal from 'decimal.js';
 import { toDecimal, multiplyDecimal, calcWeightedAvgCost } from '../../common/utils/decimal.util';
+import { TelegramService } from '../telegram/telegram.service';
 
 @Injectable()
 export class InventoryService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private telegramService: TelegramService,
+  ) {}
+
+  public async checkAndNotifyLowStock(businessId: string, itemId: string, stockAfter: Decimal) {
+    try {
+      const item = await this.prisma.inventoryItem.findUnique({ where: { id: itemId } });
+      if (!item) return;
+      if (stockAfter.lessThanOrEqualTo(toDecimal(item.minStockLevel)) && toDecimal(item.minStockLevel).greaterThan(0)) {
+        await this.telegramService.notifyLowStock({
+          businessId,
+          items: [{ name: item.name, currentStock: stockAfter.toFixed(2), minStockLevel: item.minStockLevel.toString(), unit: item.unit }],
+        });
+      }
+    } catch {
+      // Non-critical: don't fail the main operation
+    }
+  }
 
   private async getBusiness(userId: string) {
     const b = await this.prisma.business.findUnique({ where: { userId } });
@@ -130,7 +149,7 @@ export class InventoryService {
     const stockAfter = stockBefore.minus(qty);
     const totalCost = multiplyDecimal(qty, item.avgCost);
 
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       await tx.inventoryItem.update({ where: { id: itemId }, data: { currentStock: stockAfter } });
       return tx.inventoryTransaction.create({
         data: {
@@ -147,6 +166,8 @@ export class InventoryService {
         },
       });
     });
+    await this.checkAndNotifyLowStock(b.id, itemId, stockAfter);
+    return result;
   }
 
   async adjust(userId: string, itemId: string, dto: AdjustDto) {
@@ -156,7 +177,7 @@ export class InventoryService {
     const stockBefore = toDecimal(item.currentStock);
     const diff = newQty.minus(stockBefore);
 
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       await tx.inventoryItem.update({ where: { id: itemId }, data: { currentStock: newQty } });
       return tx.inventoryTransaction.create({
         data: {
@@ -173,6 +194,8 @@ export class InventoryService {
         },
       });
     });
+    await this.checkAndNotifyLowStock(b.id, itemId, newQty);
+    return result;
   }
 
   async waste(userId: string, itemId: string, dto: WasteDto) {
@@ -186,7 +209,7 @@ export class InventoryService {
     const stockAfter = stockBefore.minus(qty);
     const totalCost = multiplyDecimal(qty, item.avgCost);
 
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       await tx.inventoryItem.update({ where: { id: itemId }, data: { currentStock: stockAfter } });
       const invTx = await tx.inventoryTransaction.create({
         data: {
@@ -213,6 +236,8 @@ export class InventoryService {
       });
       return invTx;
     });
+    await this.checkAndNotifyLowStock(b.id, itemId, stockAfter);
+    return result;
   }
 
   async cleaning(userId: string, itemId: string, dto: CleaningDto) {
@@ -239,7 +264,7 @@ export class InventoryService {
     const stockAfterCleanIn = stockAfterRawOut.plus(cleanedQty);
     const unitCost = toDecimal(item.avgCost);
 
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       await tx.inventoryItem.update({ where: { id: itemId }, data: { currentStock: stockAfterCleanIn } });
 
       const outTx = await tx.inventoryTransaction.create({
@@ -283,6 +308,8 @@ export class InventoryService {
         inTransactionId: inTx.id,
       };
     });
+    await this.checkAndNotifyLowStock(b.id, itemId, stockAfterCleanIn);
+    return result;
   }
 
   async getHistory(userId: string, itemId: string, page = 1, limit = 50) {

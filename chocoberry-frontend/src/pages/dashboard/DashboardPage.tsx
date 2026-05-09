@@ -9,6 +9,7 @@ import { businessApi } from '@/api/business.api'
 import { salesApi } from '@/api/sales.api'
 import { inventoryApi } from '@/api/inventory.api'
 import { cashboxApi } from '@/api/cashbox.api'
+import { fixedExpensesApi } from '@/api/fixed-expenses.api'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -108,6 +109,31 @@ export default function DashboardPage() {
   const { data: topProducts = [] } = useQuery({
     queryKey: ['sales', 'top-products', { from, to }],
     queryFn: () => salesApi.topProducts({ from, to, limit: 5 }),
+  })
+
+  const currentMonth = (() => {
+    const d = new Date()
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+  })()
+
+  const { data: fixedSummary } = useQuery({
+    queryKey: ['fixed-expenses', 'summary', currentMonth],
+    queryFn: () => fixedExpensesApi.summary(currentMonth),
+  })
+
+  const { data: latestTelegramReport } = useQuery({
+    queryKey: ['telegram-daily-report', 'latest'],
+    queryFn: async () => {
+      try {
+        const { default: api } = await import('@/api/axios')
+        const res = await api.get('/telegram/daily-report/latest')
+        return res as any
+      } catch {
+        return null
+      }
+    },
+    retry: false,
+    staleTime: 60000,
   })
 
   return (
@@ -274,6 +300,87 @@ export default function DashboardPage() {
               <TopProductsPieChart data={topProducts} />
             ) : (
               <Skeleton className="h-60 w-full rounded-xl" />
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Fixed Expenses + Telegram Daily Report widgets */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Fixed Expenses summary */}
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base flex items-center gap-2">
+                💸 Хароҷоти моҳ
+              </CardTitle>
+              <button
+                onClick={() => navigate('/app/expenses/fixed')}
+                className="text-xs text-muted-foreground hover:text-primary transition-colors"
+              >
+                Ҳамаро бин →
+              </button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {fixedSummary ? (
+              <div className="space-y-2">
+                <div className="flex justify-between items-center p-2 rounded-lg bg-emerald-500/5">
+                  <span className="text-sm text-muted-foreground">Пардохта</span>
+                  <MoneyDisplay amount={fixedSummary.totalPaid} className="font-semibold text-emerald-600" />
+                </div>
+                <div className="flex justify-between items-center p-2 rounded-lg bg-amber-500/5">
+                  <span className="text-sm text-muted-foreground">Интизор</span>
+                  <MoneyDisplay amount={fixedSummary.totalPending} className="font-semibold text-amber-600" />
+                </div>
+                <p className="text-xs text-muted-foreground text-right">
+                  {fixedSummary.paidCount}/{fixedSummary.count} пардохта шуд
+                </p>
+              </div>
+            ) : (
+              <div className="text-center py-4 text-muted-foreground text-sm">
+                <p>Ин моҳ хароҷоти доимӣ нест</p>
+                <button
+                  onClick={() => navigate('/app/expenses/fixed')}
+                  className="mt-2 text-xs text-primary hover:underline"
+                >
+                  Илова кун
+                </button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Telegram Daily Report widget */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              📊 Ҳисоботи охир (Telegram)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {latestTelegramReport ? (
+              <div className="space-y-2">
+                <p className="text-xs text-muted-foreground">
+                  {new Date(latestTelegramReport.date).toLocaleDateString('ru-RU')}
+                </p>
+                <div className="flex justify-between items-center p-2 rounded-lg bg-muted/40">
+                  <span className="text-sm text-muted-foreground">Тавоноии оғоз</span>
+                  <MoneyDisplay amount={latestTelegramReport.openingBalance} className="font-semibold" />
+                </div>
+                <div className="flex justify-between items-center p-2 rounded-lg bg-red-500/5">
+                  <span className="text-sm text-muted-foreground">Хароҷот</span>
+                  <MoneyDisplay amount={latestTelegramReport.totalExpenses} className="font-semibold text-red-500" />
+                </div>
+                <div className="flex justify-between items-center p-2 rounded-lg bg-emerald-500/5">
+                  <span className="text-sm text-muted-foreground">Монанда</span>
+                  <MoneyDisplay amount={latestTelegramReport.closingBalance} className="font-semibold text-emerald-600" />
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-4 text-muted-foreground text-sm">
+                Ҳисоботи Telegram дар бот фиристед
+              </div>
             )}
           </CardContent>
         </Card>

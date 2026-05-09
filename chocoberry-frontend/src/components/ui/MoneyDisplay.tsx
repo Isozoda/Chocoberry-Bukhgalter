@@ -10,12 +10,14 @@ interface MoneyDisplayProps {
 
 export function MoneyDisplay({ amount, className, colored }: MoneyDisplayProps) {
   const formatted = formatMoney(amount)
+  const numAmount = parseFloat(amount?.toString() || '0')
+  
   return (
     <span
       className={cn(
         'tabular-nums font-medium',
-        colored && parseFloat(amount.toString()) > 0 && 'text-green-600 dark:text-green-400',
-        colored && parseFloat(amount.toString()) < 0 && 'text-red-600 dark:text-red-400',
+        colored && numAmount > 0 && 'text-green-600 dark:text-green-400',
+        colored && numAmount < 0 && 'text-red-600 dark:text-red-400',
         className
       )}
     >

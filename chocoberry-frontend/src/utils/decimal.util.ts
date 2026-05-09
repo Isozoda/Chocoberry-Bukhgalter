@@ -1,10 +1,18 @@
 import Decimal from 'decimal.js'
 
-export const toDecimal = (value: string | number | Decimal): Decimal =>
-  new Decimal(value.toString())
+export const toDecimal = (value: string | number | Decimal | undefined | null): Decimal => {
+  if (value === undefined || value === null || value === '' || value.toString() === 'NaN') {
+    return new Decimal(0)
+  }
+  try {
+    return new Decimal(value.toString())
+  } catch (e) {
+    return new Decimal(0)
+  }
+}
 
-export const formatMoney = (value: string | number | Decimal): string => {
-  const d = new Decimal(value.toString())
+export const formatMoney = (value: string | number | Decimal | undefined | null): string => {
+  const d = toDecimal(value)
   return d.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' см'
 }
 

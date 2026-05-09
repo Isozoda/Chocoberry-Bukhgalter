@@ -10,7 +10,7 @@ import { ExportButtons } from './ExportButtons'
 import { reportsApi } from '@/api/reports.api'
 
 export default function ProfitReport() {
-  const { t } = useTranslation('reports')
+  const { t } = useTranslation(['reports', 'expenses'])
   const now = new Date()
   const [from, setFrom] = useState(
     new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
@@ -64,7 +64,7 @@ export default function ProfitReport() {
                 <div className="space-y-2">
                   {data.expenseBreakdown.map((e) => (
                     <div key={e.expenseType} className="flex justify-between text-sm">
-                      <span className="text-muted-foreground capitalize">{e.expenseType.toLowerCase().replace(/_/g, ' ')}</span>
+                      <span className="text-muted-foreground">{t(`expenses:types.${e.expenseType.toUpperCase()}`)}</span>
                       <MoneyDisplay amount={e._sum.amount || '0'} />
                     </div>
                   ))}

@@ -18,6 +18,8 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  Receipt,
+  Bot,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
@@ -36,12 +38,14 @@ const navItems = [
   { path: '/app/suppliers', icon: Truck, ns: 'suppliers' as const },
   { path: '/app/products', icon: Cookie, ns: 'products' as const },
   { path: '/app/expenses', icon: Wallet, ns: 'expenses' as const },
+  { path: '/app/expenses/fixed', icon: Receipt, ns: 'fixedExpenses' as const },
   { path: '/app/employees', icon: Users, ns: 'employees' as const },
   { path: '/app/attendance', icon: UserCheck, ns: 'attendance' as const },
   { path: '/app/cashbox', icon: Banknote, ns: 'cashbox' as const },
   { path: '/app/funds', icon: PiggyBank, ns: 'funds' as const },
   { path: '/app/daily-report', icon: ClipboardList, ns: 'daily-report' as const },
   { path: '/app/reports', icon: BarChart3, ns: 'reports' as const },
+  { path: '/app/ai', icon: Bot, ns: 'ai' as const },
 ]
 
 export function Sidebar() {
@@ -140,7 +144,7 @@ export function Sidebar() {
                           isActive ? 'text-orange-600' : 'text-gray-400 group-hover/item:text-white'
                         )}
                       />
-                      {ns === 'inventory' && lowStockItems.length > 0 && (
+                      {(ns as string) === 'inventory' && lowStockItems.length > 0 && (
                         <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full border-2 border-[#0a0a0b] bg-destructive" />
                       )}
                     </div>
@@ -154,7 +158,7 @@ export function Sidebar() {
                       </span>
                     )}
 
-                    {sidebarOpen && ns === 'inventory' && lowStockItems.length > 0 && (
+                    {sidebarOpen && (ns as string) === 'inventory' && lowStockItems.length > 0 && (
                       <Badge
                         variant="destructive"
                         className="h-4 min-w-[1rem] justify-center rounded-full px-1 text-[9px] font-bold"
@@ -171,6 +175,7 @@ export function Sidebar() {
                 {t(`nav.${ns === 'daily-report' ? 'dailyReport' : ns}`)}
               </TooltipContent>
             )}
+
           </Tooltip>
         ))}
 

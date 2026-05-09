@@ -13,4 +13,13 @@ export default () => ({
   bonusPercent: parseFloat(process.env.BONUS_PERCENT_DEFAULT || '2.0'),
   allowedOrigins: (process.env.ALLOWED_ORIGINS || 'http://localhost:3000').split(','),
   googleAiApiKey: process.env.GOOGLE_AI_API_KEY || '',
+  anthropic: {
+    apiKey: process.env.ANTHROPIC_API_KEY || '',
+    model: process.env.AI_MODEL || 'claude-sonnet-4-20250514',
+  },
+  telegram: {
+    botToken: process.env.TELEGRAM_BOT_TOKEN || '',
+    botUsername: process.env.TELEGRAM_BOT_USERNAME || 'chocoberry_tjk_bot',
+    botSecret: process.env.TELEGRAM_BOT_SECRET || 'chocoberry_bot_secret',
+  },
 });

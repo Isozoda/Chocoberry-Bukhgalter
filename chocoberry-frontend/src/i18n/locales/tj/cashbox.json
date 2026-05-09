@@ -1,15 +1,19 @@
 {
   "title": "Касса",
+  "description": "Идоракунии маблағҳои нақдӣ ва амалиётҳои кассавӣ",
   "cashBalance": "Тавозуни нақд",
   "cardBalance": "Тавозуни карта",
   "totalBalance": "Тавозуни умумӣ",
-  "cashIn": "Воридшавии нақд",
-  "cashOut": "Хуруҷи нақд",
-  "openSession": "Кушодани сессия",
-  "closeSession": "Пӯшидани сессия",
-  "todayReport": "Ҳисоботи имрӯз",
-  "history": "Таърих",
-  "balanceBefore": "Тавозун пеш",
-  "balanceAfter": "Тавозун баъд",
-  "operationType": "Навъи амалиёт"
+  "addOperation": "Амалиёт илова кардан",
+  "date": "Сана",
+  "type": "Навъ",
+  "descriptionLabel": "Тавсиф",
+  "amount": "Маблағ",
+  "balance": "Тавозун",
+  "noOperations": "Амалиётҳо ёфт нашуданд",
+  "operationAdded": "Амалиёт бомуваффақият илова шуд",
+  "types": {
+    "CASH_IN": "Воридот",
+    "CASH_OUT": "Хуруҷ"
+  }
 }

@@ -13,7 +13,9 @@
     "dailyReport": "Ҳисоботи Рӯзона",
     "reports": "Гузоришот",
     "business": "Корхона",
-    "auth": "Воридшавӣ"
+    "auth": "Воридшавӣ",
+    "fixedExpenses": "Хароҷоти доимӣ",
+    "ai": "Зеҳни сунъӣ"
   },
   "actions": {
     "add": "Илова кардан",
@@ -134,5 +136,24 @@
   },
   "loading": "Бор мешавад...",
   "saving": "Нигоҳ дошта мешавад...",
-  "deleting": "Нест карда мешавад..."
+  "deleting": "Нест карда мешавад...",
+  "telegram": {
+    "title": "Пайвасти Telegram",
+    "description": "Ба Telegram пайваст шавед, то огоҳиҳои захираи кам ва ҳисоботи рӯзонаро бигиред.",
+    "connect": "Пайвасти Telegram",
+    "connected": "Пайваст шудааст",
+    "connectedAt": "Санаи пайваст",
+    "connectedDesc": "Огоҳиҳо ба Telegram фиристода мешаванд.",
+    "disconnect": "Қатъ кардан",
+    "openLink": "Линкро клик кунед, то бот оғоз шавад:",
+    "openTelegram": "Telegram-ро кушоед",
+    "copyLink": "Нусха кардан",
+    "copied": "Нусха шуд!",
+    "linkExpiry": "Линк 15 дақиқа эътибор дорад.",
+    "cancel": "Бекор кардан",
+    "connectError": "Линкро гирифта натавонистам",
+    "disconnectError": "Қатъ кардан нашуд",
+    "copyError": "Нусха кардан нашуд",
+    "disconnected": "Telegram қатъ шуд"
+  }
 }

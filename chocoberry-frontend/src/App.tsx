@@ -33,6 +33,7 @@ const SalesPage = lazy(() => import('@/pages/sales/SalesPage'))
 
 // Expenses
 const ExpensesPage = lazy(() => import('@/pages/expenses/ExpensesPage'))
+const FixedExpensesPage = lazy(() => import('@/pages/fixed-expenses/FixedExpensesPage'))
 
 // Employees
 const EmployeesPage = lazy(() => import('@/pages/employees/EmployeesPage'))
@@ -54,6 +55,9 @@ const DailyReportDetail = lazy(() => import('@/pages/daily-report/DailyReportDet
 
 // Reports
 const ReportsPage = lazy(() => import('@/pages/reports/ReportsPage'))
+
+// AI
+const AIPage = lazy(() => import('@/pages/ai/AIPage'))
 
 const Wrap = ({ children }: { children: React.ReactNode }) => (
   <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>
@@ -88,6 +92,7 @@ export default function App() {
             <Route path="sales" element={<Wrap><SalesPage /></Wrap>} />
 
             <Route path="expenses" element={<Wrap><ExpensesPage /></Wrap>} />
+            <Route path="expenses/fixed" element={<Wrap><FixedExpensesPage /></Wrap>} />
 
             <Route path="employees" element={<Wrap><EmployeesPage /></Wrap>} />
             <Route path="employees/:id" element={<Wrap><EmployeeDetailPage /></Wrap>} />
@@ -103,6 +108,8 @@ export default function App() {
             <Route path="daily-report/:id" element={<Wrap><DailyReportDetail /></Wrap>} />
 
             <Route path="reports" element={<Wrap><ReportsPage /></Wrap>} />
+
+            <Route path="ai" element={<Wrap><AIPage /></Wrap>} />
           </Route>
         </Route>
 

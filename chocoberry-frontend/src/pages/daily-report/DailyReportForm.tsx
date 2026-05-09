@@ -23,7 +23,7 @@ import type { CreateDailyReportDto } from '@/types/daily-report.types'
 import toast from 'react-hot-toast'
 
 export default function DailyReportForm() {
-  const { t } = useTranslation('dailyReport')
+  const { t } = useTranslation('daily-report')
   const navigate = useNavigate()
   const today = new Date().toISOString().split('T')[0]
 

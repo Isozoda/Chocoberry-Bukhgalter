@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException, Inject, forwardRef } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { FilterSalesDto } from './dto/filter-sales.dto';
@@ -6,10 +6,14 @@ import Decimal from 'decimal.js';
 import { toDecimal, multiplyDecimal, addDecimal } from '../../common/utils/decimal.util';
 import { startOfDay, endOfDay } from '../../common/utils/date.util';
 import { v4 as uuidv4 } from 'uuid';
+import { InventoryService } from '../inventory/inventory.service';
 
 @Injectable()
 export class SalesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private inventoryService: InventoryService,
+  ) {}
 
   private async getBusiness(userId: string) {
     const b = await this.prisma.business.findUnique({ where: { userId } });
@@ -194,6 +198,8 @@ export class SalesService {
               saleId: sale.id,
             },
           });
+          // Notify low stock if needed
+          await this.inventoryService.checkAndNotifyLowStock(b.id, r.inventoryItemId, stockAfter);
         }
       }
 

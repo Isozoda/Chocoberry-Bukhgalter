@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
+import { TelegramConnect } from '@/components/TelegramConnect'
 import { useEffect } from 'react'
 import type { z } from 'zod'
 
@@ -84,6 +85,8 @@ export default function BusinessProfilePage() {
           </form>
         </CardContent>
       </Card>
+
+      <TelegramConnect />
     </div>
   )
 }

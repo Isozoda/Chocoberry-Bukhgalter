@@ -1,3 +1,4 @@
+// AI Restart trigger v17 - Gemini 2.5 Flash Stable v2
 import { NestFactory, Reflector } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';

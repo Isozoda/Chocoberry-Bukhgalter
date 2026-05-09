@@ -11,7 +11,7 @@ The project consists of two main parts:
 - **Technology**: NestJS (Node.js framework).
 - **Database**: Prisma ORM (working with PostgreSQL).
 - **Security**: JWT and Passport.js for user authentication.
-- **Functions**: API for sales, inventory, payroll, and reports.
+- **Functions**: API for sales, inven`tory, payroll, and reports.
 
 ## 3. Frontend (User Interface)
 - **Technology**: React 19 + Vite.

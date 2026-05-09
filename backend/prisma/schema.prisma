@@ -8,19 +8,37 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(uuid())
-  email        String        @unique
-  name         String
-  passwordHash String
-  role         Role          @default(STAFF)
-  currency     String        @default("TJS")
-  language     String        @default("tg")
-  isActive     Boolean       @default(true)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  business     Business?
-  dailyReports DailyReport[]
-  employees    Employee[]
+  id                 String                 @id @default(uuid())
+  email              String                 @unique
+  name               String
+  passwordHash       String
+  role               Role                   @default(STAFF)
+  currency           String                 @default("TJS")
+  language           String                 @default("tg")
+  isActive           Boolean                @default(true)
+  telegramChatId     String?                @unique
+  telegramLinked     Boolean                @default(false)
+  telegramLinkedAt   DateTime?
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  business           Business?
+  dailyReports       DailyReport[]
+  employees          Employee[]
+  telegramNotifications TelegramNotification[]
+}
+
+model TelegramNotification {
+  id        String   @id @default(uuid())
+  userId    String
+  chatId    String
+  type      String
+  message   String
+  sentAt    DateTime @default(now())
+  isRead    Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, sentAt])
+  @@index([chatId, isRead])
 }
 
 model Business {
@@ -52,6 +70,9 @@ model Business {
   sales             Sale[]
   suppliers         Supplier[]
   supplierPurchases SupplierPurchase[]
+  fixedExpenses     FixedExpense[]
+  telegramReports   TelegramDailyReport[]
+  aiMessages        AiMessage[]
 }
 
 model Supplier {
@@ -610,4 +631,61 @@ enum AttendanceStatus {
   HALF_DAY
   DAY_OFF
   SICK
+}
+
+model FixedExpense {
+  id         String    @id @default(uuid())
+  businessId String
+  name       String
+  category   String
+  amount     Decimal   @db.Decimal(12, 2)
+  currency   String    @default("TJS")
+  period     String
+  dueDate    DateTime
+  paidAt     DateTime?
+  isPaid     Boolean   @default(false)
+  note       String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  business   Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId, dueDate])
+  @@index([businessId, isPaid])
+}
+
+model TelegramDailyReport {
+  id             String                    @id @default(uuid())
+  businessId     String
+  date           DateTime                  @db.Date
+  openingBalance Decimal                   @db.Decimal(12, 2)
+  closingBalance Decimal                   @db.Decimal(12, 2)
+  totalExpenses  Decimal                   @db.Decimal(12, 2)
+  rawText        String
+  source         String                    @default("telegram")
+  createdAt      DateTime                  @default(now())
+  business       Business                  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  items          TelegramDailyReportItem[]
+
+  @@unique([businessId, date])
+  @@index([businessId, date])
+}
+
+model TelegramDailyReportItem {
+  id       String              @id @default(uuid())
+  reportId String
+  name     String
+  amount   Decimal             @db.Decimal(12, 2)
+  category String?
+  report   TelegramDailyReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+}
+
+model AiMessage {
+  id         String   @id @default(uuid())
+  businessId String
+  role       String   // 'user' or 'ai'
+  content    String   @db.Text
+  createdAt  DateTime @default(now())
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId, createdAt])
 }

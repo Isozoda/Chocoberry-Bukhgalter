@@ -1,15 +1,19 @@
 {
   "title": "Касса",
+  "description": "Управление наличными средствами и кассовыми операциями",
   "cashBalance": "Баланс наличных",
-  "cardBalance": "Баланс по карте",
+  "cardBalance": "Баланс на карте",
   "totalBalance": "Общий баланс",
-  "cashIn": "Приход",
-  "cashOut": "Расход",
-  "openSession": "Открыть смену",
-  "closeSession": "Закрыть смену",
-  "todayReport": "Отчёт за сегодня",
-  "history": "История",
-  "balanceBefore": "Баланс до",
-  "balanceAfter": "Баланс после",
-  "operationType": "Тип операции"
+  "addOperation": "Добавить операцию",
+  "date": "Дата",
+  "type": "Тип",
+  "descriptionLabel": "Описание",
+  "amount": "Сумма",
+  "balance": "Баланс",
+  "noOperations": "Операции не найдены",
+  "operationAdded": "Операция успешно добавлена",
+  "types": {
+    "CASH_IN": "Приход",
+    "CASH_OUT": "Расход"
+  }
 }

@@ -3,7 +3,7 @@ import toast from 'react-hot-toast'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL as string,
-  timeout: 15000,
+  timeout: 60000,
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true,
 })
@@ -58,8 +58,9 @@ api.interceptors.response.use(
       }
 
       if (status >= 500) {
-        toast.error('Server error. Please try again later.')
-        return Promise.reject(new Error('Server error'))
+        const message = data?.error?.message || data?.message || 'Server error. Please try again later.'
+        toast.error(typeof message === 'string' ? message : 'Server error')
+        return Promise.reject(new Error(typeof message === 'string' ? message : 'Server error'))
       }
 
       const message = data?.error?.message || data?.message || 'Request failed'
