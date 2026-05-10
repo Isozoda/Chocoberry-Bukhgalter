@@ -1,5 +1,6 @@
 {
   "title": "Кормандон",
+  "description": "Идоракунии кормандон ва маош",
   "addEmployee": "Корманди нав",
   "owner": "Соҳиб",
   "consumableBuyer": "Харидори сарфшаванда",
@@ -43,6 +44,8 @@
   "status": "Статус",
   "active": "Фаъол",
   "inactive": "Ғайрифаъол",
+  "totalEmployees": "Ҳамагӣ кормандон",
+  "activeEmployees": "Кормандони фаъол",
   "noEmployees": "Кормандон ёфт нашуданд",
   "editEmployee": "Таҳрири корманд",
   "updateSuccess": "Маълумоти корманд бомуваффақият нав карда шуд",

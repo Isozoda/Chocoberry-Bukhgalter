@@ -7,4 +7,8 @@ export class AnalyzeSalesDto {
   @IsOptional()
   @IsString()
   date?: string;
+
+  @IsOptional()
+  @IsString()
+  lang?: string;
 }

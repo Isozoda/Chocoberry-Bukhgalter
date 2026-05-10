@@ -340,8 +340,8 @@ function InventoryTab() {
                     className={cn(
                       'flex items-center justify-between p-3 rounded-lg border',
                       item.urgency === 'critical' ? 'bg-red-950/20 border-red-500/20' :
-                      item.urgency === 'warning' ? 'bg-yellow-950/20 border-yellow-500/20' :
-                      'bg-green-950/20 border-green-500/20'
+                        item.urgency === 'warning' ? 'bg-yellow-950/20 border-yellow-500/20' :
+                          'bg-green-950/20 border-green-500/20'
                     )}
                   >
                     <div className="flex items-center gap-3">
@@ -357,8 +357,8 @@ function InventoryTab() {
                       <span className={cn(
                         'text-[10px] font-bold px-2 py-0.5 rounded',
                         item.urgency === 'critical' ? 'bg-red-500/20 text-red-400' :
-                        item.urgency === 'warning' ? 'bg-yellow-500/20 text-yellow-400' :
-                        'bg-green-500/20 text-green-400'
+                          item.urgency === 'warning' ? 'bg-yellow-500/20 text-yellow-400' :
+                            'bg-green-500/20 text-green-400'
                       )}>
                         {urgencyLabel[item.urgency]}
                       </span>
@@ -473,7 +473,7 @@ function AdvisorTab() {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
-  
+
   useState(() => {
     if (history.length > 0) setTimeout(scrollToBottom, 100)
   })
@@ -487,9 +487,9 @@ function AdvisorTab() {
             <Bot className="h-4 w-4" />
             Таърихи гуфтугӯ
           </CardTitle>
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => weeklyMutation.mutate()}
             disabled={isPending}
             className="h-7 text-[10px] gap-1 hover:bg-[#161618]"
@@ -504,7 +504,7 @@ function AdvisorTab() {
               <Skeleton className="h-10 w-2/3 ml-auto bg-orange-500/10 rounded-2xl rounded-tr-none" />
             </div>
           )}
-          
+
           {history.length === 0 && !isHistoryLoading && (
             <div className="flex flex-col items-center justify-center h-full text-center opacity-50">
               <Bot className="h-12 w-12 mb-2 text-muted-foreground" />
@@ -513,18 +513,18 @@ function AdvisorTab() {
           )}
 
           {history.map((msg: any) => (
-            <div 
-              key={msg.id} 
+            <div
+              key={msg.id}
               className={cn(
                 "flex flex-col max-w-[85%] space-y-1",
                 msg.role === 'user' ? "ml-auto items-end" : "items-start"
               )}
             >
-              <div 
+              <div
                 className={cn(
                   "p-3 rounded-2xl text-sm leading-relaxed",
-                  msg.role === 'user' 
-                    ? "bg-orange-500 text-white rounded-tr-none" 
+                  msg.role === 'user'
+                    ? "bg-orange-500 text-white rounded-tr-none"
                     : "bg-[#161618] text-foreground/90 border border-[#2a2a2c] rounded-tl-none"
                 )}
               >
