@@ -26,7 +26,14 @@
       "Bash(Get-ChildItem *)",
       "PowerShell(ls *)",
       "Bash(npm list *)",
-      "Bash(npx --version)"
+      "Bash(npx --version)",
+      "Bash(npx create-expo-app@latest mobile --template blank-typescript)",
+      "Bash(npx expo *)",
+      "Bash(npm install *)",
+      "Bash(mkdir *)",
+      "Bash(Select-Object FullName)",
+      "Bash(Sort-Object FullName)",
+      "PowerShell(Head 20 *)"
     ]
   }
 }
