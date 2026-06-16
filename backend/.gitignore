@@ -25,6 +25,10 @@ yarn-error.log*
 # prisma
 prisma/migrations/.gitignore
 
+# uploaded files (product photos, etc.)
+/uploads/*
+!/uploads/.gitkeep
+
 # IDE
 .idea
 .vscode

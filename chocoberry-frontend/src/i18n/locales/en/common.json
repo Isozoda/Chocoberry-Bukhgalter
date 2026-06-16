@@ -9,13 +9,13 @@
     "employees": "Employees",
     "attendance": "Attendance",
     "cashbox": "Cash Box",
-    "funds": "Funds",
     "dailyReport": "Daily Report",
     "reports": "Reports",
     "business": "Business",
     "fixedExpenses": "Fixed Expenses",
     "ai": "AI Assistant",
-    "auth": "Login"
+    "auth": "Login",
+    "accounting": "Accounting"
   },
   "actions": {
     "add": "Add",

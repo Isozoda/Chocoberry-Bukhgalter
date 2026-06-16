@@ -1,8 +1,10 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { SetRecipeDto } from './dto/set-recipe.dto';
 import Decimal from 'decimal.js';
+import { join } from 'path';
+import { promises as fs } from 'fs';
 import { toDecimal, multiplyDecimal } from '../../common/utils/decimal.util';
 import { resolveBusinessForUser } from '../../common/utils/business-resolver.util';
 
@@ -81,6 +83,26 @@ export class ProductsService {
         ...(dto.category !== undefined && { category: dto.category }),
       },
     });
+  }
+
+  async setImage(userId: string, productId: string, file?: Express.Multer.File) {
+    if (!file) throw new BadRequestException('No image file provided');
+    const b = await this.getBusiness(userId);
+    const product = await this.prisma.product.findFirst({
+      where: { id: productId, businessId: b.id },
+    });
+    if (!product) {
+      await fs.unlink(file.path).catch(() => undefined);
+      throw new NotFoundException('Product not found');
+    }
+
+    // Remove the previous photo from disk, if any, so uploads don't pile up.
+    if (product.imageUrl) {
+      await fs.unlink(join(process.cwd(), product.imageUrl.replace(/^\//, ''))).catch(() => undefined);
+    }
+
+    const imageUrl = `/uploads/products/${file.filename}`;
+    return this.prisma.product.update({ where: { id: productId }, data: { imageUrl } });
   }
 
   async remove(userId: string, id: string) {

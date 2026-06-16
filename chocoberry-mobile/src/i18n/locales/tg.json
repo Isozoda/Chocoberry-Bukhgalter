@@ -8,7 +8,6 @@
     "expenses": "Хароҷот",
     "employees": "Кормандон",
     "cashbox": "Касса",
-    "funds": "Фондҳо",
     "dailyReport": "Ҳисоботи Рӯзона",
     "reports": "Гузоришот",
     "business": "Тиҷорат",
@@ -208,17 +207,6 @@
     "cup03Forecast": "Стакан 0.3ml пешбинӣ",
     "cup04Forecast": "Стакан 0.4ml пешбинӣ"
   },
-  "funds": {
-    "charity": "Фонди Хайр",
-    "reserve": "Фонди Захиравӣ",
-    "renovation": "Фонди Ободонӣ",
-    "emergency": "Рӯзи Мабодо",
-    "taxReserve": "Захираи Андоз",
-    "deposit": "Пур кардан",
-    "withdraw": "Гирифтан",
-    "transactions": "Амалиётҳо",
-    "fundName": "Номи фонд"
-  },
   "cashbox": {
     "cash": "Нақд",
     "card": "Карта",
@@ -281,7 +269,6 @@
     "items20": "20+ маводи анбор",
     "products5": "5 маҳсулот бо рекипи воқеӣ",
     "employees5": "5 корманд",
-    "funds5": "5 фонд",
     "allCategories": "Ҳамаи категорияҳо",
     "goToDashboard": "Ба асосӣ",
     "ready": "Choco Berry омода аст!"

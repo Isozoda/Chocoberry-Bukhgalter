@@ -49,9 +49,9 @@ export default function RegisterPage() {
             <div className="h-14 w-14 bg-white rounded-full flex items-center justify-center shadow-2xl overflow-hidden p-1.5 border border-white/50">
               <img src={logo} alt="Choco Berry" className="w-full h-full object-contain" />
             </div>
-            <span className="text-2xl font-bold">Choco Berry</span>
+            <span className="text-2xl font-display font-semibold">Choco Berry</span>
           </div>
-          <h1 className="text-4xl font-bold mb-4 leading-tight">
+          <h1 className="text-4xl font-display font-semibold mb-4 leading-tight">
             {t('auth:register.branding.title')}
           </h1>
           <p className="text-orange-100 text-lg">
@@ -79,11 +79,11 @@ export default function RegisterPage() {
             <div className="inline-flex h-20 w-20 items-center justify-center bg-white rounded-full p-2 mb-4 shadow-xl overflow-hidden border-2 border-orange-100">
               <img src={logo} alt="Choco Berry" className="w-full h-full object-contain" />
             </div>
-            <h2 className="text-3xl font-bold text-primary">Choco Berry</h2>
+            <h2 className="text-3xl font-display font-semibold text-primary">Choco Berry</h2>
           </div>
 
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-foreground">{t('auth:register.title')}</h2>
+            <h2 className="text-2xl font-display font-semibold text-foreground">{t('auth:register.title')}</h2>
             <p className="text-muted-foreground mt-1">{t('auth:register.subtitle')}</p>
           </div>
 

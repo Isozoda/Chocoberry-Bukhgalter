@@ -122,7 +122,7 @@ export default function CashboxPage() {
         }
       />
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader>
             <CardTitle className="text-sm font-medium text-muted-foreground">{t('cashBalance')}</CardTitle>
@@ -135,11 +135,21 @@ export default function CashboxPage() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">{t('cardBalance')}</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t('dcBalance')}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">
-              <MoneyDisplay amount={balance?.cardBalance ?? '0'} className="text-blue-600" />
+              <MoneyDisplay amount={balance?.dcBalance ?? '0'} className="text-blue-600" />
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t('alifBalance')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">
+              <MoneyDisplay amount={balance?.alifBalance ?? '0'} className="text-sky-600" />
             </p>
           </CardContent>
         </Card>

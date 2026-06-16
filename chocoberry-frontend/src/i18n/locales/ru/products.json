@@ -1,6 +1,9 @@
 {
   "title": "Продукты",
   "addProduct": "Новый продукт",
+  "photo": "Фото",
+  "uploadPhoto": "Загрузить фото",
+  "removePhoto": "Удалить фото",
   "recipe": "Рецепт / BOM",
   "recipeFor": "Рецепт для {{name}}",
   "addIngredient": "Добавить ингредиент",

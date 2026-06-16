@@ -9,13 +9,13 @@
     "employees": "Кормандон",
     "attendance": "Ҳозир / Ғоиб",
     "cashbox": "Касса",
-    "funds": "Фондҳо",
     "dailyReport": "Ҳисоботи Рӯзона",
     "reports": "Гузоришот",
     "business": "Корхона",
     "auth": "Воридшавӣ",
     "fixedExpenses": "Хароҷоти доимӣ",
-    "ai": "Зеҳни сунъӣ"
+    "ai": "Зеҳни сунъӣ",
+    "accounting": "Муҳосибот"
   },
   "actions": {
     "add": "Илова кардан",

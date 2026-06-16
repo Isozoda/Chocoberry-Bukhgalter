@@ -46,8 +46,8 @@ const AttendancePage = lazy(() => import('@/pages/attendance/AttendancePage'))
 // Cashbox
 const CashboxPage = lazy(() => import('@/pages/cashbox/CashboxPage'))
 
-// Funds
-const FundsPage = lazy(() => import('@/pages/funds/FundsPage'))
+// Accounting (Cashbox + Payroll + Expenses + P&L overview)
+const AccountingPage = lazy(() => import('@/pages/accounting/AccountingPage'))
 
 // Daily Report
 const DailyReportPage = lazy(() => import('@/pages/daily-report/DailyReportPage'))
@@ -105,7 +105,7 @@ export default function App() {
 
             <Route path="cashbox" element={<Wrap><CashboxPage /></Wrap>} />
 
-            <Route path="funds" element={<Wrap><FundsPage /></Wrap>} />
+            <Route path="accounting" element={<Wrap><AccountingPage /></Wrap>} />
 
             <Route path="daily-report" element={<Wrap><DailyReportPage /></Wrap>} />
             <Route path="daily-report/new" element={<Wrap><DailyReportForm /></Wrap>} />

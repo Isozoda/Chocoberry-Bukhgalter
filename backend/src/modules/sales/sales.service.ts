@@ -162,6 +162,12 @@ export class SalesService {
       const cashAmount = split.cashAmount;
       const cardAmount = split.cardAmount;
 
+      if (cardAmount.greaterThan(0) && !dto.cardType) {
+        throw new BadRequestException('cardType (DUSHANBE_CITY or ALIF) is required for card payments');
+      }
+      const cardType =
+        paymentMethod === 'CARD' || paymentMethod === 'MIXED' ? dto.cardType || null : null;
+
       const saleNumber = `CB-${Date.now()}-${uuidv4().slice(0, 6).toUpperCase()}`;
 
       const sale = await tx.sale.create({
@@ -175,8 +181,7 @@ export class SalesService {
           paymentMethod,
           cashAmount,
           cardAmount,
-          cardType:
-            paymentMethod === 'CARD' || paymentMethod === 'MIXED' ? dto.cardType || null : null,
+          cardType,
           status: 'COMPLETED',
           employeeId: dto.employeeId || null,
           notes: dto.notes,
@@ -240,10 +245,22 @@ export class SalesService {
       const cashbox = await tx.cashbox.findUnique({ where: { businessId: b.id } });
       if (cashbox) {
         const newBalance = toDecimal(cashbox.balance).plus(cashAmount);
-        const newCardBalance = toDecimal(cashbox.cardBalance).plus(cardAmount);
+        const newDcBalance =
+          cardType === 'DUSHANBE_CITY'
+            ? toDecimal(cashbox.dcBalance).plus(cardAmount)
+            : toDecimal(cashbox.dcBalance);
+        const newAlifBalance =
+          cardType === 'ALIF'
+            ? toDecimal(cashbox.alifBalance).plus(cardAmount)
+            : toDecimal(cashbox.alifBalance);
         await tx.cashbox.update({
           where: { businessId: b.id },
-          data: { balance: newBalance, cardBalance: newCardBalance, lastUpdated: new Date() },
+          data: {
+            balance: newBalance,
+            dcBalance: newDcBalance,
+            alifBalance: newAlifBalance,
+            lastUpdated: new Date(),
+          },
         });
         await tx.cashboxOperation.create({
           data: {
@@ -279,7 +296,7 @@ export class SalesService {
     const yesterdayStart = new Date(start.getTime() - 86400000);
     const yesterdayEnd = new Date(end.getTime() - 86400000);
 
-    const [stats, yesterdayStats] = await Promise.all([
+    const [stats, yesterdayStats, cardByType] = await Promise.all([
       this.prisma.sale.aggregate({
         where: { businessId: b.id, date: { gte: start, lte: end }, status: 'COMPLETED' },
         _sum: { total: true, cashAmount: true, cardAmount: true, discount: true },
@@ -293,7 +310,20 @@ export class SalesService {
         },
         _sum: { total: true },
       }),
+      this.prisma.sale.groupBy({
+        by: ['cardType'],
+        where: {
+          businessId: b.id,
+          date: { gte: start, lte: end },
+          status: 'COMPLETED',
+          cardType: { not: null },
+        },
+        _sum: { cardAmount: true },
+      }),
     ]);
+
+    const dushanbeCity = cardByType.find((c) => c.cardType === 'DUSHANBE_CITY');
+    const alif = cardByType.find((c) => c.cardType === 'ALIF');
 
     const totalToday = toDecimal(stats._sum.total || 0);
     const totalYesterday = toDecimal(yesterdayStats._sum.total || 0);
@@ -314,6 +344,8 @@ export class SalesService {
       saleCount: stats._count,
       cashSales: toDecimal(stats._sum.cashAmount || 0).toFixed(2),
       cardSales: toDecimal(stats._sum.cardAmount || 0).toFixed(2),
+      dushanbeCitySales: toDecimal(dushanbeCity?._sum.cardAmount || 0).toFixed(2),
+      alifSales: toDecimal(alif?._sum.cardAmount || 0).toFixed(2),
       totalDiscount: toDecimal(stats._sum.discount || 0).toFixed(2),
       vsYesterday,
     };

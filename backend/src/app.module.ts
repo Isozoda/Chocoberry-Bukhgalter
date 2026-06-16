@@ -17,7 +17,6 @@ import { SalesModule } from './modules/sales/sales.module';
 import { ExpensesModule } from './modules/expenses/expenses.module';
 import { EmployeesModule } from './modules/employees/employees.module';
 import { CashboxModule } from './modules/cashbox/cashbox.module';
-import { FundsModule } from './modules/funds/funds.module';
 import { DailyReportModule } from './modules/daily-report/daily-report.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { TelegramModule } from './modules/telegram/telegram.module';
@@ -49,7 +48,6 @@ import { AiModule } from './modules/ai/ai.module';
     ExpensesModule,
     EmployeesModule,
     CashboxModule,
-    FundsModule,
     DailyReportModule,
     ReportsModule,
     TelegramModule,

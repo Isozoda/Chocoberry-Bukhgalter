@@ -9,13 +9,13 @@
     "employees": "Сотрудники",
     "attendance": "Посещаемость",
     "cashbox": "Касса",
-    "funds": "Фонды",
     "dailyReport": "Дневной отчёт",
     "reports": "Отчёты",
     "business": "Бизнес",
     "fixedExpenses": "Постоянные расходы",
     "ai": "ИИ Помощник",
-    "auth": "Авторизация"
+    "auth": "Авторизация",
+    "accounting": "Бухгалтерия"
   },
   "actions": {
     "add": "Добавить",

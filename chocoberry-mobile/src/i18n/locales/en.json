@@ -8,7 +8,6 @@
     "expenses": "Expenses",
     "employees": "Employees",
     "cashbox": "Cash Box",
-    "funds": "Funds",
     "dailyReport": "Daily Report",
     "reports": "Reports",
     "business": "Business",
@@ -208,17 +207,6 @@
     "cup03Forecast": "0.3ml Forecast",
     "cup04Forecast": "0.4ml Forecast"
   },
-  "funds": {
-    "charity": "Charity Fund",
-    "reserve": "Reserve Fund",
-    "renovation": "Renovation Fund",
-    "emergency": "Emergency Fund",
-    "taxReserve": "Tax Reserve",
-    "deposit": "Deposit",
-    "withdraw": "Withdraw",
-    "transactions": "Transactions",
-    "fundName": "Fund Name"
-  },
   "cashbox": {
     "cash": "Cash",
     "card": "Card",
@@ -281,7 +269,6 @@
     "items20": "20+ inventory items",
     "products5": "5 products with recipes",
     "employees5": "5 employees",
-    "funds5": "5 funds",
     "allCategories": "All categories",
     "goToDashboard": "Go to Dashboard",
     "ready": "Choco Berry is ready!"

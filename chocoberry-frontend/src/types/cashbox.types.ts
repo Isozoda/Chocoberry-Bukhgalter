@@ -4,7 +4,8 @@ export interface CashboxBalance {
   id: string
   businessId: string
   cashBalance: string
-  cardBalance: string
+  dcBalance: string
+  alifBalance: string
   totalBalance: string
   currency: string
   lastUpdated: string
@@ -31,7 +32,8 @@ export interface CashboxOperationDto {
 
 export interface CashboxTodayReport {
   cashBalance: string
-  cardBalance: string
+  dcBalance: string
+  alifBalance: string
   totalBalance: string
   totalIn: string
   totalOut: string

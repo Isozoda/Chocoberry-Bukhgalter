@@ -70,7 +70,6 @@ export default function BusinessSetupScreen() {
                 '✅ ' + t('business.items20') + ' (мева, шоколад, расходник)',
                 '✅ ' + t('business.products5'),
                 '✅ ' + t('business.employees5') + ' (Ман, Дилшод, Саф, Намк, Баҳрулло)',
-                '✅ ' + t('business.funds5'),
                 '✅ ' + t('business.allCategories'),
               ].map((item, i) => (
                 <Text key={i} style={[styles.autoItem, { color: colors.textPrimary }]}>{item}</Text>

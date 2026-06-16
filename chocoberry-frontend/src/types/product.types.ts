@@ -20,6 +20,7 @@ export interface Product {
   cost: string
   unit: string
   category?: string | null
+  imageUrl?: string | null
   isActive: boolean
   businessId: string
   recipe?: RecipeItem[]

@@ -18,7 +18,6 @@ const MODULE_CARDS = [
   { icon: 'nutrition', label: 'nav.products', route: '/(app)/products' },
   { icon: 'wallet', label: 'nav.expenses', route: '/(app)/expenses' },
   { icon: 'people', label: 'nav.employees', route: '/(app)/employees' },
-  { icon: 'cash', label: 'nav.funds', route: '/(app)/funds' },
   { icon: 'bar-chart', label: 'nav.reports', route: '/(app)/reports' },
   { icon: 'storefront', label: 'nav.business', route: '/(app)/business/profile' },
   { icon: 'cube', label: 'nav.cashbox', route: '/(app)/cashbox' },

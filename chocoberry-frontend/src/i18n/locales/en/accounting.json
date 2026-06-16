@@ -1,0 +1,23 @@
+{
+  "title": "Accounting",
+  "description": "Cashbox, payroll, expenses and profit in one place",
+  "cashbox": "Cashbox",
+  "payroll": "Payroll",
+  "expenses": "Expenses",
+  "netProfit": "Net Profit",
+  "thisMonth": "This month",
+  "cashBalance": "Cash",
+  "dcBalance": "DC Card",
+  "alifBalance": "Alif Card",
+  "totalBalance": "Total in cashbox",
+  "viewCashbox": "Open cashbox",
+  "viewPayroll": "Open employees",
+  "viewExpenses": "Open expenses",
+  "viewReports": "Full report",
+  "totalPaidThisMonth": "Paid this month",
+  "topEmployees": "Top employees",
+  "pendingFixed": "Pending fixed expenses",
+  "byCategory": "By category",
+  "income": "Income",
+  "noData": "No data"
+}

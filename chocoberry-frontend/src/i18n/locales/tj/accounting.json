@@ -1,0 +1,23 @@
+{
+  "title": "Муҳосибот",
+  "description": "Касса, маоши кормандон, хароҷот ва фоида дар як саҳифа",
+  "cashbox": "Касса",
+  "payroll": "Маоши кормандон",
+  "expenses": "Хароҷот",
+  "netProfit": "Фоидаи холис",
+  "thisMonth": "Моҳи ҷорӣ",
+  "cashBalance": "Нақд",
+  "dcBalance": "Корти DC",
+  "alifBalance": "Корти Алиф",
+  "totalBalance": "Ҳамагӣ дар касса",
+  "viewCashbox": "Дидани касса",
+  "viewPayroll": "Дидани кормандон",
+  "viewExpenses": "Дидани хароҷот",
+  "viewReports": "Ҳисоботи пурра",
+  "totalPaidThisMonth": "Пардохта дар моҳи ҷорӣ",
+  "topEmployees": "Кормандони пешсаф",
+  "pendingFixed": "Хароҷоти доимии интизор",
+  "byCategory": "Аз рӯйи категория",
+  "income": "Даромад",
+  "noData": "Маълумот нест"
+}

@@ -68,11 +68,6 @@ export const expenseSchema = z.object({
   date: z.string(),
 })
 
-export const fundTransactionSchema = z.object({
-  amount: z.string().min(1),
-  notes: z.string().optional(),
-})
-
 export const dailyReportSchema = z.object({
   date: z.string(),
   totalSales: z.string().min(1),

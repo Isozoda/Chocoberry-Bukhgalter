@@ -55,6 +55,8 @@ export interface SalesTodayStats {
   totalSales: string
   cashSales: string
   cardSales: string
+  dushanbeCitySales: string
+  alifSales: string
   totalDiscount: string
   saleCount: number
   vsYesterday: number

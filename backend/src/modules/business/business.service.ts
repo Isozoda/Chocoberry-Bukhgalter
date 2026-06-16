@@ -742,23 +742,13 @@ export class BusinessService {
         ],
       });
 
-      // FUNDS
-      await tx.fund.createMany({
-        data: [
-          { businessId: bid, type: 'CHARITY', name: 'Фонди Хайр', balance: new Decimal(0) },
-          { businessId: bid, type: 'RESERVE', name: 'Фонди Захиравӣ', balance: new Decimal(0) },
-          { businessId: bid, type: 'RENOVATION', name: 'Фонди Ободонӣ', balance: new Decimal(0) },
-          { businessId: bid, type: 'EMERGENCY', name: 'Рӯзи Мабодо', balance: new Decimal(0) },
-          { businessId: bid, type: 'TAX_RESERVE', name: 'Захираи Андоз', balance: new Decimal(0) },
-        ],
-      });
-
       // CASHBOX
       await tx.cashbox.create({
         data: {
           businessId: bid,
           balance: new Decimal(0),
-          cardBalance: new Decimal(0),
+          dcBalance: new Decimal(0),
+          alifBalance: new Decimal(0),
           currency: 'TJS',
         },
       });
@@ -768,7 +758,6 @@ export class BusinessService {
         include: {
           suppliers: true,
           employees: true,
-          funds: true,
           cashbox: true,
           categories: true,
           inventoryItems: true,
@@ -781,7 +770,6 @@ export class BusinessService {
         inventoryCount: result.inventoryItems.length,
         productCount: result.products.length,
         employeeCount: result.employees.length,
-        fundCount: result.funds.length,
         supplierCount: result.suppliers.length,
         categoryCount: result.categories.length,
       };
@@ -876,7 +864,8 @@ export class BusinessService {
     }));
 
     const cashBalance = cashbox ? toDecimal(cashbox.balance) : new Decimal(0);
-    const cardBalance = cashbox ? toDecimal(cashbox.cardBalance) : new Decimal(0);
+    const dcBalance = cashbox ? toDecimal(cashbox.dcBalance) : new Decimal(0);
+    const alifBalance = cashbox ? toDecimal(cashbox.alifBalance) : new Decimal(0);
 
     return {
       todaySales: toDecimal(sales._sum.total || 0).toFixed(2),
@@ -885,8 +874,9 @@ export class BusinessService {
       todaySaleCount: sales._count,
       todayExpenses: toDecimal(expenses._sum.amount || 0).toFixed(2),
       cashboxBalance: cashBalance.toFixed(2),
-      cardBalance: cardBalance.toFixed(2),
-      totalBalance: cashBalance.plus(cardBalance).toFixed(2),
+      dcBalance: dcBalance.toFixed(2),
+      alifBalance: alifBalance.toFixed(2),
+      totalBalance: cashBalance.plus(dcBalance).plus(alifBalance).toFixed(2),
       lowStockCount,
       last7DaysSales,
     };

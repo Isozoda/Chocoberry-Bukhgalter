@@ -1,0 +1,23 @@
+{
+  "title": "Бухгалтерия",
+  "description": "Касса, зарплата, расходы и прибыль на одной странице",
+  "cashbox": "Касса",
+  "payroll": "Зарплата сотрудников",
+  "expenses": "Расходы",
+  "netProfit": "Чистая прибыль",
+  "thisMonth": "Текущий месяц",
+  "cashBalance": "Наличные",
+  "dcBalance": "Карта DC",
+  "alifBalance": "Карта Алиф",
+  "totalBalance": "Всего в кассе",
+  "viewCashbox": "Открыть кассу",
+  "viewPayroll": "Открыть сотрудников",
+  "viewExpenses": "Открыть расходы",
+  "viewReports": "Полный отчёт",
+  "totalPaidThisMonth": "Выплачено в этом месяце",
+  "topEmployees": "Топ сотрудников",
+  "pendingFixed": "Постоянные расходы в ожидании",
+  "byCategory": "По категориям",
+  "income": "Доход",
+  "noData": "Нет данных"
+}

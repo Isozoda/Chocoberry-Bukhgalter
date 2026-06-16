@@ -25,13 +25,15 @@ export class CashboxService {
     const b = await this.getBusiness(userId);
     const cashbox = await this.getCashbox(b.id);
     const balance = toDecimal(cashbox.balance);
-    const cardBalance = toDecimal(cashbox.cardBalance);
+    const dcBalance = toDecimal(cashbox.dcBalance);
+    const alifBalance = toDecimal(cashbox.alifBalance);
     return {
       id: cashbox.id,
       businessId: cashbox.businessId,
       cashBalance: balance.toFixed(2),
-      cardBalance: cardBalance.toFixed(2),
-      totalBalance: balance.plus(cardBalance).toFixed(2),
+      dcBalance: dcBalance.toFixed(2),
+      alifBalance: alifBalance.toFixed(2),
+      totalBalance: balance.plus(dcBalance).plus(alifBalance).toFixed(2),
       currency: cashbox.currency,
       lastUpdated: cashbox.lastUpdated,
     };
@@ -120,8 +122,12 @@ export class CashboxService {
 
     return {
       cashBalance: toDecimal(cashbox.balance).toFixed(2),
-      cardBalance: toDecimal(cashbox.cardBalance).toFixed(2),
-      totalBalance: toDecimal(cashbox.balance).plus(toDecimal(cashbox.cardBalance)).toFixed(2),
+      dcBalance: toDecimal(cashbox.dcBalance).toFixed(2),
+      alifBalance: toDecimal(cashbox.alifBalance).toFixed(2),
+      totalBalance: toDecimal(cashbox.balance)
+        .plus(toDecimal(cashbox.dcBalance))
+        .plus(toDecimal(cashbox.alifBalance))
+        .toFixed(2),
       totalIn: totalIn.toFixed(2),
       totalOut: totalOut.toFixed(2),
       netChange: totalIn.minus(totalOut).toFixed(2),

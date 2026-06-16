@@ -1,6 +1,9 @@
 {
   "title": "Маҳсулот",
   "addProduct": "Маҳсулоти нав",
+  "photo": "Сурат",
+  "uploadPhoto": "Бор кардани сурат",
+  "removePhoto": "Хориҷ кардани сурат",
   "recipe": "Рецепт / BOM",
   "recipeFor": "Рецепт барои {{name}}",
   "addIngredient": "Ашёи нав",

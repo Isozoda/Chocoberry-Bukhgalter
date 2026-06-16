@@ -12,11 +12,11 @@ import tjProducts from './locales/tj/products.json'
 import tjExpenses from './locales/tj/expenses.json'
 import tjEmployees from './locales/tj/employees.json'
 import tjCashbox from './locales/tj/cashbox.json'
-import tjFunds from './locales/tj/funds.json'
 import tjDailyReport from './locales/tj/daily-report.json'
 import tjReports from './locales/tj/reports.json'
 import tjBusiness from './locales/tj/business.json'
 import tjAuth from './locales/tj/auth.json'
+import tjAccounting from './locales/tj/accounting.json'
 
 import ruAttendance from './locales/ru/attendance.json'
 import ruCommon from './locales/ru/common.json'
@@ -28,11 +28,11 @@ import ruProducts from './locales/ru/products.json'
 import ruExpenses from './locales/ru/expenses.json'
 import ruEmployees from './locales/ru/employees.json'
 import ruCashbox from './locales/ru/cashbox.json'
-import ruFunds from './locales/ru/funds.json'
 import ruDailyReport from './locales/ru/daily-report.json'
 import ruReports from './locales/ru/reports.json'
 import ruBusiness from './locales/ru/business.json'
 import ruAuth from './locales/ru/auth.json'
+import ruAccounting from './locales/ru/accounting.json'
 
 import enAttendance from './locales/en/attendance.json'
 import enCommon from './locales/en/common.json'
@@ -44,11 +44,11 @@ import enProducts from './locales/en/products.json'
 import enExpenses from './locales/en/expenses.json'
 import enEmployees from './locales/en/employees.json'
 import enCashbox from './locales/en/cashbox.json'
-import enFunds from './locales/en/funds.json'
 import enDailyReport from './locales/en/daily-report.json'
 import enReports from './locales/en/reports.json'
 import enBusiness from './locales/en/business.json'
 import enAuth from './locales/en/auth.json'
+import enAccounting from './locales/en/accounting.json'
 
 i18n
   .use(LanguageDetector)
@@ -68,11 +68,11 @@ i18n
       'expenses',
       'employees',
       'cashbox',
-      'funds',
       'daily-report',
       'reports',
       'business',
       'auth',
+      'accounting',
     ],
     interpolation: { escapeValue: false },
     detection: {
@@ -92,11 +92,11 @@ i18n
         expenses: tjExpenses,
         employees: tjEmployees,
         cashbox: tjCashbox,
-        funds: tjFunds,
         'daily-report': tjDailyReport,
         reports: tjReports,
         business: tjBusiness,
         auth: tjAuth,
+        accounting: tjAccounting,
       },
       ru: {
         common: ruCommon,
@@ -109,11 +109,11 @@ i18n
         expenses: ruExpenses,
         employees: ruEmployees,
         cashbox: ruCashbox,
-        funds: ruFunds,
         'daily-report': ruDailyReport,
         reports: ruReports,
         business: ruBusiness,
         auth: ruAuth,
+        accounting: ruAccounting,
       },
       en: {
         common: enCommon,
@@ -126,11 +126,11 @@ i18n
         expenses: enExpenses,
         employees: enEmployees,
         cashbox: enCashbox,
-        funds: enFunds,
         'daily-report': enDailyReport,
         reports: enReports,
         business: enBusiness,
         auth: enAuth,
+        accounting: enAccounting,
       },
     },
   })

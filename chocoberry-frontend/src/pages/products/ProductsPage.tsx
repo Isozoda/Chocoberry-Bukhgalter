@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
-import { Plus, Edit, Trash2, BookOpen } from 'lucide-react'
+import { Plus, Edit, Trash2, BookOpen, ImageIcon } from 'lucide-react'
 import { productsApi } from '@/api/products.api'
+import { getImageUrl } from '@/utils/image.util'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -85,7 +86,18 @@ export default function ProductsPage() {
             const name = (i18n.language === 'tg' ? product.nameTg : product.nameRu) ?? product.name
             const margin = getMargin(product.price, product.cost)
             return (
-              <Card key={product.id} className="hover:shadow-md transition-shadow">
+              <Card key={product.id} className="hover:shadow-md transition-shadow overflow-hidden">
+                <div className="h-32 w-full overflow-hidden bg-muted/40 flex items-center justify-center">
+                  {product.imageUrl ? (
+                    <img
+                      src={getImageUrl(product.imageUrl)}
+                      alt={name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <ImageIcon className="h-8 w-8 text-muted-foreground/30" />
+                  )}
+                </div>
                 <CardContent className="pt-4 space-y-3">
                   <div>
                     <h3 className="font-semibold truncate">{name}</h3>

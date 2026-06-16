@@ -30,7 +30,6 @@ const routeLabels: Record<string, string> = {
   expenses: 'nav.expenses',
   employees: 'nav.employees',
   cashbox: 'nav.cashbox',
-  funds: 'nav.funds',
   reports: 'nav.reports',
   business: 'nav.business',
   'daily-report': 'nav.dailyReport',

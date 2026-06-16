@@ -148,12 +148,6 @@ export const cashboxOperationSchema = z.object({
   description: z.string().optional(),
 })
 
-export const fundTransactionSchema = z.object({
-  type: z.enum(['INCOME', 'EXPENSE']),
-  amount: z.string().min(1),
-  notes: z.string().optional(),
-})
-
 export const dailyReportSchema = z.object({
   date: z.string().min(1),
   totalSales: z.string().min(1),

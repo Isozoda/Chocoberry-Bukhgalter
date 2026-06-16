@@ -62,8 +62,6 @@ model Business {
   expenses          Expense[]
   transactions      FinancialTransaction[]
   fines             Fine[]
-  funds             Fund[]
-  fundTxs           FundTransaction[]
   inventoryItems    InventoryItem[]
   inventoryTxs      InventoryTransaction[]
   products          Product[]
@@ -161,6 +159,7 @@ model Product {
   cost       Decimal         @default(0) @db.Decimal(10, 2)
   unit       String          @default("piece")
   category   String?
+  imageUrl   String?
   isActive   Boolean         @default(true)
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @updatedAt
@@ -378,7 +377,8 @@ model Cashbox {
   id          String             @id @default(uuid())
   businessId  String             @unique
   balance     Decimal            @default(0) @db.Decimal(12, 2)
-  cardBalance Decimal            @default(0) @db.Decimal(12, 2)
+  dcBalance   Decimal            @default(0) @db.Decimal(12, 2)
+  alifBalance Decimal            @default(0) @db.Decimal(12, 2)
   currency    String             @default("TJS")
   lastUpdated DateTime           @default(now())
   business    Business           @relation(fields: [businessId], references: [id], onDelete: Cascade)
@@ -396,36 +396,6 @@ model CashboxOperation {
   referenceId   String?
   createdAt     DateTime      @default(now())
   cashbox       Cashbox       @relation(fields: [cashboxId], references: [id], onDelete: Cascade)
-}
-
-model Fund {
-  id           String            @id @default(uuid())
-  businessId   String
-  type         FundType
-  name         String
-  balance      Decimal           @default(0) @db.Decimal(12, 2)
-  notes        String?
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
-  business     Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  transactions FundTransaction[]
-
-  @@unique([businessId, type])
-}
-
-model FundTransaction {
-  id         String          @id @default(uuid())
-  businessId String
-  fundId     String
-  type       TransactionType
-  amount     Decimal         @db.Decimal(12, 2)
-  notes      String?
-  date       DateTime        @default(now())
-  createdAt  DateTime        @default(now())
-  business   Business        @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  fund       Fund            @relation(fields: [fundId], references: [id], onDelete: Cascade)
-
-  @@index([fundId, date])
 }
 
 model DailyReport {
@@ -602,15 +572,6 @@ enum SupplierType {
   FRUIT
   CHOCOLATE
   PACKAGING
-  OTHER
-}
-
-enum FundType {
-  CHARITY
-  RESERVE
-  RENOVATION
-  EMERGENCY
-  TAX_RESERVE
   OTHER
 }
 

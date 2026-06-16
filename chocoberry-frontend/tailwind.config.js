@@ -72,6 +72,10 @@ export default {
         chocolate: '#4A2810',
         cream: '#FFF5E6',
       },
+      fontFamily: {
+        sans: ['Manrope', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+        display: ['Unbounded', 'Manrope', 'system-ui', 'sans-serif'],
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',

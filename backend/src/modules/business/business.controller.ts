@@ -18,7 +18,7 @@ export class BusinessController {
 
   @Post('setup')
   @ApiOperation({
-    summary: 'Set up business and seed all defaults (suppliers, products, inventory, funds)',
+    summary: 'Set up business and seed all defaults (suppliers, products, inventory)',
   })
   @ApiResponse({ status: 201, description: 'Business created with all defaults seeded' })
   @ApiResponse({ status: 409, description: 'Business already set up' })

@@ -11,7 +11,6 @@ import {
   Users,
   UserCheck,
   Banknote,
-  PiggyBank,
   ClipboardList,
   BarChart3,
   Settings,
@@ -20,6 +19,7 @@ import {
   ChevronRight,
   Receipt,
   Bot,
+  Calculator,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
@@ -42,7 +42,7 @@ const navItems = [
   { path: '/app/employees', icon: Users, ns: 'employees' as const },
   { path: '/app/attendance', icon: UserCheck, ns: 'attendance' as const },
   { path: '/app/cashbox', icon: Banknote, ns: 'cashbox' as const },
-  { path: '/app/funds', icon: PiggyBank, ns: 'funds' as const },
+  { path: '/app/accounting', icon: Calculator, ns: 'accounting' as const },
   { path: '/app/daily-report', icon: ClipboardList, ns: 'daily-report' as const },
   { path: '/app/reports', icon: BarChart3, ns: 'reports' as const },
   { path: '/app/ai', icon: Bot, ns: 'ai' as const },
@@ -90,7 +90,7 @@ export function Sidebar() {
 
         {sidebarOpen && (
           <div className="flex flex-col min-w-0">
-            <span className="text-lg font-bold tracking-tight text-sidebar-foreground truncate">
+            <span className="text-lg font-display font-semibold tracking-tight text-sidebar-foreground truncate">
               Choco Berry
             </span>
             <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">

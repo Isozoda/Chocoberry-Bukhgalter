@@ -45,13 +45,13 @@ function StatusSelect({ value, onChange }: { value: AttendanceStatus | null; onC
       onChange={(e) => { if (e.target.value) onChange(e.target.value as AttendanceStatus) }}
       className={cn(
         'bg-background rounded-lg border px-2 py-1.5 text-xs font-medium outline-none cursor-pointer transition-all duration-200 appearance-none',
-        'border-border hover:border-border focus:border-orange-500/50 text-white',
+        'border-border hover:border-border focus:border-orange-500/50 text-foreground',
         value ? `${STATUS_CONFIG[value].color} ${STATUS_CONFIG[value].bg}` : 'text-muted-foreground',
       )}
     >
       <option value="" className="bg-background text-muted-foreground">— {t('selectStatus')} —</option>
       {ALL_STATUSES.map((s) => (
-        <option key={s} value={s} className="bg-background text-white">
+        <option key={s} value={s} className="bg-background text-foreground">
           {STATUS_CONFIG[s].label}
         </option>
       ))}
@@ -356,11 +356,11 @@ export default function AttendancePage() {
                             <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-orange-500/20 to-rose-500/20 flex items-center justify-center text-xs font-bold text-orange-400">
                               {employee.name.charAt(0).toUpperCase()}
                             </div>
-                            <span className="font-medium text-white">{employee.name}</span>
+                            <span className="font-medium text-foreground">{employee.name}</span>
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-gray-400 text-xs">{employee.role}</td>
-                        <td className="px-4 py-3 text-gray-300 font-mono text-xs">{formatMoney(employee.salary)} см</td>
+                        <td className="px-4 py-3 text-muted-foreground text-xs">{employee.role}</td>
+                        <td className="px-4 py-3 text-foreground font-mono text-xs">{formatMoney(employee.salary)} см</td>
                         <td className="px-4 py-3">
                           <StatusSelect
                             value={record?.status ?? null}
@@ -395,8 +395,8 @@ export default function AttendancePage() {
                             className={cn(
                               'h-8 w-8 rounded-lg transition-all duration-200',
                               record?.note 
-                                ? 'bg-orange-600 text-white shadow-lg opacity-100' 
-                                : 'text-gray-600 hover:text-gray-300'
+                                ? 'bg-orange-600 text-white shadow-lg opacity-100'
+                                : 'text-muted-foreground hover:text-foreground'
                             )}
                             disabled={!record}
                             onClick={() => {
@@ -416,16 +416,16 @@ export default function AttendancePage() {
                           {showNoteFor === employee.id && (
                             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={() => setShowNoteFor(null)}>
                               <div className="bg-background border border-border rounded-xl p-4 w-72 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-                                <p className="text-sm font-semibold mb-2 text-white">{employee.name} — {t('note')}</p>
+                                <p className="text-sm font-semibold mb-2 text-foreground">{employee.name} — {t('note')}</p>
                                 <textarea
                                   rows={3}
                                   value={editingNotes[employee.id] ?? ''}
                                   onChange={(e) => setEditingNotes((prev) => ({ ...prev, [employee.id]: e.target.value }))}
-                                  className="w-full rounded-lg border border-border bg-muted/50 text-sm text-white px-3 py-2 outline-none resize-none"
+                                  className="w-full rounded-lg border border-border bg-muted/50 text-sm text-foreground px-3 py-2 outline-none resize-none"
                                   placeholder={t('addNote')}
                                 />
                                 <div className="flex gap-2 mt-3 justify-end">
-                                  <Button variant="ghost" size="sm" onClick={() => setShowNoteFor(null)} className="text-gray-400">Бекор</Button>
+                                  <Button variant="ghost" size="sm" onClick={() => setShowNoteFor(null)} className="text-muted-foreground">Бекор</Button>
                                   <Button size="sm" onClick={() => {
                                     handleFieldSave(employee.id, selectedDate, record!.status, 'note', editingNotes[employee.id] ?? '', record)
                                     setShowNoteFor(null)
@@ -480,7 +480,7 @@ export default function AttendancePage() {
                       return (
                         <th key={day} className={cn('text-center px-2 py-3 text-xs font-semibold uppercase tracking-wider min-w-[72px]', isToday ? 'text-orange-400' : 'text-muted-foreground')}>
                           <div>{t(DAY_KEYS[dow])}</div>
-                          <div className={cn('text-[10px] font-normal mt-0.5', isToday ? 'text-orange-400/70' : 'text-gray-600')}>{day.slice(5)}</div>
+                          <div className={cn('text-[10px] font-normal mt-0.5', isToday ? 'text-orange-400/70' : 'text-muted-foreground/70')}>{day.slice(5)}</div>
                         </th>
                       )
                     })}
@@ -512,8 +512,8 @@ export default function AttendancePage() {
                               {emp.name.charAt(0).toUpperCase()}
                             </div>
                             <div>
-                              <p className="font-medium text-white text-xs">{emp.name}</p>
-                              <p className="text-[10px] text-gray-600">{emp.role}</p>
+                              <p className="font-medium text-foreground text-xs">{emp.name}</p>
+                              <p className="text-[10px] text-muted-foreground">{emp.role}</p>
                             </div>
                           </div>
                         </td>
@@ -529,7 +529,7 @@ export default function AttendancePage() {
                           )
                         })}
                         <td className="text-center px-3 py-2">
-                          <span className="text-sm font-semibold text-white">{emp.workedDays}</span>
+                          <span className="text-sm font-semibold text-foreground">{emp.workedDays}</span>
                         </td>
                         <td className="text-right px-4 py-2">
                           <span className="text-sm font-mono text-emerald-400">{formatMoney(emp.weeklySalary)} см</span>
@@ -625,23 +625,23 @@ export default function AttendancePage() {
                               {emp.name.charAt(0).toUpperCase()}
                             </div>
                             <div>
-                              <p className="font-medium text-white">{emp.name}</p>
-                              <p className="text-xs text-gray-600">{emp.role}</p>
+                              <p className="font-medium text-foreground">{emp.name}</p>
+                              <p className="text-xs text-muted-foreground">{emp.role}</p>
                             </div>
                           </div>
                         </td>
-                        <td className="text-right px-4 py-3 font-mono text-gray-300 text-xs">{formatMoney(emp.monthlySalary)} см</td>
+                        <td className="text-right px-4 py-3 font-mono text-foreground text-xs">{formatMoney(emp.monthlySalary)} см</td>
                         <td className="text-right px-4 py-3 font-mono text-muted-foreground text-xs">{formatMoney(emp.dailyRate)} см</td>
                         <td className="text-center px-3 py-3">
                           <span className="text-sm font-semibold text-white">{emp.workedDays}</span>
                         </td>
                         <td className="text-center px-3 py-3">
-                          <span className={cn('text-sm font-semibold', emp.absentDays > 0 ? 'text-red-400' : 'text-gray-600')}>
+                          <span className={cn('text-sm font-semibold', emp.absentDays > 0 ? 'text-red-400' : 'text-muted-foreground')}>
                             {emp.absentDays}
                           </span>
                         </td>
                         <td className="text-center px-3 py-3">
-                          <span className={cn('text-sm font-semibold', emp.lateDays > 0 ? 'text-orange-400' : 'text-gray-600')}>
+                          <span className={cn('text-sm font-semibold', emp.lateDays > 0 ? 'text-orange-400' : 'text-muted-foreground')}>
                             {emp.lateDays}
                           </span>
                         </td>
@@ -666,7 +666,7 @@ export default function AttendancePage() {
                   {/* Totals row */}
                   {monthly && filteredMonthly.length > 0 && (
                     <tr className="bg-muted/50 border-t-2 border-border">
-                      <td className="sticky left-0 z-10 bg-muted/50 px-4 py-3 text-xs font-bold text-gray-400 uppercase">Ҷамъ</td>
+                      <td className="sticky left-0 z-10 bg-muted/50 px-4 py-3 text-xs font-bold text-muted-foreground uppercase">Ҷамъ</td>
                       <td colSpan={6} />
                       <td className="text-right px-3 py-3 font-mono text-sm font-bold text-emerald-400">
                         +{formatMoney(monthly.totalBonuses)} см
@@ -715,8 +715,8 @@ function MoneyInput({ value, disabled, onBlur }: { value: string; disabled: bool
       className={cn(
         'bg-background w-20 rounded-md border text-xs px-2 py-1.5 font-mono outline-none transition-all duration-200 appearance-none',
         disabled
-          ? 'border-border text-gray-700 cursor-not-allowed opacity-50'
-          : 'border-border text-white hover:border-border focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 shadow-inner',
+          ? 'border-border text-muted-foreground cursor-not-allowed opacity-50'
+          : 'border-border text-foreground hover:border-border focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 shadow-inner',
       )}
     />
   )

@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { Plus, Minus, Trash2, ShoppingBag, Banknote, CreditCard, Shuffle, Tag, CheckCircle2, ChevronRight, Building2 } from 'lucide-react'
+import { Plus, Minus, Trash2, ShoppingBag, Banknote, CreditCard, Shuffle, Tag, CheckCircle2, ChevronRight, Building2, ImageIcon } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { salesApi } from '@/api/sales.api'
 import { productsApi } from '@/api/products.api'
 import { addMoney, multiplyMoney, toDecimal } from '@/utils/decimal.util'
+import { getImageUrl } from '@/utils/image.util'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { MoneyDisplay } from '@/components/ui/MoneyDisplay'
@@ -15,7 +16,6 @@ import SaleReceiptModal from './SaleReceiptModal'
 import type { Product } from '@/types/product.types'
 import type { CardType, Sale } from '@/types/sale.types'
 import Decimal from 'decimal.js'
-import strawberryImg from '@/assets/IMG_6686.PNG'
 
 interface CartItem {
   product: Product
@@ -181,12 +181,16 @@ export default function POSTerminal() {
                     )}
 
                     {/* Image */}
-                    <div className="h-28 w-full overflow-hidden bg-gradient-to-br from-rose-100 to-pink-50 dark:from-rose-950/40 dark:to-pink-950/20">
-                      <img
-                        src={strawberryImg}
-                        alt={name}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
+                    <div className="h-28 w-full overflow-hidden bg-muted/40 flex items-center justify-center">
+                      {product.imageUrl ? (
+                        <img
+                          src={getImageUrl(product.imageUrl)}
+                          alt={name}
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      ) : (
+                        <ImageIcon className="h-8 w-8 text-muted-foreground/30" />
+                      )}
                     </div>
 
                     {/* Info */}
@@ -237,8 +241,12 @@ export default function POSTerminal() {
                     key={item.product.id}
                     className="flex items-center gap-3 p-2 rounded-xl bg-muted/40 hover:bg-muted/60 transition-colors"
                   >
-                    <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-gradient-to-br from-rose-100 to-pink-50 dark:from-rose-950/40 dark:to-pink-950/20">
-                      <img src={strawberryImg} alt={name} className="w-full h-full object-cover" />
+                    <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-muted/40 flex items-center justify-center">
+                      {item.product.imageUrl ? (
+                        <img src={getImageUrl(item.product.imageUrl)} alt={name} className="w-full h-full object-cover" />
+                      ) : (
+                        <ImageIcon className="h-4 w-4 text-muted-foreground/30" />
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold truncate">{name}</p>

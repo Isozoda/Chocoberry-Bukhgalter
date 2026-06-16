@@ -147,7 +147,7 @@ export default function DashboardPage() {
       </div>
 
       {/* KPI Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         <KpiCard
           label={t('todaySales')}
           value={<MoneyDisplay amount={todayStats?.totalSales || '0'} />}
@@ -165,10 +165,17 @@ export default function DashboardPage() {
           isLoading={loadingStats}
         />
         <KpiCard
-          label={t('cardSales')}
-          value={<MoneyDisplay amount={todayStats?.cardSales || '0'} />}
+          label={t('dushanbeCitySales')}
+          value={<MoneyDisplay amount={todayStats?.dushanbeCitySales || '0'} />}
           icon={CreditCard}
           color="bg-blue-500"
+          isLoading={loadingStats}
+        />
+        <KpiCard
+          label={t('alifSales')}
+          value={<MoneyDisplay amount={todayStats?.alifSales || '0'} />}
+          icon={CreditCard}
+          color="bg-sky-500"
           isLoading={loadingStats}
         />
         <KpiCard
@@ -259,9 +266,18 @@ export default function DashboardPage() {
                     <div className="h-7 w-7 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
                       <CreditCard className="h-3.5 w-3.5 text-blue-600" />
                     </div>
-                    <span className="text-sm text-muted-foreground">{t('card')}</span>
+                    <span className="text-sm text-muted-foreground">{t('dc')}</span>
                   </div>
-                  <MoneyDisplay amount={cashbox?.cardBalance || '0'} className="font-semibold" />
+                  <MoneyDisplay amount={cashbox?.dcBalance || '0'} className="font-semibold" />
+                </div>
+                <div className="flex justify-between items-center p-2 rounded-lg bg-muted/40">
+                  <div className="flex items-center gap-2">
+                    <div className="h-7 w-7 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center">
+                      <CreditCard className="h-3.5 w-3.5 text-sky-600" />
+                    </div>
+                    <span className="text-sm text-muted-foreground">{t('alif')}</span>
+                  </div>
+                  <MoneyDisplay amount={cashbox?.alifBalance || '0'} className="font-semibold" />
                 </div>
                 <div className="flex justify-between items-center p-3 rounded-xl bg-primary/5 border border-primary/10 mt-1">
                   <span className="font-semibold text-sm">{t('total')}</span>

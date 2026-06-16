@@ -1,9 +1,22 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  Query,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { SetRecipeDto } from './dto/set-recipe.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { productImageMulterOptions } from './product-image.multer';
 
 @ApiTags('products')
 @ApiBearerAuth('JWT')
@@ -46,6 +59,21 @@ export class ProductsController {
   @ApiOperation({ summary: 'Update product' })
   update(@CurrentUser() user: any, @Param('id') id: string, @Body() dto: CreateProductDto) {
     return this.productsService.update(user.id, id, dto);
+  }
+
+  @Post(':id/image')
+  @ApiOperation({ summary: 'Upload product photo' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: { type: 'object', properties: { image: { type: 'string', format: 'binary' } } },
+  })
+  @UseInterceptors(FileInterceptor('image', productImageMulterOptions))
+  uploadImage(
+    @CurrentUser() user: any,
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.productsService.setImage(user.id, id, file);
   }
 
   @Delete(':id')

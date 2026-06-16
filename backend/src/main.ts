@@ -1,7 +1,9 @@
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { join } from 'path';
 import { AppModule } from './app.module';
 
 const DEV_ORIGINS = [
@@ -14,9 +16,14 @@ const DEV_ORIGINS = [
 ];
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { logger: ['log', 'error', 'warn'] });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: ['log', 'error', 'warn'],
+  });
   const configService = app.get(ConfigService);
   const logger = new Logger('Bootstrap');
+
+  // Serve uploaded files (product photos, etc.) — kept outside the /api/v1 prefix
+  app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads/' });
 
   // Global prefix
   app.setGlobalPrefix('api/v1');
@@ -69,7 +76,6 @@ async function bootstrap() {
     .addTag('expenses', 'Expense tracking')
     .addTag('employees', 'Employee management & payroll')
     .addTag('cashbox', 'Cash register management')
-    .addTag('funds', 'Business funds (Charity, Reserve, etc.)')
     .addTag('daily-report', 'Daily business reports')
     .addTag('reports', 'Analytics, P&L & exports')
     .build();

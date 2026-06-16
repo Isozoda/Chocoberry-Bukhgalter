@@ -12,7 +12,7 @@ export interface Business {
   isActive: boolean
   createdAt: string
   updatedAt: string
-  cashbox?: { balance: string; cardBalance: string }
+  cashbox?: { balance: string; dcBalance: string; alifBalance: string }
 }
 
 export interface CreateBusinessDto {
@@ -29,7 +29,8 @@ export interface BusinessDashboard {
   todayCard: string
   todaySaleCount: number
   cashboxBalance: string
-  cardBalance: string
+  dcBalance: string
+  alifBalance: string
   totalBalance: string
   todayExpenses: string
   lowStockCount: number
@@ -41,7 +42,6 @@ export interface SetupResponse {
   inventoryCount: number
   productCount: number
   employeeCount: number
-  fundCount: number
   supplierCount: number
   categoryCount: number
 }

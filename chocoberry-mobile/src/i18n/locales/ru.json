@@ -8,7 +8,6 @@
     "expenses": "Расходы",
     "employees": "Сотрудники",
     "cashbox": "Касса",
-    "funds": "Фонды",
     "dailyReport": "Дневной отчёт",
     "reports": "Отчёты",
     "business": "Бизнес",
@@ -208,17 +207,6 @@
     "cup03Forecast": "Прогноз 0.3ml",
     "cup04Forecast": "Прогноз 0.4ml"
   },
-  "funds": {
-    "charity": "Благотворительный фонд",
-    "reserve": "Резервный фонд",
-    "renovation": "Фонд ремонта",
-    "emergency": "Чёрный день",
-    "taxReserve": "Налоговый резерв",
-    "deposit": "Пополнить",
-    "withdraw": "Снять",
-    "transactions": "Операции",
-    "fundName": "Название фонда"
-  },
   "cashbox": {
     "cash": "Наличные",
     "card": "Карта",
@@ -281,7 +269,6 @@
     "items20": "20+ позиций склада",
     "products5": "5 товаров с рецептами",
     "employees5": "5 сотрудников",
-    "funds5": "5 фондов",
     "allCategories": "Все категории",
     "goToDashboard": "На главную",
     "ready": "Choco Berry готов!"

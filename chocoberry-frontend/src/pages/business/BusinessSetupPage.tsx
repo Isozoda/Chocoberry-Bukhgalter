@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import toast from 'react-hot-toast'
-import { CheckCircle2, Store, Users, Package, BarChart3, ArrowRight, ArrowLeft } from 'lucide-react'
+import { CheckCircle2, Store, Users, Package, ArrowRight, ArrowLeft } from 'lucide-react'
 import { businessApi } from '@/api/business.api'
 import { businessSetupSchema } from '@/utils/validation.util'
 import { Button } from '@/components/ui/button'
@@ -22,7 +22,6 @@ const WHAT_GETS_CREATED = [
   { icon: Package, label: '14 inventory items (fruits, chocolate, packaging)' },
   { icon: Store, label: '10 products with recipes (BOM)' },
   { icon: Users, label: '5 employees with roles' },
-  { icon: BarChart3, label: '5 business funds (charity, reserve, etc.)' },
 ]
 
 const STEPS = [
@@ -66,7 +65,6 @@ export default function BusinessSetupPage() {
               { label: 'Inventory items', value: setupResult.inventoryCount },
               { label: 'Products', value: setupResult.productCount },
               { label: 'Employees', value: setupResult.employeeCount },
-              { label: 'Funds', value: setupResult.fundCount },
             ].map((item) => (
               <div key={item.label} className="bg-card border rounded-xl p-4">
                 <p className="text-2xl font-bold text-primary">{item.value}</p>
