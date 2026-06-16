@@ -6,7 +6,6 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 
 // Auth pages
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'))
-const RegisterPage = lazy(() => import('@/pages/auth/RegisterPage'))
 
 // Dashboard
 const DashboardPage = lazy(() => import('@/pages/dashboard/DashboardPage'))
@@ -70,7 +69,7 @@ export default function App() {
       <Routes>
         {/* Public routes */}
         <Route path="/login" element={<Wrap><LoginPage /></Wrap>} />
-        <Route path="/register" element={<Wrap><RegisterPage /></Wrap>} />
+        <Route path="/register" element={<Navigate to="/login" replace />} />
         <Route path="/setup" element={<Wrap><BusinessSetupPage /></Wrap>} />
 
         {/* Protected routes inside AppShell */}

@@ -1,10 +1,12 @@
 import { Controller, Post, Get, Body, HttpCode, HttpStatus, Logger } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { Role } from '@prisma/client';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { Public } from '../../common/decorators/public.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('auth')
@@ -14,9 +16,12 @@ export class AuthController {
 
   private readonly logger = new Logger(AuthController.name);
 
-  @Public()
+  // Self-service signup is disabled — only an already-authenticated ADMIN
+  // can provision new accounts (e.g. a new cashier login).
+  @Roles(Role.ADMIN)
+  @ApiBearerAuth('JWT')
   @Post('register')
-  @ApiOperation({ summary: 'Register a new user' })
+  @ApiOperation({ summary: 'Create a new user account (admin only)' })
   @ApiResponse({ status: 201, type: AuthResponseDto })
   @ApiResponse({ status: 409, description: 'Email already registered' })
   register(@Body() dto: RegisterDto) {

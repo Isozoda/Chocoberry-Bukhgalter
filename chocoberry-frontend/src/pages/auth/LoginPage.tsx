@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
 import { Eye, EyeOff, Mail, Lock, TrendingUp, BarChart3, Users } from 'lucide-react'
@@ -142,13 +142,6 @@ export default function LoginPage() {
               ) : t('auth:login.submit')}
             </Button>
           </form>
-
-          <p className="mt-6 text-center text-sm text-muted-foreground">
-            {t('auth:login.noAccount')}{' '}
-            <Link to="/register" className="text-primary font-medium hover:underline">
-              {t('auth:login.createAccount')}
-            </Link>
-          </p>
         </div>
       </div>
     </div>
