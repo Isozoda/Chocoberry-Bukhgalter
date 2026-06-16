@@ -4,6 +4,7 @@ import { CreateBusinessDto } from './dto/create-business.dto';
 import { UpdateBusinessDto } from './dto/update-business.dto';
 import Decimal from 'decimal.js';
 import { toDecimal } from '../../common/utils/decimal.util';
+import { resolveBusinessForUser } from '../../common/utils/business-resolver.util';
 
 @Injectable()
 export class BusinessService {
@@ -788,17 +789,18 @@ export class BusinessService {
   }
 
   async getProfile(userId: string) {
+    const resolved = await resolveBusinessForUser(this.prisma, userId);
+    if (!resolved)
+      throw new NotFoundException('Business not found. Call POST /business/setup first.');
     const business = await this.prisma.business.findUnique({
-      where: { userId },
+      where: { id: resolved.id },
       include: { cashbox: true },
     });
-    if (!business)
-      throw new NotFoundException('Business not found. Call POST /business/setup first.');
     return business;
   }
 
   async updateProfile(userId: string, dto: UpdateBusinessDto) {
-    const business = await this.prisma.business.findUnique({ where: { userId } });
+    const business = await resolveBusinessForUser(this.prisma, userId);
     if (!business) throw new NotFoundException('Business not found');
 
     return this.prisma.business.update({
@@ -814,7 +816,7 @@ export class BusinessService {
   }
 
   async getDashboard(userId: string) {
-    const business = await this.prisma.business.findUnique({ where: { userId } });
+    const business = await resolveBusinessForUser(this.prisma, userId);
     if (!business) throw new NotFoundException('Business not found');
 
     const today = new Date();

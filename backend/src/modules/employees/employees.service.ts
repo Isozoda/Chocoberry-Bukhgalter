@@ -6,15 +6,16 @@ import { CreateFineDto } from './dto/create-fine.dto';
 import { CalcPayrollDto } from './dto/calc-payroll.dto';
 import { CreateShiftDto } from './dto/create-shift.dto';
 import { toDecimal } from '../../common/utils/decimal.util';
+import { calculatePayroll } from '../../common/utils/payroll.util';
 import { startOfMonth, endOfMonth, parseMonth } from '../../common/utils/date.util';
-import Decimal from 'decimal.js';
+import { resolveBusinessForUser } from '../../common/utils/business-resolver.util';
 
 @Injectable()
 export class EmployeesService {
   constructor(private prisma: PrismaService) {}
 
   private async getBusiness(userId: string) {
-    const b = await this.prisma.business.findUnique({ where: { userId } });
+    const b = await resolveBusinessForUser(this.prisma, userId);
     if (!b) throw new NotFoundException('Business not found');
     return b;
   }
@@ -226,22 +227,24 @@ export class EmployeesService {
     });
 
     const totalSales = toDecimal(monthSales._sum.total || 0);
-    const baseSalary = toDecimal(employee.salary);
-    const bonus = totalSales.times(toDecimal(employee.bonusPercent)).dividedBy(100);
 
     const finesAgg = await this.prisma.fine.aggregate({
       where: { employeeId, isApplied: false },
       _sum: { amount: true },
     });
-    const fines = toDecimal(finesAgg._sum.amount || 0);
 
     const advancesAgg = await this.prisma.employeePayment.aggregate({
       where: { employeeId, paymentType: 'ADVANCE', period: month },
       _sum: { amount: true },
     });
-    const advances = toDecimal(advancesAgg._sum.amount || 0);
 
-    const finalSalary = baseSalary.plus(bonus).minus(fines).minus(advances);
+    const { baseSalary, bonus, fines, advances, finalSalary } = calculatePayroll({
+      baseSalary: employee.salary,
+      bonusPercent: employee.bonusPercent,
+      totalSales,
+      fines: finesAgg._sum.amount || 0,
+      advances: advancesAgg._sum.amount || 0,
+    });
 
     return {
       employeeId,
@@ -274,22 +277,23 @@ export class EmployeesService {
     const results = [];
 
     for (const employee of employees) {
-      const baseSalary = toDecimal(employee.salary);
-      const bonus = totalSales.times(toDecimal(employee.bonusPercent)).dividedBy(100);
-
       const finesAgg = await this.prisma.fine.aggregate({
         where: { employeeId: employee.id, isApplied: false },
         _sum: { amount: true },
       });
-      const fines = toDecimal(finesAgg._sum.amount || 0);
 
       const advancesAgg = await this.prisma.employeePayment.aggregate({
         where: { employeeId: employee.id, paymentType: 'ADVANCE', period: dto.month },
         _sum: { amount: true },
       });
-      const advances = toDecimal(advancesAgg._sum.amount || 0);
 
-      const finalSalary = baseSalary.plus(bonus).minus(fines).minus(advances);
+      const { baseSalary, bonus, fines, advances, finalSalary } = calculatePayroll({
+        baseSalary: employee.salary,
+        bonusPercent: employee.bonusPercent,
+        totalSales,
+        fines: finesAgg._sum.amount || 0,
+        advances: advancesAgg._sum.amount || 0,
+      });
 
       if (dto.applyImmediately && finalSalary.greaterThan(0)) {
         await this.prisma.$transaction(async (tx) => {

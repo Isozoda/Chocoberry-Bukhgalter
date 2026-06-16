@@ -1,28 +1,32 @@
-// AI Restart trigger v17 - Gemini 2.5 Flash Stable v2
-import { NestFactory, Reflector } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 
+const DEV_ORIGINS = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:8081',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:5174',
+  'http://127.0.0.1:8081',
+];
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { logger: ['log', 'error', 'warn'] });
   const configService = app.get(ConfigService);
+  const logger = new Logger('Bootstrap');
 
   // Global prefix
   app.setGlobalPrefix('api/v1');
 
-  // CORS
-  app.enableCors({
-    origin: [
-      'http://localhost:5173',
-      'http://localhost:5174',
-      'http://localhost:8081',
-      'http://127.0.0.1:5173',
-      'http://127.0.0.1:5174',
-      'http://127.0.0.1:8081',
-    ],
+  // CORS — read allowed origins from env (ALLOWED_ORIGINS), always keep local dev origins too
+  const configuredOrigins = configService.get<string[]>('allowedOrigins') || [];
+  const allowedOrigins = Array.from(new Set([...configuredOrigins, ...DEV_ORIGINS]));
 
+  app.enableCors({
+    origin: allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With', 'Origin'],
@@ -30,7 +34,7 @@ async function bootstrap() {
 
   // Request logger middleware
   app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    logger.log(`${req.method} ${req.url}`);
     next();
   });
 
@@ -81,8 +85,8 @@ async function bootstrap() {
 
   const port = configService.get<number>('port') || 3000;
   await app.listen(port);
-  console.log(`🚀 Choco Berry API running at http://localhost:${port}`);
-  console.log(`📚 Swagger docs at http://localhost:${port}/api/docs`);
+  logger.log(`🚀 Choco Berry API running at http://localhost:${port}`);
+  logger.log(`📚 Swagger docs at http://localhost:${port}/api/docs`);
 }
 
 bootstrap();

@@ -1,4 +1,5 @@
 export type PaymentMethod = 'CASH' | 'CARD' | 'TRANSFER' | 'MIXED'
+export type CardType = 'DUSHANBE_CITY' | 'ALIF'
 export type SaleStatus = 'COMPLETED' | 'REFUNDED' | 'VOID'
 
 export interface SaleItem {
@@ -24,6 +25,7 @@ export interface Sale {
   paymentMethod: PaymentMethod
   cashAmount: string
   cardAmount: string
+  cardType?: CardType | null
   status: SaleStatus
   businessId: string
   employeeId?: string | null
@@ -42,6 +44,7 @@ export interface CreateSaleDto {
   paymentMethod: PaymentMethod
   cashAmount?: number
   cardAmount?: number
+  cardType?: CardType
   discount?: number
   tax?: number
   employeeId?: string

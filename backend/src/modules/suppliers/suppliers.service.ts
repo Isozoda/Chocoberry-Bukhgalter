@@ -11,13 +11,14 @@ import { FilterPurchasesDto } from './dto/filter-purchases.dto';
 import Decimal from 'decimal.js';
 import { toDecimal, multiplyDecimal, calcWeightedAvgCost } from '../../common/utils/decimal.util';
 import { startOfDay, endOfDay } from '../../common/utils/date.util';
+import { resolveBusinessForUser } from '../../common/utils/business-resolver.util';
 
 @Injectable()
 export class SuppliersService {
   constructor(private prisma: PrismaService) {}
 
   private async getBusiness(userId: string) {
-    const b = await this.prisma.business.findUnique({ where: { userId } });
+    const b = await resolveBusinessForUser(this.prisma, userId);
     if (!b) throw new NotFoundException('Business not found');
     return b;
   }

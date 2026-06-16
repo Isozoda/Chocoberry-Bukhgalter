@@ -21,5 +21,7 @@
   "transactionsCount_one": "{{count}} transaction",
   "transactionsCount_other": "{{count}} transactions",
   "allStockOk": "All stock levels are OK",
-  "viewAllAlerts": "View all {{count}} alerts"
+  "viewAllAlerts": "View all {{count}} alerts",
+  "transactionsCount_few": "{{count}} transactions",
+  "transactionsCount_many": "{{count}} transactions"
 }

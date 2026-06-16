@@ -68,12 +68,12 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        'fixed left-0 top-0 h-full bg-[#0a0a0b] border-r border-[#1a1a1c] flex flex-col transition-all duration-300 ease-in-out z-40',
+        'fixed left-0 top-0 h-full bg-sidebar border-r border-sidebar-border flex flex-col transition-all duration-300 ease-in-out z-40',
         sidebarOpen ? 'w-64' : 'w-20'
       )}
     >
       {/* Logo */}
-      <div className="p-4 flex items-center gap-3 h-20 border-b border-[#1a1a1c] relative group">
+      <div className="p-4 flex items-center gap-3 h-20 border-b border-sidebar-border relative group">
         <div className="relative flex-shrink-0">
           <div className="absolute -inset-1 bg-gradient-to-r from-orange-600 to-pink-600 rounded-full blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
           <div className={cn(
@@ -90,7 +90,7 @@ export function Sidebar() {
 
         {sidebarOpen && (
           <div className="flex flex-col min-w-0">
-            <span className="text-lg font-bold tracking-tight text-white truncate">
+            <span className="text-lg font-bold tracking-tight text-sidebar-foreground truncate">
               Choco Berry
             </span>
             <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
@@ -99,12 +99,11 @@ export function Sidebar() {
           </div>
         )}
 
-        {/* Toggle Button - Repositioned to avoid overlapping content */}
         <Button
           variant="ghost"
           size="icon"
           className={cn(
-            "absolute right-4 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full bg-[#161618] border border-[#1a1a1c] shadow-xl hover:bg-orange-600 hover:text-white transition-all duration-300 group-hover:scale-110",
+            "absolute right-4 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full bg-sidebar-hover border border-sidebar-border shadow-xl hover:bg-orange-600 hover:text-white transition-all duration-300 group-hover:scale-110",
             !sidebarOpen && "hidden group-hover:flex"
           )}
           onClick={toggleSidebar}
@@ -126,33 +125,32 @@ export function Sidebar() {
                     'group/item relative flex w-full items-center rounded-xl px-3 py-2.5 transition-all duration-200',
                     isActive
                       ? 'bg-orange-500/10 text-orange-600 shadow-sm'
-                      : 'text-gray-400 hover:bg-[#161618] hover:text-white'
+                      : 'text-muted-foreground hover:bg-sidebar-hover hover:text-sidebar-foreground'
                   )
                 }
               >
                 {({ isActive }) => (
                   <div className="flex flex-row items-center gap-3 w-full" style={{ display: 'flex', flexDirection: 'row' }}>
-                    {/* Active Indicator */}
                     {isActive && (
-                      <div className="absolute -left-[3px] top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-orange-600 shadow-[0_0_15px_rgba(234,88,12,0.8)]" />
+                      <div className="absolute -left-[3px] top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-orange-600 shadow-[0_0_15px_rgba(234,88,12,0.6)]" />
                     )}
 
                     <div className="relative flex h-6 w-6 flex-shrink-0 items-center justify-center">
                       <Icon
                         className={cn(
                           'h-5 w-5 transition-all duration-300 group-hover/item:scale-110',
-                          isActive ? 'text-orange-600' : 'text-gray-400 group-hover/item:text-white'
+                          isActive ? 'text-orange-600' : 'text-muted-foreground group-hover/item:text-sidebar-foreground'
                         )}
                       />
                       {(ns as string) === 'inventory' && lowStockItems.length > 0 && (
-                        <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full border-2 border-[#0a0a0b] bg-destructive" />
+                        <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full border-2 border-sidebar bg-destructive" />
                       )}
                     </div>
 
                     {sidebarOpen && (
                       <span className={cn(
                         "flex-1 truncate text-sm font-semibold tracking-tight transition-all duration-300 whitespace-nowrap",
-                        isActive ? "text-orange-600" : "text-gray-400 group-hover/item:text-white"
+                        isActive ? "text-orange-600" : "text-muted-foreground group-hover/item:text-sidebar-foreground"
                       )}>
                         {t(`nav.${ns === 'daily-report' ? 'dailyReport' : ns}`)}
                       </span>
@@ -171,16 +169,15 @@ export function Sidebar() {
               </NavLink>
             </TooltipTrigger>
             {!sidebarOpen && (
-              <TooltipContent side="right" className="bg-[#161618] border-[#1a1a1c] text-white">
+              <TooltipContent side="right" className="bg-popover border-border text-popover-foreground">
                 {t(`nav.${ns === 'daily-report' ? 'dailyReport' : ns}`)}
               </TooltipContent>
             )}
-
           </Tooltip>
         ))}
 
         {sidebarOpen && (
-          <div className="px-3 pt-6 pb-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40">
+          <div className="px-3 pt-6 pb-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">
             System
           </div>
         )}
@@ -195,27 +192,27 @@ export function Sidebar() {
                   'group/item relative flex w-full items-center rounded-xl px-3 py-2.5 transition-all duration-200',
                   isActive
                     ? 'bg-orange-500/10 text-orange-600 shadow-sm'
-                    : 'text-gray-400 hover:bg-[#161618] hover:text-white'
+                    : 'text-muted-foreground hover:bg-sidebar-hover hover:text-sidebar-foreground'
                 )
               }
             >
               {({ isActive }) => (
                 <div className="flex flex-row items-center gap-3 w-full" style={{ display: 'flex', flexDirection: 'row' }}>
                   {isActive && (
-                    <div className="absolute -left-[3px] top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-orange-600 shadow-[0_0_15px_rgba(234,88,12,0.8)]" />
+                    <div className="absolute -left-[3px] top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-orange-600 shadow-[0_0_15px_rgba(234,88,12,0.6)]" />
                   )}
                   <div className="relative flex h-6 w-6 flex-shrink-0 items-center justify-center">
                     <Settings
                       className={cn(
                         'h-5 w-5 flex-shrink-0 transition-all duration-300 group-hover/item:rotate-90',
-                        isActive ? 'text-orange-600' : 'text-gray-400 group-hover/item:text-white'
+                        isActive ? 'text-orange-600' : 'text-muted-foreground group-hover/item:text-sidebar-foreground'
                       )}
                     />
                   </div>
                   {sidebarOpen && (
                     <span className={cn(
                       "flex-1 truncate text-sm font-semibold tracking-tight whitespace-nowrap",
-                      isActive ? "text-orange-600" : "text-gray-400 group-hover/item:text-white"
+                      isActive ? "text-orange-600" : "text-muted-foreground group-hover/item:text-sidebar-foreground"
                     )}>
                       {t('nav.business')}
                     </span>
@@ -225,7 +222,7 @@ export function Sidebar() {
             </NavLink>
           </TooltipTrigger>
           {!sidebarOpen && (
-            <TooltipContent side="right" className="bg-[#161618] border-[#1a1a1c] text-white">
+            <TooltipContent side="right" className="bg-popover border-border text-popover-foreground">
               {t('nav.business')}
             </TooltipContent>
           )}
@@ -233,21 +230,21 @@ export function Sidebar() {
       </nav>
 
       {/* User area */}
-      <div className="mt-auto border-t border-[#1a1a1c] p-4 bg-[#0c0c0d]/50 backdrop-blur-sm">
+      <div className="mt-auto border-t border-sidebar-border p-4 bg-sidebar/80 backdrop-blur-sm">
         <div className={cn('flex items-center gap-3', !sidebarOpen && 'flex-col')}>
           <div className="relative group/avatar">
-            <Avatar className="h-10 w-10 flex-shrink-0 rounded-xl border border-[#1a1a1c] transition-all group-hover/avatar:scale-105">
+            <Avatar className="h-10 w-10 flex-shrink-0 rounded-xl border border-sidebar-border transition-all group-hover/avatar:scale-105">
               <AvatarFallback className="text-sm bg-gradient-to-br from-orange-500 to-rose-600 text-white font-bold">
                 {user?.name?.charAt(0)?.toUpperCase() || 'U'}
               </AvatarFallback>
             </Avatar>
-            <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 bg-green-500 border-2 border-[#0a0a0b] rounded-full" />
+            <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 bg-green-500 border-2 border-sidebar rounded-full" />
           </div>
 
           {sidebarOpen && (
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold truncate text-foreground/90">{user?.name}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">{user?.role}</p>
+              <p className="text-sm font-semibold truncate text-sidebar-foreground">{user?.name}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{user?.role}</p>
             </div>
           )}
 

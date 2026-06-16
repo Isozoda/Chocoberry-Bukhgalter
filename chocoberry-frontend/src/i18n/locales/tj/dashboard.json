@@ -21,5 +21,7 @@
   "transactionsCount_one": "{{count}} амалиёт",
   "transactionsCount_other": "{{count}} амалиёт",
   "allStockOk": "Ҳамаи захираҳо дар ҳолати хубанд",
-  "viewAllAlerts": "Дидани ҳамаи {{count}} огоҳиҳо"
+  "viewAllAlerts": "Дидани ҳамаи {{count}} огоҳиҳо",
+  "transactionsCount_few": "{{count}} амалиёт",
+  "transactionsCount_many": "{{count}} амалиёт"
 }

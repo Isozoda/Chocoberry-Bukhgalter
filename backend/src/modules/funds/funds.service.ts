@@ -3,13 +3,14 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreateFundDto } from './dto/create-fund.dto';
 import { FundOpDto } from './dto/fund-op.dto';
 import { toDecimal } from '../../common/utils/decimal.util';
+import { resolveBusinessForUser } from '../../common/utils/business-resolver.util';
 
 @Injectable()
 export class FundsService {
   constructor(private prisma: PrismaService) {}
 
   private async getBusiness(userId: string) {
-    const b = await this.prisma.business.findUnique({ where: { userId } });
+    const b = await resolveBusinessForUser(this.prisma, userId);
     if (!b) throw new NotFoundException('Business not found');
     return b;
   }

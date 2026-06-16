@@ -11,6 +11,7 @@ import { buildAdvisorPrompt } from './prompts/advisor.prompt';
 import { AnalyzeSalesDto } from './dto/analyze-sales.dto';
 import { ForecastInventoryDto } from './dto/forecast-inventory.dto';
 import { AskAdvisorDto } from './dto/ask-advisor.dto';
+import { resolveBusinessForUser } from '../../common/utils/business-resolver.util';
 
 interface CacheEntry {
   data: unknown;
@@ -177,7 +178,7 @@ export class AiService {
   }
 
   private async getBusiness(userId: string) {
-    const b = await this.prisma.business.findUnique({ where: { userId } });
+    const b = await resolveBusinessForUser(this.prisma, userId);
     if (!b) throw new Error('Business not found');
     return b;
   }

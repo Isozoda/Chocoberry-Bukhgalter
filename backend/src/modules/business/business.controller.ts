@@ -1,14 +1,19 @@
-import { Controller, Post, Get, Patch, Body } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Body, Logger } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { BusinessService } from './business.service';
 import { CreateBusinessDto } from './dto/create-business.dto';
 import { UpdateBusinessDto } from './dto/update-business.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('business')
 @ApiBearerAuth('JWT')
 @Controller('business')
+@Roles(Role.ADMIN)
 export class BusinessController {
+  private readonly logger = new Logger(BusinessController.name);
+
   constructor(private readonly businessService: BusinessService) {}
 
   @Post('setup')
@@ -56,7 +61,7 @@ export class BusinessController {
     try {
       return await this.businessService.getDashboard(user.id);
     } catch (error) {
-      console.error('Dashboard Error:', error);
+      this.logger.error('Dashboard error', error instanceof Error ? error.stack : error);
       throw error;
     }
   }

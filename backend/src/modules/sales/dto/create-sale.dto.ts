@@ -10,7 +10,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { PaymentMethod } from '@prisma/client';
+import { CardType, PaymentMethod } from '@prisma/client';
 
 export class SaleItemDto {
   @ApiPropertyOptional({ example: 'uuid-of-product' })
@@ -65,6 +65,11 @@ export class CreateSaleDto {
   @IsNumber()
   @Min(0)
   cardAmount?: number;
+
+  @ApiPropertyOptional({ enum: CardType, example: 'DUSHANBE_CITY' })
+  @IsOptional()
+  @IsEnum(CardType)
+  cardType?: CardType;
 
   @ApiPropertyOptional({ example: 0 })
   @IsOptional()

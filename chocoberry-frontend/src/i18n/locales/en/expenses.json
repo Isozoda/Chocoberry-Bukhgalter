@@ -31,7 +31,8 @@
     "PAYROLL": "Payroll",
     "OWNER_DRAW": "Owner Draw",
     "CONSUMABLE": "Consumable",
-    "WASTE": "Waste"
+    "WASTE": "Waste",
+    "COGS": "Cost of Goods"
   },
   "categories": "Categories"
 }

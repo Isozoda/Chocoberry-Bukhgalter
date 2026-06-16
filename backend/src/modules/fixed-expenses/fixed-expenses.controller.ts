@@ -3,10 +3,13 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger'
 import { FixedExpensesService } from './fixed-expenses.service';
 import { CreateFixedExpenseDto } from './dto/create-fixed-expense.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('fixed-expenses')
 @ApiBearerAuth('JWT')
 @Controller('fixed-expenses')
+@Roles(Role.ADMIN)
 export class FixedExpensesController {
   constructor(private readonly service: FixedExpensesService) {}
 

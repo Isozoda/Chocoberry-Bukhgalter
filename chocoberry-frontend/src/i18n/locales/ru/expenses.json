@@ -25,12 +25,14 @@
   "card": "Карта",
   "vendorPlaceholder": "Название поставщика",
   "descriptionPlaceholder": "Дополнительная информация",
-  "types": {    "FIXED": "Постоянный",
+  "types": {
+    "FIXED": "Постоянный",
     "VARIABLE": "Переменный",
     "PAYROLL": "Зарплата",
     "OWNER_DRAW": "Дивиденды",
     "CONSUMABLE": "Расходники",
-    "WASTE": "Потери"
+    "WASTE": "Потери",
+    "COGS": "Себестоимость"
   },
   "categories": "Категории"
 }

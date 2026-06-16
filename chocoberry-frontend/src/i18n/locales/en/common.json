@@ -14,7 +14,8 @@
     "reports": "Reports",
     "business": "Business",
     "fixedExpenses": "Fixed Expenses",
-    "ai": "AI Assistant"
+    "ai": "AI Assistant",
+    "auth": "Login"
   },
   "actions": {
     "add": "Add",
@@ -107,7 +108,8 @@
     "passwordMismatch": "Passwords do not match",
     "invalidAmount": "Invalid amount",
     "insufficientStock": "Insufficient stock",
-    "networkError": "Network error"
+    "networkError": "Network error",
+    "tryAgainLater": "Please try again later"
   },
   "toast": {
     "success": "Operation successful",

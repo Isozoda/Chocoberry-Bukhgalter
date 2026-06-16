@@ -14,7 +14,8 @@
     "reports": "Отчёты",
     "business": "Бизнес",
     "fixedExpenses": "Постоянные расходы",
-    "ai": "ИИ Помощник"
+    "ai": "ИИ Помощник",
+    "auth": "Авторизация"
   },
   "actions": {
     "add": "Добавить",
@@ -107,7 +108,8 @@
     "passwordMismatch": "Пароли не совпадают",
     "invalidAmount": "Неверная сумма",
     "insufficientStock": "Недостаточно запасов",
-    "networkError": "Ошибка сети"
+    "networkError": "Ошибка сети",
+    "tryAgainLater": "Пожалуйста, попробуйте позже"
   },
   "toast": {
     "success": "Операция выполнена успешно",

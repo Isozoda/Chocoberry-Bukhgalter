@@ -3,10 +3,13 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger'
 import { DailyReportService } from './daily-report.service';
 import { CreateDailyReportDto } from './dto/create-daily-report.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('daily-report')
 @ApiBearerAuth('JWT')
 @Controller('daily-report')
+@Roles(Role.ADMIN)
 export class DailyReportController {
   constructor(private readonly dailyReportService: DailyReportService) {}
 

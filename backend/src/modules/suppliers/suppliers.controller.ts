@@ -5,10 +5,13 @@ import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { CreatePurchaseDto } from './dto/create-purchase.dto';
 import { FilterPurchasesDto } from './dto/filter-purchases.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('suppliers')
 @ApiBearerAuth('JWT')
 @Controller('suppliers')
+@Roles(Role.ADMIN)
 export class SuppliersController {
   constructor(private readonly suppliersService: SuppliersService) {}
 

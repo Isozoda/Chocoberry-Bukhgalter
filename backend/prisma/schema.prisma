@@ -12,7 +12,7 @@ model User {
   email              String                 @unique
   name               String
   passwordHash       String
-  role               Role                   @default(STAFF)
+  role               Role                   @default(ADMIN)
   currency           String                 @default("TJS")
   language           String                 @default("tg")
   isActive           Boolean                @default(true)
@@ -247,6 +247,7 @@ model Sale {
   paymentMethod PaymentMethod @default(CASH)
   cashAmount    Decimal       @default(0) @db.Decimal(12, 2)
   cardAmount    Decimal       @default(0) @db.Decimal(12, 2)
+  cardType      CardType?
   status        SaleStatus    @default(COMPLETED)
   employeeId    String?
   notes         String?
@@ -510,10 +511,8 @@ model Attendance {
 }
 
 enum Role {
-  OWNER
-  STAFF
   ADMIN
-  ACCOUNTANT
+  CASHIER
 }
 
 enum BusinessType {
@@ -622,6 +621,11 @@ enum CupType {
   CUP_90SM
   CUP_ICE_CREAM
   OTHER
+}
+
+enum CardType {
+  DUSHANBE_CITY
+  ALIF
 }
 
 enum AttendanceStatus {

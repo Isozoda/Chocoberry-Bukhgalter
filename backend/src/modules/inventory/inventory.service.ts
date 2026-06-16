@@ -13,6 +13,7 @@ import { AdjustDto } from './dto/adjust.dto';
 import Decimal from 'decimal.js';
 import { toDecimal, multiplyDecimal, calcWeightedAvgCost } from '../../common/utils/decimal.util';
 import { TelegramService } from '../telegram/telegram.service';
+import { resolveBusinessForUser } from '../../common/utils/business-resolver.util';
 
 @Injectable()
 export class InventoryService {
@@ -47,7 +48,7 @@ export class InventoryService {
   }
 
   private async getBusiness(userId: string) {
-    const b = await this.prisma.business.findUnique({ where: { userId } });
+    const b = await resolveBusinessForUser(this.prisma, userId);
     if (!b) throw new NotFoundException('Business not found');
     return b;
   }

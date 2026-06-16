@@ -48,6 +48,14 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        sidebar: {
+          DEFAULT: 'hsl(var(--sidebar-bg))',
+          foreground: 'hsl(var(--sidebar-foreground))',
+          active: 'hsl(var(--sidebar-active))',
+          'active-foreground': 'hsl(var(--sidebar-active-foreground))',
+          hover: 'hsl(var(--sidebar-hover))',
+          border: 'hsl(var(--sidebar-border))',
+        },
         brand: {
           DEFAULT: '#E8593C',
           50: '#FDF2EF',

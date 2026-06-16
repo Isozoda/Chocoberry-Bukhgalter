@@ -12,6 +12,15 @@
   "balance": "Баланс",
   "noOperations": "Операции не найдены",
   "operationAdded": "Операция успешно добавлена",
+  "todayReport": "Отчёт за сегодня",
+  "history": "История",
+  "balanceBefore": "Баланс до",
+  "balanceAfter": "Баланс после",
+  "operationType": "Тип операции",
+  "cashIn": "Приход",
+  "cashOut": "Расход",
+  "openSession": "Открыть смену",
+  "closeSession": "Закрыть смену",
   "types": {
     "CASH_IN": "Приход",
     "CASH_OUT": "Расход"

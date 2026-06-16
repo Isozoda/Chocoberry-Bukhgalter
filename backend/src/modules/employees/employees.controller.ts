@@ -7,10 +7,13 @@ import { CreateFineDto } from './dto/create-fine.dto';
 import { CalcPayrollDto } from './dto/calc-payroll.dto';
 import { CreateShiftDto } from './dto/create-shift.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('employees')
 @ApiBearerAuth('JWT')
 @Controller('employees')
+@Roles(Role.ADMIN)
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
 

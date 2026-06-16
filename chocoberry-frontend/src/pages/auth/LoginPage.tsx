@@ -38,7 +38,7 @@ export default function LoginPage() {
     onSuccess: (data) => {
       login(data.accessToken, data.user)
       toast.success(t('auth:login.welcomeBack'))
-      navigate('/app/dashboard')
+      navigate(data.user.role === 'CASHIER' ? '/app/pos' : '/app/dashboard')
     },
   })
 

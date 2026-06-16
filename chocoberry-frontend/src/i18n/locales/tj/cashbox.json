@@ -12,6 +12,15 @@
   "balance": "Тавозун",
   "noOperations": "Амалиётҳо ёфт нашуданд",
   "operationAdded": "Амалиёт бомуваффақият илова шуд",
+  "todayReport": "Ҳисоботи имрӯза",
+  "history": "Таърих",
+  "balanceBefore": "Тавозун пеш аз",
+  "balanceAfter": "Тавозун баъд аз",
+  "operationType": "Навъи амалиёт",
+  "cashIn": "Воридот",
+  "cashOut": "Хуруҷ",
+  "openSession": "Кушодани нӯбат",
+  "closeSession": "Бастани нӯбат",
   "types": {
     "CASH_IN": "Воридот",
     "CASH_OUT": "Хуруҷ"

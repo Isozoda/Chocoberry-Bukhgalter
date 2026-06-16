@@ -16,7 +16,7 @@ export class RegisterDto {
   @MinLength(6)
   password: string;
 
-  @ApiPropertyOptional({ enum: Role, example: Role.OWNER })
+  @ApiPropertyOptional({ enum: Role, example: Role.ADMIN })
   @IsOptional()
   @IsEnum(Role)
   role?: Role;

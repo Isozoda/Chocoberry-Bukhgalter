@@ -3,10 +3,13 @@ import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AttendanceService } from './attendance.service';
 import { UpsertAttendanceDto } from './dto/upsert-attendance.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('attendance')
 @ApiBearerAuth('JWT')
 @Controller('attendance')
+@Roles(Role.ADMIN)
 export class AttendanceController {
   constructor(private readonly attendanceService: AttendanceService) {}
 

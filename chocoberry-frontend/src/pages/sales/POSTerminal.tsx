@@ -1,25 +1,19 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { Plus, Minus, Trash2, ShoppingCart } from 'lucide-react'
+import { Plus, Minus, Trash2, ShoppingBag, Banknote, CreditCard, Shuffle, Tag, CheckCircle2, ChevronRight, Building2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { salesApi } from '@/api/sales.api'
 import { productsApi } from '@/api/products.api'
 import { addMoney, multiplyMoney, toDecimal } from '@/utils/decimal.util'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { MoneyDisplay } from '@/components/ui/MoneyDisplay'
 import { MoneyInput } from '@/components/forms/MoneyInput'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
-import { EmptyState } from '@/components/ui/EmptyState'
-import MixedPaymentModal from './MixedPaymentModal'
 import SaleReceiptModal from './SaleReceiptModal'
 import type { Product } from '@/types/product.types'
-import type { Sale } from '@/types/sale.types'
+import type { CardType, Sale } from '@/types/sale.types'
 import Decimal from 'decimal.js'
 import strawberryImg from '@/assets/IMG_6686.PNG'
 
@@ -28,15 +22,27 @@ interface CartItem {
   quantity: number
 }
 
+const CUP_LABELS: Record<string, string> = {
+  ALL: 'Ҳама',
+  CUP_300_ML: '300 мл',
+  CUP_400_ML: '400 мл',
+  CUP_80SM: '80 см',
+  CUP_90SM: '90 см',
+  CUP_ICE_CREAM: 'Мороженое',
+  OTHER: 'Дигар',
+}
+
+const cupTypes = ['ALL', 'CUP_300_ML', 'CUP_400_ML', 'CUP_80SM', 'CUP_90SM', 'CUP_ICE_CREAM', 'OTHER']
+
 export default function POSTerminal() {
   const { t, i18n } = useTranslation('sales')
   const queryClient = useQueryClient()
   const [cart, setCart] = useState<CartItem[]>([])
   const [discount, setDiscount] = useState('0')
   const [paymentMethod, setPaymentMethod] = useState<'CASH' | 'CARD' | 'MIXED'>('CASH')
-  const [mixedOpen, setMixedOpen] = useState(false)
   const [mixedCash, setMixedCash] = useState('0')
   const [mixedCard, setMixedCard] = useState('0')
+  const [cardType, setCardType] = useState<CardType | null>(null)
   const [receipt, setReceipt] = useState<Sale | null>(null)
   const [cupType, setCupType] = useState('ALL')
 
@@ -93,6 +99,11 @@ export default function POSTerminal() {
     },
   })
 
+  const cardTypeRequired = paymentMethod === 'CARD' || paymentMethod === 'MIXED'
+  const canSubmit = cart.length > 0 && !saleMutation.isPending &&
+    (paymentMethod === 'MIXED' ? mixedValid : true) &&
+    (cardTypeRequired ? cardType !== null : true)
+
   const handleSale = () => {
     if (cart.length === 0) {
       toast.error(t('emptyCart'))
@@ -103,6 +114,7 @@ export default function POSTerminal() {
       paymentMethod,
       cashAmount: parseFloat(paymentMethod === 'MIXED' ? mixedCash : paymentMethod === 'CASH' ? total.toString() : '0'),
       cardAmount: parseFloat(paymentMethod === 'MIXED' ? mixedCard : paymentMethod === 'CARD' ? total.toString() : '0'),
+      cardType: cardType ?? undefined,
       discount: parseFloat(discount || '0'),
     })
   }
@@ -111,165 +123,296 @@ export default function POSTerminal() {
     setCart([])
     setDiscount('0')
     setPaymentMethod('CASH')
+    setCardType(null)
     setReceipt(null)
   }
 
-  const cupTypes = ['ALL', 'CUP_300_ML', 'CUP_400_ML', 'CUP_80SM', 'CUP_90SM', 'CUP_ICE_CREAM', 'OTHER']
+  const paymentOptions = [
+    { key: 'CASH' as const, label: 'Нақд', icon: Banknote },
+    { key: 'CARD' as const, label: 'Карта', icon: CreditCard },
+    { key: 'MIXED' as const, label: 'Омехта', icon: Shuffle },
+  ]
 
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Product grid */}
-        <div className="lg:col-span-2 space-y-4">
-          <Tabs value={cupType} onValueChange={setCupType}>
-            <TabsList className="flex-wrap h-auto">
-              {cupTypes.map((ct) => (
-                <TabsTrigger key={ct} value={ct} className="text-xs">
-                  {ct === 'ALL' ? 'All' : ct.replace(/_/g, ' ')}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
+      <div className="flex gap-5 h-[calc(100vh-var(--pos-h-offset,160px))] min-h-0">
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {productsData?.data.map((product) => {
-              const name = (i18n.language === 'tg' ? product.nameTg : product.nameRu) || product.name
-              return (
-                <button
-                  key={product.id}
-                  onClick={() => addToCart(product)}
-                  className="text-left p-3 rounded-lg border hover:border-primary hover:bg-primary/5 transition-colors"
-                >
-                  <div className="mb-2 h-16 w-full rounded-md overflow-hidden bg-white border flex items-center justify-center">
-                    <img src={strawberryImg} alt={name} className="h-full w-full object-cover" />
-                  </div>
-                  <p className="font-medium text-sm truncate">{name}</p>
-                  <MoneyDisplay amount={product.price} className="text-xs text-primary font-bold" />
-                </button>
-              )
-            })}
+        {/* ═══ LEFT — Product grid ═══ */}
+        <div className="flex-1 flex flex-col gap-4 min-w-0">
+
+          {/* Category pills */}
+          <div className="flex gap-2 flex-wrap">
+            {cupTypes.map((ct) => (
+              <button
+                key={ct}
+                onClick={() => setCupType(ct)}
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 border ${
+                  cupType === ct
+                    ? 'bg-primary text-primary-foreground border-primary shadow-md shadow-primary/30'
+                    : 'border-border text-muted-foreground hover:border-primary/50 hover:text-foreground'
+                }`}
+              >
+                {CUP_LABELS[ct]}
+              </button>
+            ))}
+          </div>
+
+          {/* Products */}
+          <div className="flex-1 overflow-y-auto pr-1">
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
+              {productsData?.data.map((product) => {
+                const name = (i18n.language === 'tg' ? product.nameTg : product.nameRu) || product.name
+                const inCart = cart.find((i) => i.product.id === product.id)
+                return (
+                  <button
+                    key={product.id}
+                    onClick={() => addToCart(product)}
+                    className={`group relative text-left rounded-2xl border-2 overflow-hidden transition-all duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] ${
+                      inCart
+                        ? 'border-primary shadow-md shadow-primary/20'
+                        : 'border-border hover:border-primary/60'
+                    }`}
+                  >
+                    {/* Cart badge */}
+                    {inCart && (
+                      <span className="absolute top-2 right-2 z-10 bg-primary text-primary-foreground text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shadow-lg">
+                        {inCart.quantity}
+                      </span>
+                    )}
+
+                    {/* Image */}
+                    <div className="h-28 w-full overflow-hidden bg-gradient-to-br from-rose-100 to-pink-50 dark:from-rose-950/40 dark:to-pink-950/20">
+                      <img
+                        src={strawberryImg}
+                        alt={name}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+
+                    {/* Info */}
+                    <div className="p-3">
+                      <p className="font-semibold text-sm leading-tight truncate mb-1">{name}</p>
+                      <MoneyDisplay amount={product.price} className="text-sm text-primary font-bold" />
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
           </div>
         </div>
 
-        {/* Cart */}
-        <Card className="h-fit">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <ShoppingCart className="h-4 w-4" />
-              {t('cart')} ({cart.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {cart.length === 0 ? (
-              <EmptyState message={t('emptyCart')} className="py-6" />
-            ) : (
-              <div className="space-y-2 max-h-64 overflow-y-auto">
-                {cart.map((item) => {
-                  const name = (i18n.language === 'tg' ? item.product.nameTg : item.product.nameRu) || item.product.name
-                  const lineTotal = multiplyMoney(item.product.price, item.quantity)
-                  return (
-                    <div key={item.product.id} className="flex items-center gap-2 text-sm">
-                      <div className="flex-1 min-w-0">
-                        <p className="truncate font-medium">{name}</p>
-                        <MoneyDisplay amount={lineTotal.toString()} className="text-xs text-muted-foreground" />
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => updateQty(item.product.id, -1)}>
-                          <Minus className="h-3 w-3" />
-                        </Button>
-                        <span className="w-6 text-center tabular-nums">{item.quantity}</span>
-                        <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => updateQty(item.product.id, 1)}>
-                          <Plus className="h-3 w-3" />
-                        </Button>
-                        <Button size="icon" variant="ghost" className="h-6 w-6 text-destructive" onClick={() => removeFromCart(item.product.id)}>
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
+        {/* ═══ RIGHT — Cart panel ═══ */}
+        <div className="w-[480px] flex flex-col rounded-2xl border bg-card overflow-hidden shadow-sm">
 
-            <div className="border-t pt-3 space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">{t('subtotal')}</span>
+          {/* Cart header */}
+          <div className="px-5 py-4 border-b flex items-center justify-between bg-muted/30">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                <ShoppingBag className="h-4 w-4 text-primary" />
+              </div>
+              <span className="font-bold text-base">{t('cart')}</span>
+            </div>
+            {cart.length > 0 && (
+              <span className="text-xs bg-primary text-primary-foreground font-bold px-2 py-0.5 rounded-full">
+                {cart.reduce((s, i) => s + i.quantity, 0)} та
+              </span>
+            )}
+          </div>
+
+          {/* Cart items */}
+          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2">
+            {cart.length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center text-center gap-3 text-muted-foreground py-10">
+                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+                  <ShoppingBag className="h-7 w-7 opacity-40" />
+                </div>
+                <p className="text-sm">{t('emptyCart')}</p>
+              </div>
+            ) : (
+              cart.map((item) => {
+                const name = (i18n.language === 'tg' ? item.product.nameTg : item.product.nameRu) || item.product.name
+                const lineTotal = multiplyMoney(item.product.price, item.quantity)
+                return (
+                  <div
+                    key={item.product.id}
+                    className="flex items-center gap-3 p-2 rounded-xl bg-muted/40 hover:bg-muted/60 transition-colors"
+                  >
+                    <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-gradient-to-br from-rose-100 to-pink-50 dark:from-rose-950/40 dark:to-pink-950/20">
+                      <img src={strawberryImg} alt={name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold truncate">{name}</p>
+                      <MoneyDisplay amount={lineTotal.toString()} className="text-xs text-primary font-bold" />
+                    </div>
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <button
+                        onClick={() => updateQty(item.product.id, -1)}
+                        className="w-6 h-6 rounded-full bg-background border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+                      >
+                        <Minus className="h-3 w-3" />
+                      </button>
+                      <span className="w-6 text-center text-xs font-bold tabular-nums">{item.quantity}</span>
+                      <button
+                        onClick={() => updateQty(item.product.id, 1)}
+                        className="w-6 h-6 rounded-full bg-background border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+                      >
+                        <Plus className="h-3 w-3" />
+                      </button>
+                      <button
+                        onClick={() => removeFromCart(item.product.id)}
+                        className="w-6 h-6 rounded-full flex items-center justify-center hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors ml-1"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    </div>
+                  </div>
+                )
+              })
+            )}
+          </div>
+
+          {/* Summary + payment */}
+          <div className="border-t px-4 pt-4 pb-4 space-y-4 bg-muted/10">
+
+            {/* Subtotal & discount */}
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between text-muted-foreground">
+                <span>{t('subtotal')}</span>
                 <MoneyDisplay amount={subtotal.toString()} />
               </div>
-
               <div className="flex items-center gap-2">
-                <Label className="text-muted-foreground min-w-0">{t('discount')}</Label>
-                <MoneyInput value={discount} onChange={setDiscount} className="flex-1 text-sm h-7" />
+                <Tag className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                <Label className="text-xs text-muted-foreground">{t('discount')}</Label>
+                <MoneyInput value={discount} onChange={setDiscount} className="flex-1 h-7 text-xs" />
               </div>
+            </div>
 
-              <div className="flex justify-between font-bold text-base">
-                <span>{t('total')}</span>
-                <MoneyDisplay amount={total.toString()} className="text-primary text-lg" />
-              </div>
+            {/* Total */}
+            <div className="flex items-center justify-between bg-primary/8 dark:bg-primary/10 rounded-xl px-4 py-3 border border-primary/20">
+              <span className="font-bold text-base">{t('total')}</span>
+              <MoneyDisplay amount={total.toString()} className="text-2xl font-black text-primary" />
             </div>
 
             {/* Payment method */}
-            <div className="space-y-2">
-              <Label className="text-xs">{t('paymentMethod')}</Label>
-              <div className="flex rounded-md border overflow-hidden">
-                {(['CASH', 'CARD', 'MIXED'] as const).map((m) => (
-                  <button
-                    key={m}
-                    onClick={() => {
-                      setPaymentMethod(m)
-                      if (m === 'MIXED') setMixedOpen(true)
-                    }}
-                    className={`flex-1 py-1.5 text-xs font-medium transition-colors ${
-                      paymentMethod === m ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
-                    }`}
-                  >
-                    {t(`common:payment.${m.toLowerCase()}`)}
-                  </button>
-                ))}
-              </div>
-
-              {paymentMethod === 'MIXED' && (
-                <div className="text-xs">
-                  <span className={mixedValid ? 'text-green-600' : 'text-destructive'}>
-                    {mixedValid ? '✓ ' : '⚠ '}
-                    Cash: {mixedCash} + Card: {mixedCard}
-                  </span>
-                </div>
-              )}
+            <div className="grid grid-cols-3 gap-2">
+              {paymentOptions.map(({ key, label, icon: Icon }) => (
+                <button
+                  key={key}
+                  onClick={() => {
+                    setPaymentMethod(key)
+                    if (key === 'MIXED') {
+                      setMixedCash('0')
+                      setMixedCard(total.toFixed(2))
+                    }
+                  }}
+                  className={`flex flex-col items-center gap-1.5 py-2.5 rounded-xl border-2 text-xs font-semibold transition-all duration-200 ${
+                    paymentMethod === key
+                      ? 'border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25'
+                      : 'border-border hover:border-primary/50 text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  {label}
+                </button>
+              ))}
             </div>
 
-            <Button
-              className="w-full"
-              size="lg"
+            {/* Card type selection */}
+            {cardTypeRequired && (
+              <div className="space-y-1.5">
+                <Label className="text-xs text-muted-foreground flex items-center gap-1.5">
+                  <CreditCard className="h-3.5 w-3.5" />
+                  Навъи карта интихоб кунед
+                </Label>
+                <div className="grid grid-cols-2 gap-2">
+                  {([
+                    { key: 'DUSHANBE_CITY' as CardType, label: 'Душанбе Сити', icon: Building2, color: 'from-blue-500 to-blue-600' },
+                    { key: 'ALIF' as CardType, label: 'Алиф', icon: CreditCard, color: 'from-emerald-500 to-emerald-600' },
+                  ]).map(({ key, label, icon: Icon, color }) => (
+                    <button
+                      key={key}
+                      onClick={() => setCardType(key)}
+                      className={`relative flex flex-col items-center gap-1.5 py-3 rounded-xl border-2 text-xs font-semibold transition-all duration-200 overflow-hidden ${
+                        cardType === key
+                          ? 'border-transparent text-white shadow-lg scale-[1.02]'
+                          : 'border-border hover:border-primary/40 text-muted-foreground hover:text-foreground bg-background'
+                      }`}
+                    >
+                      {cardType === key && (
+                        <div className={`absolute inset-0 bg-gradient-to-br ${color}`} />
+                      )}
+                      <Icon className="h-5 w-5 relative z-10" />
+                      <span className="relative z-10">{label}</span>
+                      {cardType === key && (
+                        <CheckCircle2 className="absolute top-1.5 right-1.5 h-3.5 w-3.5 z-10" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Mixed inputs */}
+            {paymentMethod === 'MIXED' && (
+              <div className="space-y-2 p-3 rounded-xl bg-muted/50 border">
+                <div className="flex items-center gap-2">
+                  <Banknote className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                  <Label className="text-xs text-muted-foreground w-14">Нақд</Label>
+                  <MoneyInput
+                    value={mixedCash}
+                    onChange={(v) => {
+                      setMixedCash(v)
+                      const cash = new Decimal(v || '0')
+                      setMixedCard(Decimal.max(new Decimal(0), total.minus(cash)).toFixed(2))
+                    }}
+                    className="flex-1 h-8 text-xs"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <CreditCard className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                  <Label className="text-xs text-muted-foreground w-14">Карта</Label>
+                  <MoneyInput
+                    value={mixedCard}
+                    onChange={(v) => {
+                      setMixedCard(v)
+                      const card = new Decimal(v || '0')
+                      setMixedCash(Decimal.max(new Decimal(0), total.minus(card)).toFixed(2))
+                    }}
+                    className="flex-1 h-8 text-xs"
+                  />
+                </div>
+                <div className={`flex items-center gap-1.5 text-xs font-medium px-2 py-1.5 rounded-lg ${
+                  mixedValid
+                    ? 'bg-green-500/10 text-green-600 dark:text-green-400'
+                    : 'bg-destructive/10 text-destructive'
+                }`}>
+                  <CheckCircle2 className={`h-3.5 w-3.5 flex-shrink-0 ${mixedValid ? '' : 'opacity-40'}`} />
+                  {mixedValid ? `Дуруст: ${total.toFixed(2)} см` : `Ҷамъ бояд ${total.toFixed(2)} см бошад`}
+                </div>
+              </div>
+            )}
+
+            {/* Execute button */}
+            <button
               onClick={handleSale}
-              disabled={
-                cart.length === 0 ||
-                saleMutation.isPending ||
-                (paymentMethod === 'MIXED' && !mixedValid)
-              }
+              disabled={!canSubmit}
+              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98]"
             >
-              {saleMutation.isPending && <LoadingSpinner size="sm" className="mr-2" />}
-              {t('processSale')}
-            </Button>
-          </CardContent>
-        </Card>
+              {saleMutation.isPending ? (
+                <LoadingSpinner size="sm" />
+              ) : (
+                <>
+                  {cardTypeRequired && !cardType ? 'Навъи картаро интихоб кунед' : t('processSale')}
+                  <ChevronRight className="h-4 w-4" />
+                </>
+              )}
+            </button>
+          </div>
+        </div>
       </div>
 
-      <MixedPaymentModal
-        open={mixedOpen}
-        total={total.toString()}
-        cashAmount={mixedCash}
-        cardAmount={mixedCard}
-        onCashChange={setMixedCash}
-        onCardChange={setMixedCard}
-        onClose={() => setMixedOpen(false)}
-      />
-
       {receipt && (
-        <SaleReceiptModal
-          sale={receipt}
-          onClose={handleNewSale}
-        />
+        <SaleReceiptModal sale={receipt} onClose={handleNewSale} />
       )}
     </>
   )

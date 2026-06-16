@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD, APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import configuration from './config/configuration';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
@@ -29,6 +29,8 @@ import { AiModule } from './modules/ai/ai.module';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
+      envFilePath: '.env',
+      expandVariables: true,
     }),
     ThrottlerModule.forRoot([
       {
@@ -55,6 +57,10 @@ import { AiModule } from './modules/ai/ai.module';
     AiModule,
   ],
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

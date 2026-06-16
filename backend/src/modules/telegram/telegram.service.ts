@@ -6,6 +6,7 @@ import { SubscribeDto } from './dto/subscribe.dto';
 import { NotifyLowStockDto, NotifyDailyReportDto } from './dto/notify.dto';
 import { InventoryService } from '../inventory/inventory.service';
 import { toDecimal, multiplyDecimal } from '../../common/utils/decimal.util';
+import { resolveBusinessForUser } from '../../common/utils/business-resolver.util';
 
 interface BulkDeductItem {
   itemId: string;
@@ -130,7 +131,7 @@ export class TelegramService {
       return min > 0 && current <= min;
     });
 
-    console.log(`[TelegramBot] Found ${lowStockItems.length} low stock items for chatId ${chatId}`);
+    this.logger.log(`Found ${lowStockItems.length} low stock items for chatId ${chatId}`);
     return lowStockItems;
   }
 
@@ -465,7 +466,7 @@ export class TelegramService {
   }
 
   async getLatestTelegramDailyReport(userId: string) {
-    const business = await this.prisma.business.findUnique({ where: { userId } });
+    const business = await resolveBusinessForUser(this.prisma, userId);
     if (!business) return null;
     return this.prisma.telegramDailyReport.findFirst({
       where: { businessId: business.id },

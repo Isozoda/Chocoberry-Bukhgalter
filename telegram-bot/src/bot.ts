@@ -24,7 +24,13 @@ export function createBot(token: string, api: ApiService): TelegramBot {
   const bot = new TelegramBot(token, { polling: true });
 
   bot.on('polling_error', (err) => {
-    console.error('[Bot] Polling error:', err.message);
+    console.error('[Bot] Polling error:', err);
+    if (Array.isArray((err as any).errors)) {
+      console.error('[Bot] Polling aggregate errors:', (err as any).errors);
+    }
+    if ((err as any).response) {
+      console.error('[Bot] Polling error response:', (err as any).response);
+    }
   });
 
   // /start [TOKEN]

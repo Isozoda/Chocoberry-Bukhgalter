@@ -16,16 +16,20 @@ services:
       - key: PORT
         value: 10000
       - key: JWT_SECRET
-        value: chocoberry_super_secret_change_in_prod_2026
+        generateValue: true
       - key: JWT_EXPIRES_IN
         value: "7d"
       - key: DEFAULT_CURRENCY
         value: "TJS"
       - key: DEFAULT_LANGUAGE
         value: "tg"
+      - key: ALLOWED_ORIGINS
+        sync: false
       - key: ANTHROPIC_API_KEY
         sync: false
       - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_BOT_SECRET
         sync: false
       - key: TELEGRAM_BOT_USERNAME
         value: chocoberry_tjk_bot

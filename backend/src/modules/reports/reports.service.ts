@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { toDecimal } from '../../common/utils/decimal.util';
+import { calcMarginPercent } from '../../common/utils/pnl.util';
 import {
   startOfDay,
   endOfDay,
@@ -11,13 +12,14 @@ import {
 import Decimal from 'decimal.js';
 import * as ExcelJS from 'exceljs';
 import PDFDocument = require('pdfkit');
+import { resolveBusinessForUser } from '../../common/utils/business-resolver.util';
 
 @Injectable()
 export class ReportsService {
   constructor(private prisma: PrismaService) {}
 
   private async getBusiness(userId: string) {
-    const b = await this.prisma.business.findUnique({ where: { userId } });
+    const b = await resolveBusinessForUser(this.prisma, userId);
     if (!b) throw new NotFoundException('Business not found');
     return b;
   }
@@ -58,9 +60,7 @@ export class ReportsService {
       totalIncome: totalIncome.toFixed(2),
       totalExpenses: totalExpenses.toFixed(2),
       netProfit: netProfit.toFixed(2),
-      profitMargin: totalIncome.isZero()
-        ? '0.00'
-        : netProfit.dividedBy(totalIncome).times(100).toFixed(2),
+      profitMargin: calcMarginPercent(netProfit, totalIncome),
       expenseBreakdown,
     };
   }
@@ -106,9 +106,7 @@ export class ReportsService {
       totalSales: totalSales.toFixed(2),
       totalCogs: totalCogs.toFixed(2),
       grossProfit: grossProfit.toFixed(2),
-      grossMargin: totalSales.isZero()
-        ? '0.00'
-        : grossProfit.dividedBy(totalSales).times(100).toFixed(2),
+      grossMargin: calcMarginPercent(grossProfit, totalSales),
     };
   }
 

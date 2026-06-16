@@ -52,18 +52,18 @@ function UrgencyDot({ urgency }: { urgency: UrgencyType }) {
 function AISkeleton() {
   return (
     <div className="space-y-3 mt-4">
-      <Skeleton className="h-4 w-3/4 bg-[#1a1a1c]" />
-      <Skeleton className="h-4 w-full bg-[#1a1a1c]" />
-      <Skeleton className="h-4 w-5/6 bg-[#1a1a1c]" />
-      <Skeleton className="h-20 w-full bg-[#1a1a1c] mt-4" />
-      <Skeleton className="h-20 w-full bg-[#1a1a1c]" />
+      <Skeleton className="h-4 w-3/4 bg-muted" />
+      <Skeleton className="h-4 w-full bg-muted" />
+      <Skeleton className="h-4 w-5/6 bg-muted" />
+      <Skeleton className="h-20 w-full bg-muted mt-4" />
+      <Skeleton className="h-20 w-full bg-muted" />
     </div>
   )
 }
 
 function AILoadingCard() {
   return (
-    <Card className="bg-[#0d0d0f] border-orange-500/20">
+    <Card className="bg-card border-orange-500/20">
       <CardContent className="pt-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="relative">
@@ -99,7 +99,7 @@ function SalesTab() {
   return (
     <div className="space-y-4">
       {/* Controls */}
-      <Card className="bg-[#0d0d0f] border-[#1a1a1c]">
+      <Card className="bg-card border-border">
         <CardContent className="pt-4 pb-4">
           <div className="flex items-center gap-3 flex-wrap">
             <span className="text-sm text-muted-foreground">Давра:</span>
@@ -111,7 +111,7 @@ function SalesTab() {
                   'px-4 py-1.5 rounded-lg text-sm font-medium transition-all',
                   period === p.value
                     ? 'bg-orange-500 text-white'
-                    : 'bg-[#161618] text-muted-foreground hover:text-white hover:bg-[#1e1e20]'
+                    : 'bg-muted text-muted-foreground hover:text-white hover:bg-muted'
                 )}
               >
                 {p.label}
@@ -168,9 +168,9 @@ function SalesTab() {
                     { label: 'Хароҷот', value: `${Number(result.rawData.totalExpenses).toLocaleString()} см` },
                     { label: 'Фоида', value: `${Number(result.rawData.netProfit).toLocaleString()} см` },
                   ].map((s) => (
-                    <div key={s.label} className="bg-[#161618] rounded-lg p-2 text-center">
+                    <div key={s.label} className="bg-muted rounded-lg p-2 text-center">
                       <p className="text-[10px] text-muted-foreground">{s.label}</p>
-                      <p className="text-sm font-bold text-white mt-0.5">{s.value}</p>
+                      <p className="text-sm font-bold mt-0.5">{s.value}</p>
                     </div>
                   ))}
                 </div>
@@ -180,7 +180,7 @@ function SalesTab() {
 
           {/* Insights */}
           {result.insights?.length > 0 && (
-            <Card className="bg-[#0d0d0f] border-[#1a1a1c]">
+            <Card className="bg-card border-border">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm text-muted-foreground uppercase tracking-wider">
                   Натиҷаҳо
@@ -188,7 +188,7 @@ function SalesTab() {
               </CardHeader>
               <CardContent className="space-y-2">
                 {result.insights.map((ins, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-[#161618]">
+                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-muted">
                     <InsightIcon type={ins.type} />
                     <p className="text-sm text-foreground/90">{ins.text}</p>
                   </div>
@@ -199,7 +199,7 @@ function SalesTab() {
 
           {/* Recommendations */}
           {result.recommendations?.length > 0 && (
-            <Card className="bg-[#0d0d0f] border-[#1a1a1c]">
+            <Card className="bg-card border-border">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm text-muted-foreground uppercase tracking-wider">
                   Тавсияҳо
@@ -207,10 +207,10 @@ function SalesTab() {
               </CardHeader>
               <CardContent className="space-y-2">
                 {result.recommendations.map((rec, i) => (
-                  <div key={i} className="p-3 rounded-lg bg-[#161618] space-y-1">
+                  <div key={i} className="p-3 rounded-lg bg-muted space-y-1">
                     <div className="flex items-center gap-2">
                       <PriorityBadge priority={rec.priority} />
-                      <p className="text-sm font-medium text-white">{rec.action}</p>
+                      <p className="text-sm font-medium text-foreground">{rec.action}</p>
                     </div>
                     <p className="text-xs text-muted-foreground pl-0.5">{rec.reason}</p>
                   </div>
@@ -229,7 +229,7 @@ function SalesTab() {
                     <span className="text-sm text-blue-300 font-medium">Пешгӯии давраи оянда</span>
                   </div>
                   <div className="text-right">
-                    <p className="text-xl font-bold text-white">
+                    <p className="text-xl font-bold text-foreground">
                       ~{Number(result.forecast.nextPeriodRevenue).toLocaleString()} см
                     </p>
                     <p className="text-xs text-muted-foreground">
@@ -279,7 +279,7 @@ function InventoryTab() {
 
   return (
     <div className="space-y-4">
-      <Card className="bg-[#0d0d0f] border-[#1a1a1c]">
+      <Card className="bg-card border-border">
         <CardContent className="pt-4 pb-4">
           <div className="flex items-center gap-3 flex-wrap">
             <span className="text-sm text-muted-foreground">Рӯзҳои оянда:</span>
@@ -291,7 +291,7 @@ function InventoryTab() {
                   'px-4 py-1.5 rounded-lg text-sm font-medium transition-all',
                   days === d
                     ? 'bg-orange-500 text-white'
-                    : 'bg-[#161618] text-muted-foreground hover:text-white hover:bg-[#1e1e20]'
+                    : 'bg-muted text-muted-foreground hover:text-white hover:bg-muted'
                 )}
               >
                 {d} рӯз
@@ -326,7 +326,7 @@ function InventoryTab() {
         <div className="space-y-4">
           {/* Critical items */}
           {result.criticalItems?.length > 0 && (
-            <Card className="bg-[#0d0d0f] border-[#1a1a1c]">
+            <Card className="bg-card border-border">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                   <Package className="h-4 w-4" />
@@ -347,7 +347,7 @@ function InventoryTab() {
                     <div className="flex items-center gap-3">
                       <UrgencyDot urgency={item.urgency} />
                       <div>
-                        <p className="text-sm font-medium text-white">{item.name}</p>
+                        <p className="text-sm font-medium text-foreground">{item.name}</p>
                         <p className="text-xs text-muted-foreground">
                           Монд: {item.currentStock} {item.unit} · {item.willRunOutIn}
                         </p>
@@ -376,7 +376,7 @@ function InventoryTab() {
 
           {/* Order list */}
           {result.orderList?.length > 0 && (
-            <Card className="bg-[#0d0d0f] border-[#1a1a1c]">
+            <Card className="bg-card border-border">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                   <ShoppingCart className="h-4 w-4" />
@@ -385,11 +385,11 @@ function InventoryTab() {
               </CardHeader>
               <CardContent className="space-y-2">
                 {result.orderList.map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-[#161618]">
+                  <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-muted">
                     <div className="flex items-center gap-3">
                       <UrgencyDot urgency={item.urgency} />
                       <div>
-                        <p className="text-sm font-medium text-white">{item.name}</p>
+                        <p className="text-sm font-medium text-foreground">{item.name}</p>
                         <p className="text-xs text-muted-foreground">
                           {item.amount} {item.unit}
                         </p>
@@ -403,8 +403,8 @@ function InventoryTab() {
                   </div>
                 ))}
                 {result.totalOrderCost > 0 && (
-                  <div className="flex items-center justify-between pt-2 border-t border-[#1a1a1c]">
-                    <span className="text-sm font-bold text-white">Ҷамъи фармоиш:</span>
+                  <div className="flex items-center justify-between pt-2 border-t border-border">
+                    <span className="text-sm font-bold text-foreground">Ҷамъи фармоиш:</span>
                     <span className="text-lg font-bold text-orange-400">
                       ~{result.totalOrderCost.toLocaleString()} см
                     </span>
@@ -481,8 +481,8 @@ function AdvisorTab() {
   return (
     <div className="space-y-4 flex flex-col h-[calc(100vh-280px)]">
       {/* History Area */}
-      <Card className="bg-[#0d0d0f] border-[#1a1a1c] flex-1 overflow-hidden flex flex-col">
-        <CardHeader className="py-3 border-b border-[#1a1a1c] flex-row items-center justify-between">
+      <Card className="bg-card border-border flex-1 overflow-hidden flex flex-col">
+        <CardHeader className="py-3 border-b border-border flex-row items-center justify-between">
           <CardTitle className="text-sm text-muted-foreground uppercase tracking-wider flex items-center gap-2">
             <Bot className="h-4 w-4" />
             Таърихи гуфтугӯ
@@ -492,7 +492,7 @@ function AdvisorTab() {
             size="sm"
             onClick={() => weeklyMutation.mutate()}
             disabled={isPending}
-            className="h-7 text-[10px] gap-1 hover:bg-[#161618]"
+            className="h-7 text-[10px] gap-1 hover:bg-muted"
           >
             <Lightbulb className="h-3 w-3" /> Маслиҳати нав
           </Button>
@@ -500,7 +500,7 @@ function AdvisorTab() {
         <CardContent className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-orange-500/20">
           {isHistoryLoading && (
             <div className="space-y-4">
-              <Skeleton className="h-10 w-2/3 bg-[#161618] rounded-2xl rounded-tl-none" />
+              <Skeleton className="h-10 w-2/3 bg-muted rounded-2xl rounded-tl-none" />
               <Skeleton className="h-10 w-2/3 ml-auto bg-orange-500/10 rounded-2xl rounded-tr-none" />
             </div>
           )}
@@ -525,7 +525,7 @@ function AdvisorTab() {
                   "p-3 rounded-2xl text-sm leading-relaxed",
                   msg.role === 'user'
                     ? "bg-orange-500 text-white rounded-tr-none"
-                    : "bg-[#161618] text-foreground/90 border border-[#2a2a2c] rounded-tl-none"
+                    : "bg-muted text-foreground/90 border border-border rounded-tl-none"
                 )}
               >
                 {msg.content}
@@ -538,7 +538,7 @@ function AdvisorTab() {
 
           {isPending && (
             <div className="flex items-start gap-2 animate-pulse">
-              <div className="bg-[#161618] p-3 rounded-2xl rounded-tl-none border border-[#2a2a2c]">
+              <div className="bg-muted p-3 rounded-2xl rounded-tl-none border border-border">
                 <RefreshCw className="h-4 w-4 animate-spin text-orange-500" />
               </div>
             </div>
@@ -548,14 +548,14 @@ function AdvisorTab() {
       </Card>
 
       {/* Input box */}
-      <Card className="bg-[#0d0d0f] border-[#1a1a1c] shrink-0">
+      <Card className="bg-card border-border shrink-0">
         <CardContent className="p-3">
           <div className="relative">
             <Textarea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="Савол диҳед..."
-              className="bg-[#161618] border-[#2a2a2c] text-sm resize-none pr-12 min-h-[60px] focus-visible:ring-orange-500"
+              className="bg-muted border-border text-sm resize-none pr-12 min-h-[60px] focus-visible:ring-orange-500"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey && question.trim()) {
                   e.preventDefault()
@@ -591,14 +591,14 @@ export default function AIPage() {
           <Sparkles className="h-3 w-3 text-orange-300 absolute -top-0.5 -right-0.5 animate-pulse" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Зеҳни сунъӣ</h1>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">Зеҳни сунъӣ</h1>
           <p className="text-sm text-muted-foreground">Claude AI • Таҳлил, пешгӯӣ ва маслиҳат</p>
         </div>
       </div>
 
       {/* Tabs */}
       <Tabs defaultValue="sales">
-        <TabsList className="bg-[#0d0d0f] border border-[#1a1a1c] p-1 h-auto">
+        <TabsList className="bg-card border border-border p-1 h-auto">
           <TabsTrigger value="sales" className="gap-2 data-[state=active]:bg-orange-500 data-[state=active]:text-white">
             <TrendingUp className="h-4 w-4" />
             Таҳлили фурӯш

@@ -4,8 +4,11 @@ import { AnalyzeSalesDto } from './dto/analyze-sales.dto';
 import { ForecastInventoryDto } from './dto/forecast-inventory.dto';
 import { AskAdvisorDto } from './dto/ask-advisor.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('ai')
+@Roles(Role.ADMIN)
 export class AiController {
   constructor(private readonly aiService: AiService) {}
 

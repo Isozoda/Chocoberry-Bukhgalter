@@ -16,9 +16,7 @@ export class AuthService {
     const existing = await this.prisma.user.findUnique({ where: { email: dto.email } });
     if (existing) throw new ConflictException('Email already registered');
 
-    // If it's the first user, make them an OWNER
-    const userCount = await this.prisma.user.count();
-    const role = userCount === 0 ? 'OWNER' : dto.role || 'STAFF';
+    const role = dto.role || 'ADMIN';
 
     const passwordHash = await bcrypt.hash(dto.password, 10);
     const user = await this.prisma.user.create({

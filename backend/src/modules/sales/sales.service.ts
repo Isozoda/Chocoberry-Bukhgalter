@@ -10,10 +10,12 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { FilterSalesDto } from './dto/filter-sales.dto';
 import Decimal from 'decimal.js';
-import { toDecimal, multiplyDecimal, addDecimal } from '../../common/utils/decimal.util';
+import { toDecimal, multiplyDecimal } from '../../common/utils/decimal.util';
+import { calculateSaleTotal, resolvePaymentSplit } from '../../common/utils/sale-calc.util';
 import { startOfDay, endOfDay } from '../../common/utils/date.util';
 import { v4 as uuidv4 } from 'uuid';
 import { InventoryService } from '../inventory/inventory.service';
+import { resolveBusinessForUser } from '../../common/utils/business-resolver.util';
 
 @Injectable()
 export class SalesService {
@@ -23,7 +25,7 @@ export class SalesService {
   ) {}
 
   private async getBusiness(userId: string) {
-    const b = await this.prisma.business.findUnique({ where: { userId } });
+    const b = await resolveBusinessForUser(this.prisma, userId);
     if (!b) throw new NotFoundException('Business not found');
     return b;
   }
@@ -147,26 +149,18 @@ export class SalesService {
         });
       }
 
-      const total = subtotal.minus(discount).plus(tax);
+      const total = calculateSaleTotal(subtotal, discount, tax);
       if (total.lessThan(0)) throw new BadRequestException('Total cannot be negative');
 
-      // Validate MIXED payment
-      let cashAmount = toDecimal(dto.cashAmount || 0);
-      let cardAmount = toDecimal(dto.cardAmount || 0);
-
-      if (paymentMethod === 'MIXED') {
-        if (!addDecimal(cashAmount, cardAmount).equals(total)) {
-          throw new BadRequestException(
-            `MIXED: cashAmount(${cashAmount}) + cardAmount(${cardAmount}) must equal total(${total})`,
-          );
-        }
-      } else if (paymentMethod === 'CASH') {
-        cashAmount = total;
-        cardAmount = new Decimal(0);
-      } else if (paymentMethod === 'CARD') {
-        cardAmount = total;
-        cashAmount = new Decimal(0);
+      // Validate & resolve MIXED/CASH/CARD payment split
+      const split = resolvePaymentSplit(paymentMethod, total, dto.cashAmount, dto.cardAmount);
+      if (!split.isValid) {
+        throw new BadRequestException(
+          `MIXED: cashAmount(${split.cashAmount}) + cardAmount(${split.cardAmount}) must equal total(${total})`,
+        );
       }
+      const cashAmount = split.cashAmount;
+      const cardAmount = split.cardAmount;
 
       const saleNumber = `CB-${Date.now()}-${uuidv4().slice(0, 6).toUpperCase()}`;
 
@@ -181,6 +175,8 @@ export class SalesService {
           paymentMethod,
           cashAmount,
           cardAmount,
+          cardType:
+            paymentMethod === 'CARD' || paymentMethod === 'MIXED' ? dto.cardType || null : null,
           status: 'COMPLETED',
           employeeId: dto.employeeId || null,
           notes: dto.notes,

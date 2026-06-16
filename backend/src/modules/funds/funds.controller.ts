@@ -4,10 +4,13 @@ import { FundsService } from './funds.service';
 import { CreateFundDto } from './dto/create-fund.dto';
 import { FundOpDto } from './dto/fund-op.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('funds')
 @ApiBearerAuth('JWT')
 @Controller('funds')
+@Roles(Role.ADMIN)
 export class FundsController {
   constructor(private readonly fundsService: FundsService) {}
 

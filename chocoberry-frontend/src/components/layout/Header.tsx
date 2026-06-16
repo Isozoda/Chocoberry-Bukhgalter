@@ -108,7 +108,7 @@ export function Header() {
               </span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="min-w-[140px] rounded-2xl p-1.5 bg-[#0c0c0d]/98 backdrop-blur-xl border-[#1a1a1c] shadow-2xl animate-in fade-in zoom-in duration-300">
+          <DropdownMenuContent align="end" className="min-w-[140px] rounded-2xl p-1.5 shadow-xl animate-in fade-in zoom-in duration-200">
             {[
               { code: 'en', label: 'En', flag: enFlag },
               { code: 'ru', label: 'Ru', flag: ruFlag },
@@ -119,19 +119,19 @@ export function Header() {
                 onClick={() => changeLanguage(lang.code as any)}
                 className={cn(
                   "flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 mb-0.5 last:mb-0",
-                  currentLang === lang.code 
-                    ? "bg-primary/15 text-primary font-bold shadow-inner" 
-                    : "text-muted-foreground hover:bg-[#1a1a1c] hover:text-foreground"
+                  currentLang === lang.code
+                    ? "bg-primary/15 text-primary font-bold"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
                 <div className="flex items-center gap-3">
-                  <div className="h-6 w-6 rounded-full overflow-hidden border border-white/10 shadow-sm">
+                  <div className="h-6 w-6 rounded-full overflow-hidden border border-border shadow-sm">
                     <img src={lang.flag} alt={lang.label} className="h-full w-full object-cover" />
                   </div>
                   <span className="text-sm font-medium">{lang.label}</span>
                 </div>
                 {currentLang === lang.code && (
-                  <div className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(234,88,12,0.8)]" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-primary" />
                 )}
               </DropdownMenuItem>
             ))}

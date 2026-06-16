@@ -3,10 +3,13 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiProduces } from '@ne
 import { Response } from 'express';
 import { ReportsService } from './reports.service';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('reports')
 @ApiBearerAuth('JWT')
 @Controller('reports')
+@Roles(Role.ADMIN)
 export class ReportsController {
   constructor(private readonly reportsService: ReportsService) {}
 

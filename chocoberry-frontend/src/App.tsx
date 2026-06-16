@@ -30,6 +30,7 @@ const InventoryValuation = lazy(() => import('@/pages/inventory/InventoryValuati
 
 // Sales
 const SalesPage = lazy(() => import('@/pages/sales/SalesPage'))
+const CashierPOSPage = lazy(() => import('@/pages/sales/CashierPOSPage'))
 
 // Expenses
 const ExpensesPage = lazy(() => import('@/pages/expenses/ExpensesPage'))
@@ -74,6 +75,9 @@ export default function App() {
 
         {/* Protected routes inside AppShell */}
         <Route path="/app" element={<ProtectedRoute />}>
+          {/* Cashier-only full-screen POS, no sidebar/header */}
+          <Route path="pos" element={<Wrap><CashierPOSPage /></Wrap>} />
+
           <Route element={<AppShell />}>
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<Wrap><DashboardPage /></Wrap>} />

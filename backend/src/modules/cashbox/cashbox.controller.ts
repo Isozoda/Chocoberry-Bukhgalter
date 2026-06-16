@@ -3,10 +3,13 @@ import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { CashboxService } from './cashbox.service';
 import { CashboxOpDto } from './dto/cashbox-op.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('cashbox')
 @ApiBearerAuth('JWT')
 @Controller('cashbox')
+@Roles(Role.ADMIN)
 export class CashboxController {
   constructor(private readonly cashboxService: CashboxService) {}
 

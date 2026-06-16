@@ -383,3 +383,24 @@ src/
     ├── daily-report/          # Daily P&L summary
     └── reports/               # Analytics + Excel/PDF export
 ```
+
+---
+
+## Deployment & Production Notes (Render)
+
+`render.yaml` deploys this API to [Render](https://render.com). A few things to keep in mind:
+
+- **Secrets**: `JWT_SECRET` is set with `generateValue: true` — Render generates a random
+  secret on first deploy (this also means deploying again with a fresh secret invalidates
+  all existing JWT sessions, forcing users to log in again — intentional after a leak).
+  `ALLOWED_ORIGINS`, `ANTHROPIC_API_KEY`, `TELEGRAM_BOT_TOKEN` and `TELEGRAM_BOT_SECRET` are
+  `sync: false` — set their real values manually in the Render dashboard, never in this file
+  or in a committed `.env`.
+- **`ALLOWED_ORIGINS`**: comma-separated list of frontend origins allowed by CORS
+  (e.g. `https://chocoberry.app,https://www.chocoberry.app`). `main.ts` always also allows the
+  local dev origins (`localhost:5173/5174/8081`), so you don't need to add those.
+- **Free Postgres plan risk**: `chocoberry-db` is on Render's **free** Postgres plan, which
+  Render automatically expires/deletes after a limited period. For a system tracking real
+  sales, payroll and cash — **upgrade to a paid plan before going fully live**, and set up
+  regular `pg_dump` backups (Render's paid plans include automated backups) so a plan
+  expiry or accidental deletion can't wipe out business data.

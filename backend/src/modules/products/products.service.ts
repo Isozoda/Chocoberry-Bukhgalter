@@ -4,13 +4,14 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { SetRecipeDto } from './dto/set-recipe.dto';
 import Decimal from 'decimal.js';
 import { toDecimal, multiplyDecimal } from '../../common/utils/decimal.util';
+import { resolveBusinessForUser } from '../../common/utils/business-resolver.util';
 
 @Injectable()
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
   private async getBusiness(userId: string) {
-    const b = await this.prisma.business.findUnique({ where: { userId } });
+    const b = await resolveBusinessForUser(this.prisma, userId);
     if (!b) throw new NotFoundException('Business not found');
     return b;
   }

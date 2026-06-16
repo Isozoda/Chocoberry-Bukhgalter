@@ -2,7 +2,7 @@ export interface User {
   id: string
   name: string
   email: string
-  role: 'OWNER' | 'ADMIN' | 'STAFF' | 'ACCOUNTANT'
+  role: 'ADMIN' | 'CASHIER'
   businessId?: string
   business?: { id: string; name: string; type: string }
   createdAt: string

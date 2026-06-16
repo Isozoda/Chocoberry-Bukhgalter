@@ -8,10 +8,13 @@ import { WasteDto } from './dto/waste.dto';
 import { CleaningDto } from './dto/cleaning.dto';
 import { AdjustDto } from './dto/adjust.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('inventory')
 @ApiBearerAuth('JWT')
 @Controller('inventory')
+@Roles(Role.ADMIN)
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
 

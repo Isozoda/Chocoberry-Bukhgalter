@@ -27,7 +27,7 @@ const STATUS_CONFIG: Record<AttendanceStatus, { label: string; color: string; bg
 const ALL_STATUSES = Object.keys(STATUS_CONFIG) as AttendanceStatus[]
 
 function StatusBadge({ status }: { status: AttendanceStatus | null }) {
-  if (!status) return <span className="text-xs text-gray-600 italic">—</span>
+  if (!status) return <span className="text-xs text-muted-foreground italic">—</span>
   const cfg = STATUS_CONFIG[status]
   return (
     <span className={cn('inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium border', cfg.bg, cfg.color)}>
@@ -43,16 +43,15 @@ function StatusSelect({ value, onChange }: { value: AttendanceStatus | null; onC
     <select
       value={value ?? ''}
       onChange={(e) => { if (e.target.value) onChange(e.target.value as AttendanceStatus) }}
-      style={{ backgroundColor: '#111113' }}
       className={cn(
-        'rounded-lg border px-2 py-1.5 text-xs font-medium outline-none cursor-pointer transition-all duration-200 appearance-none',
-        'border-[#2a2a2e] hover:border-gray-600 focus:border-orange-500/50 text-white',
-        value ? `${STATUS_CONFIG[value].color} ${STATUS_CONFIG[value].bg}` : 'text-gray-500',
+        'bg-background rounded-lg border px-2 py-1.5 text-xs font-medium outline-none cursor-pointer transition-all duration-200 appearance-none',
+        'border-border hover:border-border focus:border-orange-500/50 text-white',
+        value ? `${STATUS_CONFIG[value].color} ${STATUS_CONFIG[value].bg}` : 'text-muted-foreground',
       )}
     >
-      <option value="" style={{ backgroundColor: '#111113' }} className="text-gray-500">— {t('selectStatus')} —</option>
+      <option value="" className="bg-background text-muted-foreground">— {t('selectStatus')} —</option>
       {ALL_STATUSES.map((s) => (
-        <option key={s} value={s} style={{ backgroundColor: '#111113' }} className="text-white">
+        <option key={s} value={s} className="bg-background text-white">
           {STATUS_CONFIG[s].label}
         </option>
       ))}
@@ -231,11 +230,11 @@ export default function AttendancePage() {
         icon={UserCheck}
         action={
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => window.print()} className="border-[#2a2a2e] hover:bg-[#1a1a1c]">
+            <Button variant="outline" size="sm" onClick={() => window.print()} className="border-border hover:bg-muted">
               <Printer className="h-4 w-4 mr-1.5" />
               {t('printReport')}
             </Button>
-            <Button variant="outline" size="sm" onClick={exportCSV} className="border-[#2a2a2e] hover:bg-[#1a1a1c]">
+            <Button variant="outline" size="sm" onClick={exportCSV} className="border-border hover:bg-muted">
               <Download className="h-4 w-4 mr-1.5" />
               {t('exportWeekly')}
             </Button>
@@ -257,31 +256,30 @@ export default function AttendancePage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex gap-2 flex-1 max-w-md">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t('searchPlaceholder')}
-              className="pl-9 !bg-[#111113] border-[#2a2a2e] text-sm hover:border-gray-600 transition-colors"
+              className="pl-9 !bg-background border-border text-sm hover:border-border transition-colors"
             />
           </div>
           {activeTab === 'daily' && (
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value as AttendanceStatus | '')}
-              style={{ backgroundColor: '#111113' }}
-              className="rounded-lg border border-[#2a2a2e] text-sm text-gray-300 px-3 py-2 outline-none hover:border-gray-600 transition-colors cursor-pointer appearance-none"
+              className="bg-background rounded-lg border border-border text-sm text-foreground px-3 py-2 outline-none hover:border-border transition-colors cursor-pointer appearance-none"
             >
-              <option value="" style={{ backgroundColor: '#111113' }}>{t('allStatuses')}</option>
+              <option value="" className="bg-background">{t('allStatuses')}</option>
               {ALL_STATUSES.map((s) => (
-                <option key={s} value={s} style={{ backgroundColor: '#111113' }}>{STATUS_CONFIG[s].label}</option>
+                <option key={s} value={s} className="bg-background">{STATUS_CONFIG[s].label}</option>
               ))}
             </select>
           )}
         </div>
 
         {/* Tab switcher */}
-        <div className="flex rounded-xl border border-[#2a2a2e] overflow-hidden bg-[#0c0c0d] p-1 gap-1">
+        <div className="flex rounded-xl border border-border overflow-hidden bg-card p-1 gap-1">
           {(['daily', 'weekly', 'monthly'] as const).map((tab) => (
             <button
               key={tab}
@@ -290,7 +288,7 @@ export default function AttendancePage() {
                 'px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200',
                 activeTab === tab
                   ? 'bg-orange-500/15 text-orange-500 shadow-sm'
-                  : 'text-gray-400 hover:text-white hover:bg-[#1a1a1c]',
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted',
               )}
             >
               {t(tab)}
@@ -304,45 +302,44 @@ export default function AttendancePage() {
         <div className="space-y-3">
           {/* Date navigator */}
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="h-8 w-8 border border-[#2a2a2e] hover:bg-[#1a1a1c]" onClick={() => setSelectedDate(addDays(selectedDate, -1))}>
+            <Button variant="ghost" size="icon" className="h-8 w-8 border border-border hover:bg-muted" onClick={() => setSelectedDate(addDays(selectedDate, -1))}>
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <input
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              style={{ backgroundColor: '#111113', colorScheme: 'dark' }}
-              className="rounded-lg border border-[#2a2a2e] text-sm text-white px-3 py-1.5 outline-none cursor-pointer hover:border-gray-600 transition-colors"
+              className="bg-background rounded-lg border border-border text-sm text-foreground px-3 py-1.5 outline-none cursor-pointer hover:border-border transition-colors"
             />
-            <Button variant="ghost" size="icon" className="h-8 w-8 border border-[#2a2a2e] hover:bg-[#1a1a1c]" onClick={() => setSelectedDate(addDays(selectedDate, 1))}>
+            <Button variant="ghost" size="icon" className="h-8 w-8 border border-border hover:bg-muted" onClick={() => setSelectedDate(addDays(selectedDate, 1))}>
               <ChevronRight className="h-4 w-4" />
             </Button>
             <span className="text-sm text-muted-foreground">{formatDisplayDate(selectedDate)}</span>
           </div>
 
           {/* Daily table */}
-          <div className="rounded-xl border border-[#1a1a1c] bg-[#0c0c0d] overflow-hidden">
+          <div className="rounded-xl border border-border bg-card overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-[#1a1a1c] bg-[#0a0a0b]">
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('employee')}</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('role')}</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('salary')}</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('todayStatus')}</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('bonus')}</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('penalty')}</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('overtimePay')}</th>
-                    <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('note')}</th>
+                  <tr className="border-b border-border bg-muted/50">
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('employee')}</th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('role')}</th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('salary')}</th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('todayStatus')}</th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('bonus')}</th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('penalty')}</th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('overtimePay')}</th>
+                    <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('note')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dailyLoading ? (
                     Array.from({ length: 4 }).map((_, i) => (
-                      <tr key={i} className="border-b border-[#1a1a1c]">
+                      <tr key={i} className="border-b border-border">
                         {Array.from({ length: 8 }).map((_, j) => (
                           <td key={j} className="px-4 py-3">
-                            <div className="h-4 bg-[#1a1a1c] rounded animate-pulse" />
+                            <div className="h-4 bg-muted rounded animate-pulse" />
                           </td>
                         ))}
                       </tr>
@@ -353,7 +350,7 @@ export default function AttendancePage() {
                     </tr>
                   ) : (
                     filteredDaily.map(({ employee, record }) => (
-                      <tr key={employee.id} className="border-b border-[#1a1a1c] hover:bg-[#111113] transition-colors group">
+                      <tr key={employee.id} className="border-b border-border hover:bg-background transition-colors group">
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
                             <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-orange-500/20 to-rose-500/20 flex items-center justify-center text-xs font-bold text-orange-400">
@@ -418,13 +415,13 @@ export default function AttendancePage() {
                           {/* Inline note editor */}
                           {showNoteFor === employee.id && (
                             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={() => setShowNoteFor(null)}>
-                              <div className="bg-[#111113] border border-[#2a2a2e] rounded-xl p-4 w-72 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                              <div className="bg-background border border-border rounded-xl p-4 w-72 shadow-2xl" onClick={(e) => e.stopPropagation()}>
                                 <p className="text-sm font-semibold mb-2 text-white">{employee.name} — {t('note')}</p>
                                 <textarea
                                   rows={3}
                                   value={editingNotes[employee.id] ?? ''}
                                   onChange={(e) => setEditingNotes((prev) => ({ ...prev, [employee.id]: e.target.value }))}
-                                  className="w-full rounded-lg border border-[#2a2a2e] bg-[#0a0a0b] text-sm text-white px-3 py-2 outline-none resize-none"
+                                  className="w-full rounded-lg border border-border bg-muted/50 text-sm text-white px-3 py-2 outline-none resize-none"
                                   placeholder={t('addNote')}
                                 />
                                 <div className="flex gap-2 mt-3 justify-end">
@@ -453,17 +450,16 @@ export default function AttendancePage() {
         <div className="space-y-3">
           {/* Week navigator */}
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="h-8 w-8 border border-[#2a2a2e] hover:bg-[#1a1a1c]" onClick={() => setWeekStart(addDays(weekStart, -7))}>
+            <Button variant="ghost" size="icon" className="h-8 w-8 border border-border hover:bg-muted" onClick={() => setWeekStart(addDays(weekStart, -7))}>
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <input
               type="date"
               value={weekStart}
               onChange={(e) => setWeekStart(getMondayOfWeek(e.target.value))}
-              style={{ backgroundColor: '#111113', colorScheme: 'dark' }}
-              className="rounded-lg border border-[#2a2a2e] text-sm text-white px-3 py-1.5 outline-none cursor-pointer hover:border-gray-600 transition-colors"
+              className="bg-background rounded-lg border border-border text-sm text-foreground px-3 py-1.5 outline-none cursor-pointer hover:border-border transition-colors"
             />
-            <Button variant="ghost" size="icon" className="h-8 w-8 border border-[#2a2a2e] hover:bg-[#1a1a1c]" onClick={() => setWeekStart(addDays(weekStart, 7))}>
+            <Button variant="ghost" size="icon" className="h-8 w-8 border border-border hover:bg-muted" onClick={() => setWeekStart(addDays(weekStart, 7))}>
               <ChevronRight className="h-4 w-4" />
             </Button>
             <span className="text-sm text-muted-foreground">
@@ -472,33 +468,33 @@ export default function AttendancePage() {
           </div>
 
           {/* Weekly grid */}
-          <div className="rounded-xl border border-[#1a1a1c] bg-[#0c0c0d] overflow-hidden">
+          <div className="rounded-xl border border-border bg-card overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm min-w-[900px]">
                 <thead>
-                  <tr className="border-b border-[#1a1a1c] bg-[#0a0a0b]">
-                    <th className="sticky left-0 z-10 bg-[#0a0a0b] text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-[160px]">{t('employee')}</th>
+                  <tr className="border-b border-border bg-muted/50">
+                    <th className="sticky left-0 z-10 bg-muted/50 text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider min-w-[160px]">{t('employee')}</th>
                     {weekly?.days.map((day) => {
                       const isToday = day === todayStr()
                       const dow = new Date(day).getDay()
                       return (
-                        <th key={day} className={cn('text-center px-2 py-3 text-xs font-semibold uppercase tracking-wider min-w-[72px]', isToday ? 'text-orange-400' : 'text-gray-500')}>
+                        <th key={day} className={cn('text-center px-2 py-3 text-xs font-semibold uppercase tracking-wider min-w-[72px]', isToday ? 'text-orange-400' : 'text-muted-foreground')}>
                           <div>{t(DAY_KEYS[dow])}</div>
                           <div className={cn('text-[10px] font-normal mt-0.5', isToday ? 'text-orange-400/70' : 'text-gray-600')}>{day.slice(5)}</div>
                         </th>
                       )
                     })}
-                    <th className="text-center px-3 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('weeklyWorkedDays')}</th>
-                    <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('weeklySalary')}</th>
+                    <th className="text-center px-3 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('weeklyWorkedDays')}</th>
+                    <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('weeklySalary')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {weeklyLoading ? (
                     Array.from({ length: 4 }).map((_, i) => (
-                      <tr key={i} className="border-b border-[#1a1a1c]">
+                      <tr key={i} className="border-b border-border">
                         {Array.from({ length: 10 }).map((_, j) => (
                           <td key={j} className="px-2 py-3">
-                            <div className="h-7 bg-[#1a1a1c] rounded animate-pulse" />
+                            <div className="h-7 bg-muted rounded animate-pulse" />
                           </td>
                         ))}
                       </tr>
@@ -509,7 +505,7 @@ export default function AttendancePage() {
                     </tr>
                   ) : (
                     filteredWeekly.map((emp) => (
-                      <tr key={emp.employeeId} className="border-b border-[#1a1a1c] hover:bg-[#111113] transition-colors">
+                      <tr key={emp.employeeId} className="border-b border-border hover:bg-background transition-colors">
                         <td className="sticky left-0 z-10 bg-inherit px-4 py-2">
                           <div className="flex items-center gap-2">
                             <div className="h-6 w-6 rounded-md bg-gradient-to-br from-orange-500/20 to-rose-500/20 flex items-center justify-center text-xs font-bold text-orange-400">
@@ -555,7 +551,7 @@ export default function AttendancePage() {
           <div className="flex items-center gap-3">
             <Button
               variant="ghost" size="icon"
-              className="h-8 w-8 border border-[#2a2a2e] hover:bg-[#1a1a1c]"
+              className="h-8 w-8 border border-border hover:bg-muted"
               onClick={() => {
                 const d = new Date(selectedMonth + '-01')
                 d.setMonth(d.getMonth() - 1)
@@ -568,12 +564,11 @@ export default function AttendancePage() {
               type="month"
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              style={{ backgroundColor: '#111113', colorScheme: 'dark' }}
-              className="rounded-lg border border-[#2a2a2e] text-sm text-white px-3 py-1.5 outline-none cursor-pointer hover:border-gray-600 transition-colors"
+              className="bg-background rounded-lg border border-border text-sm text-foreground px-3 py-1.5 outline-none cursor-pointer hover:border-border transition-colors"
             />
             <Button
               variant="ghost" size="icon"
-              className="h-8 w-8 border border-[#2a2a2e] hover:bg-[#1a1a1c]"
+              className="h-8 w-8 border border-border hover:bg-muted"
               onClick={() => {
                 const d = new Date(selectedMonth + '-01')
                 d.setMonth(d.getMonth() + 1)
@@ -583,24 +578,24 @@ export default function AttendancePage() {
               <ChevronRight className="h-4 w-4" />
             </Button>
             {monthly && (
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-muted-foreground">
                 {monthly.workingDaysInMonth} {t('workingDays')}
               </span>
             )}
           </div>
 
           {/* Monthly summary table */}
-          <div className="rounded-xl border border-[#1a1a1c] bg-[#0c0c0d] overflow-hidden">
+          <div className="rounded-xl border border-border bg-card overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm min-w-[1000px]">
                 <thead>
-                  <tr className="border-b border-[#1a1a1c] bg-[#0a0a0b]">
-                    <th className="sticky left-0 z-10 bg-[#0a0a0b] text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('employee')}</th>
-                    <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('monthlySalary')}</th>
-                    <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('dailyRate')}</th>
-                    <th className="text-center px-3 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('workedDays')}</th>
-                    <th className="text-center px-3 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('absentDays')}</th>
-                    <th className="text-center px-3 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('lateDays')}</th>
+                  <tr className="border-b border-border bg-muted/50">
+                    <th className="sticky left-0 z-10 bg-muted/50 text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('employee')}</th>
+                    <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('monthlySalary')}</th>
+                    <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('dailyRate')}</th>
+                    <th className="text-center px-3 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('workedDays')}</th>
+                    <th className="text-center px-3 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('absentDays')}</th>
+                    <th className="text-center px-3 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('lateDays')}</th>
                     <th className="text-right px-3 py-3 text-xs font-semibold text-emerald-600 uppercase tracking-wider">{t('bonus')}</th>
                     <th className="text-right px-3 py-3 text-xs font-semibold text-red-600 uppercase tracking-wider">{t('penalty')}</th>
                     <th className="text-right px-4 py-3 text-xs font-semibold text-orange-500 uppercase tracking-wider">{t('finalSalary')}</th>
@@ -609,10 +604,10 @@ export default function AttendancePage() {
                 <tbody>
                   {monthlyLoading ? (
                     Array.from({ length: 4 }).map((_, i) => (
-                      <tr key={i} className="border-b border-[#1a1a1c]">
+                      <tr key={i} className="border-b border-border">
                         {Array.from({ length: 9 }).map((_, j) => (
                           <td key={j} className="px-4 py-3">
-                            <div className="h-4 bg-[#1a1a1c] rounded animate-pulse" />
+                            <div className="h-4 bg-muted rounded animate-pulse" />
                           </td>
                         ))}
                       </tr>
@@ -623,7 +618,7 @@ export default function AttendancePage() {
                     </tr>
                   ) : (
                     filteredMonthly.map((emp) => (
-                      <tr key={emp.employeeId} className="border-b border-[#1a1a1c] hover:bg-[#111113] transition-colors">
+                      <tr key={emp.employeeId} className="border-b border-border hover:bg-background transition-colors">
                         <td className="sticky left-0 z-10 bg-inherit px-4 py-3">
                           <div className="flex items-center gap-2">
                             <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-orange-500/20 to-rose-500/20 flex items-center justify-center text-xs font-bold text-orange-400">
@@ -636,7 +631,7 @@ export default function AttendancePage() {
                           </div>
                         </td>
                         <td className="text-right px-4 py-3 font-mono text-gray-300 text-xs">{formatMoney(emp.monthlySalary)} см</td>
-                        <td className="text-right px-4 py-3 font-mono text-gray-500 text-xs">{formatMoney(emp.dailyRate)} см</td>
+                        <td className="text-right px-4 py-3 font-mono text-muted-foreground text-xs">{formatMoney(emp.dailyRate)} см</td>
                         <td className="text-center px-3 py-3">
                           <span className="text-sm font-semibold text-white">{emp.workedDays}</span>
                         </td>
@@ -670,8 +665,8 @@ export default function AttendancePage() {
                   )}
                   {/* Totals row */}
                   {monthly && filteredMonthly.length > 0 && (
-                    <tr className="bg-[#0a0a0b] border-t-2 border-[#2a2a2e]">
-                      <td className="sticky left-0 z-10 bg-[#0a0a0b] px-4 py-3 text-xs font-bold text-gray-400 uppercase">Ҷамъ</td>
+                    <tr className="bg-muted/50 border-t-2 border-border">
+                      <td className="sticky left-0 z-10 bg-muted/50 px-4 py-3 text-xs font-bold text-gray-400 uppercase">Ҷамъ</td>
                       <td colSpan={6} />
                       <td className="text-right px-3 py-3 font-mono text-sm font-bold text-emerald-400">
                         +{formatMoney(monthly.totalBonuses)} см
@@ -717,12 +712,11 @@ function MoneyInput({ value, disabled, onBlur }: { value: string; disabled: bool
         const n = parseFloat(local)
         if (!isNaN(n) && n !== parseFloat(value)) onBlur(n)
       }}
-      style={{ backgroundColor: disabled ? '#0a0a0b' : '#111113' }}
       className={cn(
-        'w-20 rounded-md border text-xs px-2 py-1.5 font-mono outline-none transition-all duration-200 appearance-none',
+        'bg-background w-20 rounded-md border text-xs px-2 py-1.5 font-mono outline-none transition-all duration-200 appearance-none',
         disabled
-          ? 'border-[#1a1a1c] text-gray-700 cursor-not-allowed opacity-50'
-          : 'border-[#2a2a2e] text-white hover:border-gray-600 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 shadow-inner',
+          ? 'border-border text-gray-700 cursor-not-allowed opacity-50'
+          : 'border-border text-white hover:border-border focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 shadow-inner',
       )}
     />
   )
