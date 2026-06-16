@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
+import { Banknote, CreditCard, Building2, CheckCircle2 } from 'lucide-react'
 import { suppliersApi } from '@/api/suppliers.api'
 import { inventoryApi } from '@/api/inventory.api'
 import { supplierPurchaseSchema } from '@/utils/validation.util'
@@ -40,6 +41,8 @@ export default function PurchaseForm({ supplier, onSuccess }: Props) {
   const [pricePerUnit, setPricePerUnit] = useState('')
   const [inventoryItemId, setInventoryItemId] = useState('')
   const [notes, setNotes] = useState('')
+  const [paymentMethod, setPaymentMethod] = useState<'CASH' | 'CARD'>('CASH')
+  const [cardType, setCardType] = useState<'DUSHANBE_CITY' | 'ALIF' | null>(null)
 
   const { data: inventoryList } = useQuery({
     queryKey: ['inventory', { limit: 100 }],
@@ -64,9 +67,16 @@ export default function PurchaseForm({ supplier, onSuccess }: Props) {
     },
   })
 
+  const cardTypeRequired = paymentMethod === 'CARD'
+  const canSubmit = !cardTypeRequired || cardType !== null
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!inventoryItemId || !pricePerUnit) {
+      toast.error(t('common:errors.required'))
+      return
+    }
+    if (cardTypeRequired && !cardType) {
       toast.error(t('common:errors.required'))
       return
     }
@@ -78,6 +88,8 @@ export default function PurchaseForm({ supplier, onSuccess }: Props) {
       kgPerBox: isBoxUnit ? kgPerBox : undefined,
       pricePerUnit,
       notes: notes || undefined,
+      paymentMethod,
+      cardType: cardType ?? undefined,
     })
   }
 
@@ -167,11 +179,62 @@ export default function PurchaseForm({ supplier, onSuccess }: Props) {
       )}
 
       <div className="space-y-2">
+        <Label>{t('common:payment.payment')}</Label>
+        <div className="grid grid-cols-2 gap-2">
+          {([
+            { key: 'CASH' as const, label: t('common:payment.cash'), icon: Banknote },
+            { key: 'CARD' as const, label: t('common:payment.card'), icon: CreditCard },
+          ]).map(({ key, label, icon: Icon }) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => { setPaymentMethod(key); if (key === 'CASH') setCardType(null) }}
+              className={`flex items-center justify-center gap-1.5 py-2 rounded-lg border-2 text-sm font-medium transition-colors ${
+                paymentMethod === key
+                  ? 'border-primary bg-primary text-primary-foreground'
+                  : 'border-border hover:border-primary/50 text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <Icon className="h-4 w-4" />
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {cardTypeRequired && (
+        <div className="space-y-2">
+          <Label>Навъи корта *</Label>
+          <div className="grid grid-cols-2 gap-2">
+            {([
+              { key: 'DUSHANBE_CITY' as const, label: 'DC', icon: Building2 },
+              { key: 'ALIF' as const, label: 'Алиф', icon: CreditCard },
+            ]).map(({ key, label, icon: Icon }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setCardType(key)}
+                className={`relative flex items-center justify-center gap-1.5 py-2 rounded-lg border-2 text-sm font-medium transition-colors ${
+                  cardType === key
+                    ? 'border-primary bg-primary text-primary-foreground'
+                    : 'border-border hover:border-primary/50 text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                {label}
+                {cardType === key && <CheckCircle2 className="absolute top-1 right-1 h-3 w-3" />}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-2">
         <Label>{t('common:labels.notes')}</Label>
         <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} />
       </div>
 
-      <Button type="submit" className="w-full" disabled={purchaseMutation.isPending}>
+      <Button type="submit" className="w-full" disabled={purchaseMutation.isPending || !canSubmit}>
         {purchaseMutation.isPending && <LoadingSpinner size="sm" className="mr-2" />}
         {t('purchase')}
       </Button>

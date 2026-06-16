@@ -9,6 +9,7 @@ import { toDecimal } from '../../common/utils/decimal.util';
 import { calculatePayroll } from '../../common/utils/payroll.util';
 import { startOfMonth, endOfMonth, parseMonth } from '../../common/utils/date.util';
 import { resolveBusinessForUser } from '../../common/utils/business-resolver.util';
+import { assertSufficientCashBalance } from '../../common/utils/cashbox-balance.util';
 
 @Injectable()
 export class EmployeesService {
@@ -86,6 +87,11 @@ export class EmployeesService {
     if (!employee) throw new NotFoundException('Employee not found');
 
     return this.prisma.$transaction(async (tx) => {
+      const cashbox = await tx.cashbox.findUnique({ where: { businessId: b.id } });
+      if (cashbox) {
+        assertSufficientCashBalance(cashbox.balance, dto.amount);
+      }
+
       const expense = await tx.expense.create({
         data: {
           businessId: b.id,
@@ -121,7 +127,6 @@ export class EmployeesService {
         },
       });
 
-      const cashbox = await tx.cashbox.findUnique({ where: { businessId: b.id } });
       if (cashbox) {
         const newBalance = toDecimal(cashbox.balance).minus(toDecimal(dto.amount));
         await tx.cashbox.update({

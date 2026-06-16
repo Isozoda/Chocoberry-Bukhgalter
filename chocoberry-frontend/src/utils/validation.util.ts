@@ -33,9 +33,15 @@ export const supplierPurchaseSchema = z
     kgPerBox: z.string().optional(),
     pricePerUnit: z.string().min(1),
     notes: z.string().optional(),
+    paymentMethod: z.enum(['CASH', 'CARD']).optional(),
+    cardType: z.enum(['DUSHANBE_CITY', 'ALIF']).optional(),
   })
   .refine((data) => data.quantity || (data.boxCount && data.kgPerBox), {
     message: 'Provide either quantity or box count + kg per box',
+  })
+  .refine((data) => data.paymentMethod !== 'CARD' || !!data.cardType, {
+    message: 'Card type is required for card payments',
+    path: ['cardType'],
   })
 
 export const productSchema = z.object({

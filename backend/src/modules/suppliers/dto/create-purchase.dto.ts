@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { InventoryUnit } from '@prisma/client';
+import { InventoryUnit, CardType, PaymentMethod } from '@prisma/client';
 
 export class CreatePurchaseDto {
   @ApiPropertyOptional({ example: 'uuid-of-inventory-item', description: 'Inventory item ID' })
@@ -47,4 +47,14 @@ export class CreatePurchaseDto {
   @IsOptional()
   @IsString()
   notes?: string;
+
+  @ApiPropertyOptional({ enum: PaymentMethod, example: 'CASH', description: 'CASH or CARD' })
+  @IsOptional()
+  @IsEnum(PaymentMethod)
+  paymentMethod?: PaymentMethod;
+
+  @ApiPropertyOptional({ enum: CardType, example: 'DUSHANBE_CITY', description: 'Required when paymentMethod is CARD' })
+  @IsOptional()
+  @IsEnum(CardType)
+  cardType?: CardType;
 }

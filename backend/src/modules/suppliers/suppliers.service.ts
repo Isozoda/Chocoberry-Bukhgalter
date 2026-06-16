@@ -12,6 +12,7 @@ import Decimal from 'decimal.js';
 import { toDecimal, multiplyDecimal, calcWeightedAvgCost } from '../../common/utils/decimal.util';
 import { startOfDay, endOfDay } from '../../common/utils/date.util';
 import { resolveBusinessForUser } from '../../common/utils/business-resolver.util';
+import { assertSufficientCashBalance, assertSufficientCardBalance } from '../../common/utils/cashbox-balance.util';
 
 @Injectable()
 export class SuppliersService {
@@ -91,7 +92,22 @@ export class SuppliersService {
     const pricePerUnit = toDecimal(dto.pricePerUnit);
     const totalAmount = multiplyDecimal(quantity, pricePerUnit);
 
+    const paymentMethod = dto.paymentMethod || 'CASH';
+    if (paymentMethod === 'CARD' && !dto.cardType) {
+      throw new BadRequestException('cardType (DUSHANBE_CITY or ALIF) is required for card payments');
+    }
+
     return this.prisma.$transaction(async (tx) => {
+      const cashbox = await tx.cashbox.findUnique({ where: { businessId: b.id } });
+      if (cashbox) {
+        if (paymentMethod === 'CARD') {
+          const cardBalance = dto.cardType === 'ALIF' ? cashbox.alifBalance : cashbox.dcBalance;
+          assertSufficientCardBalance(cardBalance, totalAmount, dto.cardType);
+        } else {
+          assertSufficientCashBalance(cashbox.balance, totalAmount);
+        }
+      }
+
       let forecastCupsBy03: number | null = null;
       let forecastCupsBy04: number | null = null;
 
@@ -195,7 +211,7 @@ export class SuppliersService {
           amount: totalAmount,
           description: `Покупка у ${supplier.name}: ${quantity.toFixed(2)} ${dto.unit}`,
           vendor: supplier.name,
-          paymentMethod: 'CASH',
+          paymentMethod,
           isPaid: true,
           date: new Date(),
         },
@@ -214,26 +230,39 @@ export class SuppliersService {
       });
 
       // Update cashbox
-      const cashbox = await tx.cashbox.findUnique({ where: { businessId: b.id } });
       if (cashbox) {
-        await tx.cashbox.update({
-          where: { businessId: b.id },
-          data: {
-            balance: toDecimal(cashbox.balance).minus(totalAmount),
-            lastUpdated: new Date(),
-          },
-        });
-        await tx.cashboxOperation.create({
-          data: {
-            cashboxId: cashbox.id,
-            type: 'OUT',
-            amount: totalAmount,
-            balanceBefore: toDecimal(cashbox.balance),
-            balanceAfter: toDecimal(cashbox.balance).minus(totalAmount),
-            description: `Покупка у ${supplier.name}`,
-            referenceId: purchase.id,
-          },
-        });
+        if (paymentMethod === 'CARD') {
+          const isAlif = dto.cardType === 'ALIF';
+          await tx.cashbox.update({
+            where: { businessId: b.id },
+            data: {
+              ...(isAlif
+                ? { alifBalance: toDecimal(cashbox.alifBalance).minus(totalAmount) }
+                : { dcBalance: toDecimal(cashbox.dcBalance).minus(totalAmount) }),
+              lastUpdated: new Date(),
+            },
+          });
+          // Card balances don't have a CashboxOperation ledger (mirrors sales.service.ts).
+        } else {
+          await tx.cashbox.update({
+            where: { businessId: b.id },
+            data: {
+              balance: toDecimal(cashbox.balance).minus(totalAmount),
+              lastUpdated: new Date(),
+            },
+          });
+          await tx.cashboxOperation.create({
+            data: {
+              cashboxId: cashbox.id,
+              type: 'OUT',
+              amount: totalAmount,
+              balanceBefore: toDecimal(cashbox.balance),
+              balanceAfter: toDecimal(cashbox.balance).minus(totalAmount),
+              description: `Покупка у ${supplier.name}`,
+              referenceId: purchase.id,
+            },
+          });
+        }
       }
 
       return {

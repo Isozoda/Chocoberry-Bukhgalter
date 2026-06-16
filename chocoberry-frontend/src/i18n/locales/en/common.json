@@ -108,6 +108,8 @@
     "passwordMismatch": "Passwords do not match",
     "invalidAmount": "Invalid amount",
     "insufficientStock": "Insufficient stock",
+    "insufficientCashBalance": "Insufficient cash balance! Available: {{available}}, requested: {{requested}}",
+    "insufficientCardBalance": "Insufficient {{cardLabel}} card balance! Available: {{available}}, requested: {{requested}}",
     "networkError": "Network error",
     "tryAgainLater": "Please try again later"
   },

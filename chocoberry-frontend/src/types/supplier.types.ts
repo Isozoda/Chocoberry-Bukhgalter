@@ -40,6 +40,8 @@ export interface PurchaseDto {
   kgPerBox?: string
   pricePerUnit: string
   notes?: string
+  paymentMethod?: 'CASH' | 'CARD'
+  cardType?: 'DUSHANBE_CITY' | 'ALIF'
 }
 
 export interface PurchaseForecast {

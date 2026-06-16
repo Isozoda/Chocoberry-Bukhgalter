@@ -4,6 +4,7 @@ import { CashboxOpDto } from './dto/cashbox-op.dto';
 import { toDecimal } from '../../common/utils/decimal.util';
 import { startOfDay, endOfDay } from '../../common/utils/date.util';
 import { resolveBusinessForUser } from '../../common/utils/business-resolver.util';
+import { assertSufficientCashBalance } from '../../common/utils/cashbox-balance.util';
 
 @Injectable()
 export class CashboxService {
@@ -48,8 +49,11 @@ export class CashboxService {
     const cashbox = await this.getCashbox(b.id);
     const amount = toDecimal(dto.amount);
     const balanceBefore = toDecimal(cashbox.balance);
-    const balanceAfter =
-      type === 'IN' || type === 'OPEN' ? balanceBefore.plus(amount) : balanceBefore.minus(amount);
+    const isOutgoing = type !== 'IN' && type !== 'OPEN';
+    if (isOutgoing) {
+      assertSufficientCashBalance(balanceBefore, amount);
+    }
+    const balanceAfter = isOutgoing ? balanceBefore.minus(amount) : balanceBefore.plus(amount);
 
     return this.prisma.$transaction(async (tx) => {
       await tx.cashbox.update({

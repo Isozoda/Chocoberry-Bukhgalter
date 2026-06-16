@@ -1,5 +1,29 @@
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import i18n from '@/i18n'
+
+// Backend errors that are sent as a stable code + structured `details`
+// (rather than a human sentence) get rendered through i18n here, so the
+// user always sees a localized message instead of raw backend English.
+const ERROR_CODE_I18N_KEY: Record<string, string> = {
+  INSUFFICIENT_CASH_BALANCE: 'common:errors.insufficientCashBalance',
+  INSUFFICIENT_CARD_BALANCE: 'common:errors.insufficientCardBalance',
+}
+
+const CARD_TYPE_LABEL: Record<string, string> = {
+  DUSHANBE_CITY: 'DC',
+  ALIF: 'Alif',
+}
+
+function resolveErrorMessage(data: any, fallback: string): string {
+  const code = data?.error?.message
+  if (typeof code === 'string' && ERROR_CODE_I18N_KEY[code]) {
+    const details = data?.error?.details || {}
+    const cardLabel = CARD_TYPE_LABEL[details.cardType] || details.cardType
+    return i18n.t(ERROR_CODE_I18N_KEY[code], { ...details, cardLabel })
+  }
+  return data?.error?.message || data?.message || data?.error || fallback
+}
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL as string,
@@ -38,11 +62,7 @@ api.interceptors.response.use(
       }
 
       if (status === 400 || status === 422) {
-        const message =
-          data?.error?.message ||
-          data?.message ||
-          data?.error ||
-          'Validation error'
+        const message = resolveErrorMessage(data, 'Validation error')
         toast.error(typeof message === 'string' ? message : JSON.stringify(message))
         const enhancedError = new Error(typeof message === 'string' ? message : 'Validation error') as Error & {
           details?: Array<{ field: string; message: string }>

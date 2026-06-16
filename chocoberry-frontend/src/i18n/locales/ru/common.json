@@ -108,6 +108,8 @@
     "passwordMismatch": "Пароли не совпадают",
     "invalidAmount": "Неверная сумма",
     "insufficientStock": "Недостаточно запасов",
+    "insufficientCashBalance": "Недостаточно наличных в кассе! В кассе: {{available}} см, запрошено: {{requested}} см",
+    "insufficientCardBalance": "Недостаточно средств на карте {{cardLabel}}! На карте: {{available}} см, запрошено: {{requested}} см",
     "networkError": "Ошибка сети",
     "tryAgainLater": "Пожалуйста, попробуйте позже"
   },

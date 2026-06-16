@@ -4,6 +4,7 @@ import { CreateExpenseDto } from './dto/create-expense.dto';
 import { toDecimal } from '../../common/utils/decimal.util';
 import { startOfDay, endOfDay } from '../../common/utils/date.util';
 import { resolveBusinessForUser } from '../../common/utils/business-resolver.util';
+import { assertSufficientCashBalance } from '../../common/utils/cashbox-balance.util';
 
 @Injectable()
 export class ExpensesService {
@@ -51,6 +52,11 @@ export class ExpensesService {
   async create(userId: string, dto: CreateExpenseDto) {
     const b = await this.getBusiness(userId);
     return this.prisma.$transaction(async (tx) => {
+      const cashbox = await tx.cashbox.findUnique({ where: { businessId: b.id } });
+      if (cashbox && dto.paymentMethod !== 'CARD') {
+        assertSufficientCashBalance(cashbox.balance, dto.amount);
+      }
+
       const expense = await tx.expense.create({
         data: {
           businessId: b.id,
@@ -77,7 +83,6 @@ export class ExpensesService {
         },
       });
 
-      const cashbox = await tx.cashbox.findUnique({ where: { businessId: b.id } });
       if (cashbox && dto.paymentMethod !== 'CARD') {
         const newBalance = toDecimal(cashbox.balance).minus(toDecimal(dto.amount));
         await tx.cashbox.update({

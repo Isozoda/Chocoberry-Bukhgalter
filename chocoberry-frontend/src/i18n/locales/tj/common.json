@@ -108,7 +108,8 @@
     "passwordMismatch": "Рамзҳо мувофиқат намекунанд",
     "invalidAmount": "Маблағ нодуруст",
     "insufficientStock": "Захираи кофӣ нест",
-    "insufficientStock": "Захираи кофӣ нест",
+    "insufficientCashBalance": "Маблағи кассаи нақд кофӣ нест! Дар касса: {{available}} см, дархост шуд: {{requested}} см",
+    "insufficientCardBalance": "Тавозуни корти {{cardLabel}} кофӣ нест! Дар корт: {{available}} см, дархост шуд: {{requested}} см",
     "networkError": "Хатои шабака",
     "tryAgainLater": "Лутфан дертар кӯшиш кунед"
   },
